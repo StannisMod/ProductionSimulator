@@ -28,14 +28,15 @@
         android:background="@drawable/oval_button" />
         <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
 
-    <ImageButton
+    <ImageView
         android:id="@+id/topersonal"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="85dp"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="-30dp"
         android:layout_toStartOf="@+id/toinventory"
-        app:srcCompat="@mipmap/coins_foreground" />
+        app:srcCompat="@mipmap/camp_foreground" />
 
     <ImageButton
         android:id="@+id/tofactory"

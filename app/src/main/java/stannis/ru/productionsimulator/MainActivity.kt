@@ -13,13 +13,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mail.setOnClickListener {
+            // val intent = Intent(this, MailActivity::class.java)
             // startActivity(mail)
         }
 
         toinventory.setOnClickListener {
+            // val intent = Intent(this, InventoryActivity::class.java)
             // startActivity(inventory)
         }
-
 
         tomarket.setOnClickListener {
             val intent = Intent(this, MarketActivity::class.java)
@@ -27,10 +28,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         stats_panel.setOnClickListener {
+            // val intent = Intent(this, StatsActivity::class.java)
             // startActivity(stats)
         }
 
         tofactory.setOnClickListener {
+            // val intent = Intent(this, FactoryActivity::class.java)
             // startActivity(factory)
         }
     }
