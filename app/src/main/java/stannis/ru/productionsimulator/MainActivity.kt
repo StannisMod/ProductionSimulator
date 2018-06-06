@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.stats_panel.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,10 +26,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        /*
         stats_panel.setOnClickListener {
             // startActivity(stats)
-        }*/
+        }
 
         tofactory.setOnClickListener {
             // startActivity(factory)
