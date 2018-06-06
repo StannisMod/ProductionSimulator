@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MarketActivity"></activity>
+        <activity android:name=".MarketActivity" />
+        <activity android:name=".Credit_DepositActivity" android:parentActivityName=".BankActivity" />
+        <activity android:name=".BankActivity" android:parentActivityName=".MarketActivity"></activity>
     </application>
 
 </manifest>

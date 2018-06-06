@@ -1,15 +1,18 @@
 package stannis.ru.productionsimulator
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TabHost
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_market.*
 
 class MarketActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
 
@@ -48,5 +51,11 @@ class MarketActivity : AppCompatActivity() {
         val adapter3 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray3)
 
         listview3.adapter = adapter3
+
+        imageButton.setOnClickListener{
+            val intent = Intent(this, BankActivity::class.java)
+            startActivity(intent)
+
+        }
     }
 }
