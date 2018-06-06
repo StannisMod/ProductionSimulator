@@ -31,10 +31,6 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
 
-        tabHost.setOnTabChangedListener {
-            Toast.makeText(baseContext, "tabId = ${it}", Toast.LENGTH_SHORT).show()
-        }
-
         var listview1 : ListView = findViewById(R.id.tvTab1)
         val dataArray1 = arrayOf( "Бензопила", "Грузовик", "Обрабатывающий станок")
         val adapter1 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray1)
