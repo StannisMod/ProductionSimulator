@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <include
+        layout="@layout/stats_panel"
+        />
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:text="Рынок"
+                android:textSize="30sp"
+                tools:textColor="@android:drawable/ic_menu_revert" />
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="309dp">
+
+                <ListView
+                    android:id="@+id/tvTab1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"></ListView>
+
+                <ListView
+                    android:id="@+id/tvTab2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"></ListView>
+
+                <ListView
+                    android:id="@+id/tvTab3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"></ListView>
+            </FrameLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@mipmap/coins_round" />
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+    </TabHost>
+</LinearLayout>
