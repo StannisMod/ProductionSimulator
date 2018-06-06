@@ -10,14 +10,6 @@
         layout="@layout/stats_panel"
         />
 
-    <Button
-        android:id="@+id/mail"
-        android:layout_width="34dp"
-        android:layout_height="33dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:text="M" />
-
     <ImageButton
         android:id="@+id/toinventory"
         android:layout_width="60dp"
@@ -41,8 +33,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="77dp"
-        android:layout_toStartOf="@+id/mail"
+        android:layout_marginBottom="85dp"
+        android:layout_toStartOf="@+id/toinventory"
         app:srcCompat="@mipmap/coins_foreground" />
 
     <ImageButton

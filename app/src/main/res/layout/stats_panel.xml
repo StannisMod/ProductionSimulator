@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="30dp">
 
     <LinearLayout
@@ -10,6 +12,77 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/moneyView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="0.1"
+            app:srcCompat="@mipmap/coins_foreground" />
+
+        <TextView
+            android:id="@+id/money"
+            android:layout_width="222dp"
+            android:layout_height="match_parent"
+            android:layout_weight="48" />
+
+        <ImageView
+            android:id="@+id/resView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            app:srcCompat="@mipmap/res_foreground" />
+
+        <TextView
+            android:id="@+id/staff"
+            android:layout_width="222dp"
+            android:layout_height="match_parent"
+            android:layout_weight="48" />
+
+        <ImageView
+            android:id="@+id/staffView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            app:srcCompat="@mipmap/staff_foreground" />
+
+        <TextView
+            android:id="@+id/res"
+            android:layout_width="222dp"
+            android:layout_height="match_parent"
+            android:layout_weight="48" />
+
+        <ImageView
+            android:id="@+id/angelImage"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            app:srcCompat="@mipmap/angel_foreground" />
+
+        <ProgressBar
+            android:id="@+id/rep"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8" />
+
+        <ImageView
+            android:id="@+id/devilImage"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            app:srcCompat="@mipmap/devil_foreground" />
+
+        <ImageButton
+            android:id="@+id/mail"
+            android:background="@mipmap/mail_background"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            app:srcCompat="@mipmap/mail_foreground" />
+
     </LinearLayout>
 
 </RelativeLayout>
