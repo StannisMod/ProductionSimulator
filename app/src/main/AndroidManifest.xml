@@ -24,7 +24,7 @@
             android:parentActivityName=".BankActivity" />
         <activity
             android:name=".BankActivity"
-            android:parentActivityName=".MarketActivity" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StaffActivity"
             android:parentActivityName=".MainActivity" />

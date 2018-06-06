@@ -12,7 +12,7 @@ class StaffActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workers)
-        val dataArray  = Array(10){i-> Staff("Petrovich", 43, "Токарь", 10, "Russian", 1200) }
+        val dataArray = Array(10) { i -> Staff("Petrovich", 43, "Токарь", 10, "Russian", 1200, Pair("12", "05")) }
         val adapter = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray)
         listView.adapter = adapter
         listView.setOnItemClickListener { adapterView, view, i, l ->

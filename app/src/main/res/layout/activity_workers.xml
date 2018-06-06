@@ -5,23 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StaffActivity">
+
     <include
         android:id="@+id/stats_panel"
-        layout="@layout/stats_panel"
-        ></include>
+        layout="@layout/stats_panel"></include>
+
     <TextView
         android:id="@+id/yourStaff"
-        android:layout_below="@id/stats_panel"
-        android:textSize="14dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/stats_panel"
+        android:layout_marginLeft="5dp"
         android:text="Ваши работники: "
-        />
+        android:textSize="30sp" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/yourStaff">
-    </ListView>
+        android:layout_below="@id/yourStaff"></ListView>
 
 </RelativeLayout>
