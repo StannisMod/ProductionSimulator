@@ -8,6 +8,7 @@ import android.widget.ListView
 import android.widget.TabHost
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_market.*
+import stannis.ru.productionsimulator.Models.Staff
 
 class MarketActivity : AppCompatActivity() {
 
@@ -16,10 +17,10 @@ class MarketActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
 
-        val tabHost : TabHost = findViewById(android.R.id.tabhost)
+        val tabHost: TabHost = findViewById(android.R.id.tabhost)
         tabHost.setup()
 
-        var tabSpec : TabHost.TabSpec = tabHost.newTabSpec("tag1")
+        var tabSpec: TabHost.TabSpec = tabHost.newTabSpec("tag1")
         tabSpec.setIndicator("Покупка")
         tabSpec.setContent(R.id.tvTab1)
         tabHost.addTab(tabSpec)
@@ -34,25 +35,31 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
 
-        var listview1 : ListView = findViewById(R.id.tvTab1)
-        val dataArray1 = arrayOf( "Бензопила", "Грузовик", "Обрабатывающий станок")
+        var listview1: ListView = findViewById(R.id.tvTab1)
+        val dataArray1 = arrayOf("Бензопила", "Грузовик", "Обрабатывающий станок")
         val adapter1 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray1)
 
         listview1.adapter = adapter1
 
-        var listview2 : ListView = findViewById(R.id.tvTab2)
-        val dataArray2 = arrayOf( "Android", "IPhone", "Windows Phone", "BlackBerry")
+        var listview2: ListView = findViewById(R.id.tvTab2)
+        val dataArray2 = arrayOf("Android", "IPhone", "Windows Phone", "BlackBerry")
         val adapter2 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray2)
 
         listview2.adapter = adapter2
 
-        var listview3 : ListView = findViewById(R.id.tvTab3)
-        val dataArray3 = arrayOf( "Иван", "Мария", "Эдвард")
-        val adapter3 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray3)
+        var listview3: ListView = findViewById(R.id.tvTab3)
+        val dataArray3 = Array<Staff>(10) { i -> Staff("Михалыч", 53, "Слесарь", 10, "Белорус", 100, Pair("03", "01")) }
+        val adapter3 = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray3)
 
         listview3.adapter = adapter3
+        listview3.setOnItemClickListener { adapterView, view, i, l ->
+            val extra = "${dataArray3[i].toDetailedString()}.MarketWorker.$i"
+            val intent = Intent(this, WorkerActivity::class.java)
+            intent.putExtra("TAG", extra)
+            startActivity(intent)
+        }
 
-        imageButton.setOnClickListener{
+        imageButton.setOnClickListener {
             val intent = Intent(this, BankActivity::class.java)
             startActivity(intent)
 

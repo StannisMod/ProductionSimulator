@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WorkerActivity">
+
+
+    <include
+        android:id="@+id/stats_panel"
+        layout="@layout/stats_panel"></include>
+
+    <RelativeLayout
+        android:id="@+id/workerInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stats_panel"
+        android:layout_margin="20dp">
+
+        <ImageView
+
+            android:id="@+id/photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:id="@+id/staticFields"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_toRightOf="@id/photo"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Имя:"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/inputName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Возраст:"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Специальность:"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/inputNation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Национальность:"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/inputSalary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Зарплата:"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/inputBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="День Рождения:"
+                android:textSize="18dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/staticFields"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Kek"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="23"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/prof"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Токарь"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/nation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Россиянин"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/salary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="1200 $"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/birth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="05.08"
+                android:textSize="18dp" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/fire_hire_layout"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/workerInfo"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/hire_prom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:text="Повысить з/п"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/fire"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hire_prom"
+            android:layout_centerHorizontal="true"
+            android:text="Уволить"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Назад"
+        android:textSize="18dp" />
+
+</RelativeLayout>
