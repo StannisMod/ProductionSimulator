@@ -1,5 +1,6 @@
 package stannis.ru.productionsimulator
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,8 +19,10 @@ class MainActivity : AppCompatActivity() {
             // startActivity(inventory)
         }
 
+
         tomarket.setOnClickListener {
-            // startActivity(market)
+            val intent = Intent(this, MarketActivity::class.java)
+            startActivity(intent)
         }
 
         /*
