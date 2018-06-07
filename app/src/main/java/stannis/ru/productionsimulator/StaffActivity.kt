@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_workers.*
+import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Staff
 
 class StaffActivity : AppCompatActivity() {
@@ -12,6 +13,12 @@ class StaffActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workers)
+
+        mail.setOnClickListener {
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
+        }
+
         val dataArray = Array(10) { i -> Staff("Petrovich", 43, "Токарь", 10, "Russian", 1200, Pair("12", "05")) }
         val adapter = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray)
         listView.adapter = adapter
