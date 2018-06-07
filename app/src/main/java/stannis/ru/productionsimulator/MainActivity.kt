@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mail.setOnClickListener {
-            // val intent = Intent(this, MailActivity::class.java)
-            // startActivity(mail)
+             val intent = Intent(this, MailActivity::class.java)
+             startActivity(intent)
         }
 
         toinventory.setOnClickListener {
