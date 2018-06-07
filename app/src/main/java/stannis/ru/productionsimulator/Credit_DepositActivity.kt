@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_credit__deposit.*
+import kotlinx.android.synthetic.main.stats_panel.*
 
 
 class Credit_DepositActivity : AppCompatActivity() {
@@ -13,6 +14,12 @@ class Credit_DepositActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credit__deposit)
+
+        mail.setOnClickListener {
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
+        }
+
         var isCredit: Boolean = true
         if (intent.hasExtra("Type")) {
             if (intent.getStringExtra("Type").equals("credit")) {
