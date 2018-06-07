@@ -25,8 +25,8 @@
         <activity
             android:name=".BankActivity"
             android:parentActivityName=".MarketActivity" />
-        <activity android:name=".MailActivity" />
-        <activity android:name=".MessageActivity"></activity>
+        <activity android:name=".MailActivity" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".MessageActivity" android:parentActivityName=".MailActivity"></activity>
     </application>
 
 </manifest>
