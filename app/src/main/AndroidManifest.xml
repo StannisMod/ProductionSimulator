@@ -28,7 +28,8 @@
         <activity
             android:name=".StaffActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".WorkerActivity"></activity>
+        <activity android:name=".WorkerActivity" />
+        <activity android:name=".FactoryActivity"></activity>
     </application>
 
 </manifest>
