@@ -24,9 +24,12 @@
             android:parentActivityName=".BankActivity" />
         <activity
             android:name=".BankActivity"
-            android:parentActivityName=".MarketActivity" />
-        <activity android:name=".MailActivity" android:parentActivityName=".MainActivity"/>
-        <activity android:name=".MessageActivity" android:parentActivityName=".MailActivity"></activity>
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".StaffActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".WorkerActivity" />
+        <activity android:name=".FactoryActivity"></activity>
     </application>
 
 </manifest>

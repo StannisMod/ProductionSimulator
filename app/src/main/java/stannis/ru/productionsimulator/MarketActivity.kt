@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TabHost
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_market.*
+import stannis.ru.productionsimulator.Models.Staff
 import kotlinx.android.synthetic.main.stats_panel.*
 
 class MarketActivity : AppCompatActivity() {
@@ -21,7 +23,7 @@ class MarketActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val tabHost : TabHost = findViewById(android.R.id.tabhost)
+        val tabHost: TabHost = findViewById(android.R.id.tabhost)
         tabHost.setup()
 
         var tabSpec : TabHost.TabSpec = tabHost.newTabSpec("tag1")
@@ -60,6 +62,7 @@ class MarketActivity : AppCompatActivity() {
         imageButton.setOnClickListener{
             val intent = Intent(this, BankActivity::class.java)
             startActivity(intent)
+
         }
     }
 }
