@@ -6,7 +6,7 @@ class Message(var caption : String = "Отдайте деньги!", var text : 
     }
 
     fun toCaption(): String{
-        return "${sender}, ${date[0]}.${date[1]}.${date[2]}\n${caption}"
+        return "${sender}   /${date[0]}.${date[1]}.${date[2]}\n     ${caption}"
     }
 
     fun toStringArray(): Array<String>{

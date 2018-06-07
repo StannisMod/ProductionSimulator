@@ -20,7 +20,6 @@ class MailActivity : AppCompatActivity() {
         var listview : ListView = findViewById(R.id.listView)
         val dataArray = Array(list.size){i -> list[i].toCaption()}
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray)
-
         listview.adapter = adapter
 
         listview.setOnItemClickListener { parent, view, position, id ->
