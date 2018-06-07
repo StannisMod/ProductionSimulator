@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         tofactory.setOnClickListener {
-            // val intent = Intent(this, FactoryActivity::class.java)
-            // startActivity(factory)
+            val intent = Intent(this, FactoryActivity::class.java)
+            startActivity(intent)
         }
         topersonal.setOnClickListener{
             val intent = Intent(this, StaffActivity::class.java)
