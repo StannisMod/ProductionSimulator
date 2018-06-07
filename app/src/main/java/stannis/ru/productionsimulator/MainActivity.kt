@@ -3,8 +3,10 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.stats_panel.*
+import stannis.ru.productionsimulator.Models.DatabaseFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         tofactory.setOnClickListener {
+            DatabaseFactory.getInstance(this).addLaborExchangeWithProperties(this, "Petr", 0, "Tokar", 10, "Rus", 1200, "01", "02")
+            Log.d("db", DatabaseFactory.getInstance(this).getLaborExchangeWithProperties(this, 0))
+
             // val intent = Intent(this, FactoryActivity::class.java)
             // startActivity(factory)
         }
