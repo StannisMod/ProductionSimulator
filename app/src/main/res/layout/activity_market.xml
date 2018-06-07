@@ -39,17 +39,17 @@
 
                 <ListView
                     android:id="@+id/tvTab1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"></ListView>
 
                 <ListView
                     android:id="@+id/tvTab2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"></ListView>
 
                 <ListView
                     android:id="@+id/tvTab3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"></ListView>
             </FrameLayout>
 
