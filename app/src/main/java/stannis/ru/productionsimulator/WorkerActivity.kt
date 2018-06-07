@@ -23,12 +23,6 @@ class WorkerActivity : AppCompatActivity() {
 
             val cond = arr[1].trim() != "YourWorker"
 
-            back.setOnClickListener {
-                val kek = if (cond) MarketActivity::class.java else StaffActivity::class.java
-                val intent = Intent(this, kek)
-
-                startActivity(intent)
-            }
 
             if (cond) {
                 fire.visibility = View.INVISIBLE
