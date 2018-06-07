@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_bank.*
+import kotlinx.android.synthetic.main.stats_panel.*
 import java.util.*
 
 class BankActivity : AppCompatActivity() {
@@ -12,6 +13,12 @@ class BankActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank)
+
+        mail.setOnClickListener {
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
+        }
+
         takeCredit.setOnClickListener {
             val intent1 = Intent(this, Credit_DepositActivity::class.java)
             intent1.putExtra("Type", "credit")

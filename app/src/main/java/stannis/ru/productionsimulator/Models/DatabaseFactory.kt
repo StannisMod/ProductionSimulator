@@ -3,10 +3,8 @@ package stannis.ru.productionsimulator.Models
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
-import java.sql.*
 
-
-class DatabaseFactory(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB") {
+class DatabaseFactory(ctx : Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB") {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -21,39 +19,27 @@ class DatabaseFactory(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSi
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.createTable("Factories", true,
+        db.createTable("Factories", false,
                 "id" to INTEGER,
                 "type" to INTEGER,
                 "res" to INTEGER,
                 "consumption" to INTEGER,
-                "production" to INTEGER,
-                "prod" to INTEGER)
-        // "machine_stat" to )
+                "productivity" to INTEGER,
+                "production" to INTEGER)
+               // "machine_stat" to )
 
-        db.createTable("laborExchange", true,
+        db.createTable("laborExchange", false,
                 "name" to TEXT,
                 "age" to INTEGER,
                 "spec" to TEXT,
-                "quality" to INTEGER,
+                "class" to INTEGER,
                 "nationality" to TEXT,
-                "salary" to INTEGER,
-                "dayOfBirth" to TEXT,
-                "monthOfBirth" to TEXT
-        )
+                "salary" to INTEGER)
 
-        db.createTable("buy", true,
+        db.createTable("buy", false,
                 "name" to TEXT,
                 "id" to INTEGER,
                 "price" to INTEGER)
-        db.createTable("hiredStaff", true,
-                "name" to TEXT,
-                "age" to INTEGER,
-                "spec" to TEXT,
-                "quality" to INTEGER,
-                "nationality" to TEXT,
-                "salary" to INTEGER,
-                "dayOfBirth" to TEXT,
-                "monthOfBirth" to TEXT)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -66,27 +52,32 @@ class DatabaseFactory(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSi
 
     // To manage factory DB
 
-    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, consumption: Int, production: Int, prod: Int) {
+    fun addFactoryWithProperties(ctx : Context, id : Int, type : Int, res : Int, consumption : Int, productivity : Int, production : Int) {
         getInstance(ctx).use {
             insert("Factories",
                     "id" to id, "type" to type, "res" to res, "consumption" to consumption,
-                    "production" to production, "prod" to prod)
+                            "production" to productivity, "prod" to production)
         }
     }
 
-    fun setFactoryProperties(ctx: Context, id: Int, type: Int, res: Int, consumption: Int, production: Int, prod: Int) {
+    // TODO Write SELECT
+
+    fun getFactoryProperties(ctx : Context, id : Int, type : Int, res : Int, consumption : Int, productivity : Int, production : Int) {
         getInstance(ctx).use {
             select("Factories")
-                    .whereArgs("id = ${id}", "type" to type, "res" to res, "consumption" to consumption,
-                            "production" to production, "prod" to prod)
+                    .whereArgs("id = $id").column("type")
         }
     }
 
+    // TODO Write UPDATE
 
+    /*
 
-    fun setStaffWithProperties(ctx: Context) {
-
+    fun setFactoryProperties(ctx : Context, id : Int, type : Int, res : Int, consumption : Int, productivity : Int, production : Int) {
+        getInstance(ctx).use {
+            update()
+        }
     }
 
+    */
 }
-
