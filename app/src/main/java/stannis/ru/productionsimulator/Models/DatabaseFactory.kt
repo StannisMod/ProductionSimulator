@@ -82,7 +82,7 @@ class DatabaseFactory(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSi
         }
     }
 
-    
+
 
     fun setStaffWithProperties(ctx: Context) {
 
