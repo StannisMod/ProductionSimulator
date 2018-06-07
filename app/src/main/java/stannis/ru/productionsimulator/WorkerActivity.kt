@@ -26,6 +26,7 @@ class WorkerActivity : AppCompatActivity() {
             back.setOnClickListener {
                 val kek = if (cond) MarketActivity::class.java else StaffActivity::class.java
                 val intent = Intent(this, kek)
+
                 startActivity(intent)
             }
 

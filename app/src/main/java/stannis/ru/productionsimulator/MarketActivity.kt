@@ -54,10 +54,17 @@ class MarketActivity : AppCompatActivity() {
         listview2.adapter = adapter2
 
         var listview3 : ListView = findViewById(R.id.tvTab3)
-        val dataArray3 = arrayOf( "Иван", "Мария", "Эдвард")
-        val adapter3 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray3)
+        val dataArray3 = arrayOf( Staff("Михалыч", 34, "Токарь", 10,"Russian", 1200, Pair("01", "02")), Staff("Михалыч", 34, "Токарь", 10,"Russian", 1200, Pair("01", "02")), Staff("Михалыч", 34, "Токарь", 10,"Russian", 1200, Pair("01", "02")))
+        val adapter3 = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray3)
 
         listview3.adapter = adapter3
+        listview3.setOnItemClickListener { adapterView, view, i, l ->
+            val extra = "${dataArray3[i].toDetailedString()}.MarketWorker.$i"
+            val intent = Intent(this, WorkerActivity::class.java)
+            intent.putExtra("TAG", extra)
+            startActivity(intent)
+
+        }
 
         imageButton.setOnClickListener{
             val intent = Intent(this, BankActivity::class.java)
