@@ -2,10 +2,11 @@ package stannis.ru.productionsimulator.Models
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.support.annotation.IntegerRes
 import org.jetbrains.anko.db.*
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB") {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB") {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -30,12 +31,15 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
                 "machine_state" to REAL)
 
         db.createTable("laborExchange", false,
+                "id" to INTEGER,
                 "name" to TEXT,
                 "age" to INTEGER,
                 "spec" to TEXT,
-                "class" to INTEGER,
+                "quality" to INTEGER,
                 "nationality" to TEXT,
-                "salary" to INTEGER)
+                "salary" to INTEGER,
+                "dayOfBirth" to TEXT,
+                "monthOfBirth" to TEXT)
 
         db.createTable("buy", false,
                 "name" to TEXT,
@@ -63,6 +67,77 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
                     "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
         }
+    }
+
+    fun addLaborExchangeWithProperties(id: Int, name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            insert("laborExchange",
+                    "id" to id, "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
+                    "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+        }
+    }
+
+    fun getListOfLaborExchange(): List<Staff> {
+        val query = "SELECT * FROM labourExchange"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Staff> = ArrayList()
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 1;
+                val name = cursor.getString(i)
+                i++
+                val age = Integer.parseInt(cursor.getString(i))
+                i++
+                val spec = cursor.getString(i)
+                i++
+                val quality = Integer.parseInt(cursor.getString(i))
+                i++
+                val nationality = cursor.getString(i)
+                i++
+                val salary = Integer.parseInt(cursor.getString(i))
+                i++
+                val dayOfBirth = cursor.getString(i)
+                i++
+                val monthOfBirth = cursor.getString(i)
+                i++
+                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
+    }
+
+    fun getWorkerFromLabour(id: Int): Staff? {
+        val query = "SELECT * FROM labourExchange WHERE id = \"$id\""
+        val db = this.writableDatabase
+        var worker: Staff? = null
+        val cursor = db.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 1
+            val name = cursor.getString(i)
+            i++
+            val age = Integer.parseInt(cursor.getString(i))
+            i++
+            val spec = cursor.getString(i)
+            i++
+            val quality = Integer.parseInt(cursor.getString(i))
+            i++
+            val nationality = cursor.getString(i)
+            i++
+            val salary = Integer.parseInt(cursor.getString(i))
+            i++
+            val dayOfBirth = cursor.getString(i)
+            i++
+            val monthOfBirth = cursor.getString(i)
+            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
+            cursor.close()
+        }
+        db.close()
+        return worker
     }
 
     fun getFactory(id: Int): Factory? {
@@ -110,16 +185,31 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
     }
 
     fun removeFactory(id: Int): Int {
-        var result : Int = 0
+        var result: Int = 0
         getInstance(ctx).use {
             result = delete("Factories", "id = {id}", "id" to id)
         }
         return result
     }
 
+    fun setLaborExchangeProperties(id: Int, name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            update("laborExchange", "name" to name, "age" to age, "spec" to spec, "quality" to quality,
+                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+                    .whereArgs("id = {id}", "id" to id).exec()
+        }
+    }
+
+    fun removeLaborExchange(id: Int): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("laborExchange", "id = {id}", "id" to id)
+        }
+        return result
+    }
     // For managing inventories
 
-    fun addInventory(inv : Inventory) {
+    fun addInventory(inv: Inventory) {
         getInstance(ctx).use {
             for (i in 0..inv.getInventorySize()) {
                 val slot = inv.getInventorySlotContents(i)
@@ -128,7 +218,7 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
         }
     }
 
-    fun updateInventory(inv : Inventory) {
+    fun updateInventory(inv: Inventory) {
         getInstance(ctx).use {
             for (i in 0..inv.getInventorySize()) {
                 val slot = inv.getInventorySlotContents(i)
@@ -137,13 +227,13 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
         }
     }
 
-    fun getInventory(name : String) : Inventory? {
+    fun getInventory(name: String): Inventory? {
         // var index : Int
-        var id : Int
-        var stackSize : Int
-        var maxStackSize : Int
+        var id: Int
+        var stackSize: Int
+        var maxStackSize: Int
 
-        var inv : Inventory? = null
+        var inv: Inventory? = null
         val slots = ArrayList<ItemStack>()
 
         val query = "SELECT * FROM \"$name\""
@@ -158,8 +248,7 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
                 maxStackSize = Integer.parseInt(cursor.getString(3))
 
                 slots.add(ItemStack(id, stackSize, maxStackSize))
-            }
-            while (cursor.moveToNext())
+            } while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
             cursor.close()
         }
@@ -168,7 +257,7 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
         return inv
     }
 
-    fun removeInventory(name : String) {
+    fun removeInventory(name: String) {
         val db = this.writableDatabase
         db.dropTable(name, true)
         db.close()

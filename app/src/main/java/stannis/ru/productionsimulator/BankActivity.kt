@@ -41,6 +41,10 @@ class BankActivity : AppCompatActivity() {
         }
         val adapter= ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray)
         bankListView.adapter = adapter
-
+        bankListView.setOnItemClickListener { adapterView, view, i, l ->
+            val intent = Intent(this, ResetCredit_Deposit::class.java)
+            intent.putExtra("ID", i.toString())
+            startActivity(intent)
+        }
     }
 }

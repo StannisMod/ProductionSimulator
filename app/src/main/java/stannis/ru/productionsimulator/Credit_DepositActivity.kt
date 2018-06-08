@@ -30,7 +30,7 @@ class Credit_DepositActivity : AppCompatActivity() {
                 enterAmountOfCredit_Deposit.text = "Введите сумму депозита: "
             }
             inputAmountOfCredit.setOnKeyListener { v, keyCode, event ->
-                if ((event as KeyEvent).action == KeyEvent.ACTION_DOWN) {
+                if((v as EditText).text.toString()!="") {
                     var percent = 0.0
                     if (isCredit) {
                         percent = myToDouble((v as EditText).text.toString()) / 100.0
@@ -39,19 +39,23 @@ class Credit_DepositActivity : AppCompatActivity() {
                     }
 
                     countedPercent.text = " ${percent.format(2)}%"
+                }else{
+                    countedPercent.text = " 0%"
                 }
                 false
+
+            }
+            confirmCredit.setOnClickListener {
+                /*
+                    Some Code. Actually adding this action to data of player
+                 */
+                val intent = Intent(this, BankActivity::class.java)
+                startActivity(intent)
             }
         }
-        confirmCredit.setOnClickListener {
-            /*
-                Some Code. Actually adding this action to data of player
-             */
-            val intent = Intent(this, BankActivity::class.java)
-            startActivity(intent)
-        }
-    }
 
+
+    }
     fun Double.format(radix: Int) = java.lang.String.format("%.${radix}f", this)
 
     fun myToDouble(str: String?): Double {
