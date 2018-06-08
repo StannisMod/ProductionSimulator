@@ -5,12 +5,19 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_worker.*
+import kotlinx.android.synthetic.main.stats_panel.*
 
 class WorkerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
+
+        mail.setOnClickListener {
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
+        }
+
         if (intent.hasExtra("TAG")) {
             val arr = intent.getStringExtra("TAG").split(".")
             val dataOfWorker = arr[0].split(",")
@@ -23,11 +30,6 @@ class WorkerActivity : AppCompatActivity() {
 
             val cond = arr[1].trim() != "YourWorker"
 
-            back.setOnClickListener {
-                val kek = if (cond) MarketActivity::class.java else StaffActivity::class.java
-                val intent = Intent(this, kek)
-                startActivity(intent)
-            }
 
             if (cond) {
                 fire.visibility = View.INVISIBLE

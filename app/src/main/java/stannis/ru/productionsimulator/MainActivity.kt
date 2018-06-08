@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.stats_panel.*
+import stannis.ru.productionsimulator.Models.DatabaseFactory
 
 class MainActivity : AppCompatActivity() {
 

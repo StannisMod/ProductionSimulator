@@ -1,9 +1,11 @@
 package stannis.ru.productionsimulator
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_factory.*
+import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.Models.Factory
 import stannis.ru.productionsimulator.Models.Inventory
@@ -13,6 +15,11 @@ class FactoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_factory)
+
+        mail.setOnClickListener {
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
+        }
 
         // val factory = Factory.getFactoryById(intent.getIntExtra("TAG", 0))
 

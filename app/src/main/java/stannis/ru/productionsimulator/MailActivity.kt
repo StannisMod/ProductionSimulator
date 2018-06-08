@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_message.view.*
+import kotlinx.android.synthetic.main.stats_panel.*
 
 class MailActivity : AppCompatActivity() {
 
