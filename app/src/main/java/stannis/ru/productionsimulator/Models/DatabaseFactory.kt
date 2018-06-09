@@ -2,10 +2,11 @@ package stannis.ru.productionsimulator.Models
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import org.jetbrains.anko.db.*
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB") {
+class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 5) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -20,16 +21,18 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.createTable("Factories", false,
+        db.createTable("Factories", true,
                 "id" to INTEGER,
                 "type" to INTEGER,
                 "res" to INTEGER,
+                "res_cap" to INTEGER,
                 "consumption" to INTEGER,
                 "productivity" to INTEGER,
                 "production" to INTEGER,
+                "production_cap" to INTEGER,
                 "machine_state" to REAL)
 
-        db.createTable("laborExchange", false,
+        db.createTable("laborExchange", true,
                 "name" to TEXT,
                 "age" to INTEGER,
                 "spec" to TEXT,
@@ -37,27 +40,33 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
                 "nationality" to TEXT,
                 "salary" to INTEGER)
 
-        db.createTable("buy", false,
+        db.createTable("buy", true,
                 "name" to TEXT,
                 "id" to INTEGER,
                 "price" to INTEGER)
 
-        db.createTable(Inventory.getInventory().name, false,
-                "index" to INTEGER,
+        db.createTable(Inventory.getInventory().name, true,
+                "num" to INTEGER,
                 "id" to INTEGER,
                 "stackSize" to INTEGER,
                 "maxStackSize" to INTEGER)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        Log.d("MAIN", "Dropped!")
         db.dropTable("Factories", true)
+        db.dropTable("laborExchange", true)
+        db.dropTable("buy", true)
         db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
 
+    val Context.database: DatabaseFactory
+        get() = DatabaseFactory.getInstance(applicationContext)
+
     // To manage factory DB
 
-    fun addFactoryWithProperties(id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx : Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
                     "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
@@ -119,11 +128,11 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
 
     // For managing inventories
 
-    fun addInventory(inv : Inventory) {
+    fun addInventory(ctx : Context, inv : Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()) {
+            for (i in 0..(inv.getInventorySize() - 1)) {
                 val slot = inv.getInventorySlotContents(i)
-                insert(inv.name, "index" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
+                insert(inv.name, "num" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
             }
         }
     }
@@ -161,6 +170,9 @@ class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "Product
             }
             while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
+            for (i in 0..(slots.size - 1))
+                inv.setInventorySlotContents(i, slots.get(i))
+
             cursor.close()
         }
         db.close()
