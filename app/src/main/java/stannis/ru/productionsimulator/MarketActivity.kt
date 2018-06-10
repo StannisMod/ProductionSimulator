@@ -10,6 +10,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_market.*
 import stannis.ru.productionsimulator.Models.Staff
 import kotlinx.android.synthetic.main.stats_panel.*
+import stannis.ru.productionsimulator.Models.DatabaseFactory
 
 class MarketActivity : AppCompatActivity() {
 
@@ -54,12 +55,12 @@ class MarketActivity : AppCompatActivity() {
         listview2.adapter = adapter2
 
         var listview3 : ListView = findViewById(R.id.tvTab3)
-        val dataArray3 = arrayOf( Staff("Михалыч", 34, "Токарь", 10,"Russian", 1200, Pair("01", "02")), Staff("Михалыч", 34, "Токарь", 10,"Russian", 1200, Pair("01", "02")), Staff("Михалыч", 34, "Токарь", 10,"Russian", 1200, Pair("01", "02")))
+        val dataArray3 = DatabaseFactory.getInstance(this).getListOfLaborExchange()
         val adapter3 = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray3)
 
         listview3.adapter = adapter3
         listview3.setOnItemClickListener { adapterView, view, i, l ->
-            val extra = "${dataArray3[i].toDetailedString()}.MarketWorker.$i"
+            val extra = "${dataArray3[i].name}.MarketWorker.$i"
             val intent = Intent(this, WorkerActivity::class.java)
             intent.putExtra("TAG", extra)
             startActivity(intent)
