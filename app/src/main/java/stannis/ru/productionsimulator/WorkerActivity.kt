@@ -51,7 +51,8 @@ class WorkerActivity : AppCompatActivity() {
                         if (tmp != null) {
                             tmp.getPromotion()
                             print(tmp.salary.toString())
-                            salary.text = tmp.salary.toString()
+                            salary.text = "${tmp.salary} $"
+
                             DatabaseFactory.getInstance(this).setStaffWithProperties(tmp)
 
 
@@ -77,7 +78,7 @@ class WorkerActivity : AppCompatActivity() {
                 age.text = worker.age.toString()
                 prof.text = worker.prof
                 nation.text = worker.nation
-                salary.text = worker.salary.toString()
+                salary.text = "${worker.salary} $"
                 birth.text = "${worker.birth.first}.${worker.birth.second}"
             }
 

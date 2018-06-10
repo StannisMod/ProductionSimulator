@@ -11,6 +11,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     companion object {
         private var instance: DatabaseFactory? = null
+
         @Synchronized
         fun getInstance(ctx: Context): DatabaseFactory {
             if (instance == null) {
@@ -18,12 +19,13 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
             }
             return instance!!
         }
+
     }
     var added  = false
 
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.createTable("Factories", false,
+        db.createTable("Factories", true,
                 "id" to INTEGER,
                 "type" to INTEGER,
                 "res" to INTEGER,
@@ -32,7 +34,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "production" to INTEGER,
                 "machine_state" to REAL)
 
-        db.createTable("laborExchange", false,
+        db.createTable("laborExchange", true,
                 "name" to TEXT,
                 "age" to INTEGER,
                 "spec" to TEXT,
@@ -42,7 +44,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "dayOfBirth" to TEXT,
                 "monthOfBirth" to TEXT)
 
-        db.createTable("staff", false,
+        db.createTable("staff", true,
                 "name" to TEXT,
                 "age" to INTEGER,
                 "spec" to TEXT,
@@ -52,12 +54,12 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "dayOfBirth" to TEXT,
                 "monthOfBirth" to TEXT)
 
-        db.createTable("buy", false,
+        db.createTable("buy", true,
                 "name" to TEXT,
                 "id" to INTEGER,
                 "price" to INTEGER)
 
-//        db.createTable(Inventory.getInventory().name, false,
+//        db.createTable(Inventory.getInventory().name, true,
 //                "index" to INTEGER,
 //                "id" to INTEGER,
 //                "stackSize" to INTEGER,
@@ -86,158 +88,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
         }
     }
-
-    fun addLaborExchangeWithProperties( name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
-        getInstance(ctx).use {
-            insert("laborExchange",
-                     "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
-                    "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
-        }
-    }
-
-    fun getListOfLaborExchange(): List<Staff> {
-        val query = "SELECT * FROM laborExchange"
-        val db = this.writableDatabase
-
-        val cursor = db.rawQuery(query, null)
-        var list: ArrayList<Staff> = ArrayList()
-        if (cursor.moveToFirst()) {
-            do {
-                var i = 0;
-                val name = cursor.getString(i)
-                i++
-                val age = Integer.parseInt(cursor.getString(i))
-                i++
-                val spec = cursor.getString(i)
-                i++
-                val quality = Integer.parseInt(cursor.getString(i))
-                i++
-                val nationality = cursor.getString(i)
-                i++
-                val salary = Integer.parseInt(cursor.getString(i))
-                i++
-                val dayOfBirth = cursor.getString(i)
-                i++
-                val monthOfBirth = cursor.getString(i)
-                i++
-                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
-            } while (cursor.moveToNext())
-            cursor.close()
-        }
-        db.close()
-        return list
-    }
-
-    fun getWorkerFromLabor(name : String): Staff? {
-        val query = "SELECT * FROM laborExchange WHERE name = \"$name\""
-        val db = this.writableDatabase
-        var worker: Staff? = null
-        val cursor = db.rawQuery(query, null)
-        if (cursor.moveToFirst()) {
-            cursor.moveToFirst()
-            var i = 0
-            val name = cursor.getString(i)
-            i++
-            val age = Integer.parseInt(cursor.getString(i))
-            i++
-            val spec = cursor.getString(i)
-            i++
-            val quality = Integer.parseInt(cursor.getString(i))
-            i++
-            val nationality = cursor.getString(i)
-            i++
-            val salary = Integer.parseInt(cursor.getString(i))
-            i++
-            val dayOfBirth = cursor.getString(i)
-            i++
-            val monthOfBirth = cursor.getString(i)
-            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
-            cursor.close()
-        }
-        db.close()
-        return worker
-    }
-    fun addStaffWithProperties( name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
-        getInstance(ctx).use {
-            insert("staff",
-                    "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
-                    "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
-        }
-    }
-    fun addStaffWithProperties( staff:Staff) {
-        addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
-    }
-
-    fun getListOfStaff(): List<Staff> {
-        val query = "SELECT * FROM staff"
-        val db = this.writableDatabase
-
-        val cursor = db.rawQuery(query, null)
-        var list: ArrayList<Staff> = ArrayList()
-        if (cursor.moveToFirst()) {
-            do {
-                var i = 0
-                val name = cursor.getString(i)
-                i++
-                val age = Integer.parseInt(cursor.getString(i))
-                i++
-                val spec = cursor.getString(i)
-                i++
-                val quality = Integer.parseInt(cursor.getString(i))
-                i++
-                val nationality = cursor.getString(i)
-                i++
-                val salary = Integer.parseInt(cursor.getString(i))
-                i++
-                val dayOfBirth = cursor.getString(i)
-                i++
-                val monthOfBirth = cursor.getString(i)
-                i++
-                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
-            } while (cursor.moveToNext())
-            cursor.close()
-        }
-        db.close()
-        return list
-    }
-
-    fun getWorkerFromStaff(name:String): Staff? {
-        val query = "SELECT * FROM staff WHERE name = \"$name\""
-        val db = this.writableDatabase
-        var worker: Staff? = null
-        val cursor = db.rawQuery(query, null)
-        if (cursor.moveToFirst()) {
-            cursor.moveToFirst()
-            var i = 0
-            val name = cursor.getString(i)
-            i++
-            val age = Integer.parseInt(cursor.getString(i))
-            i++
-            val spec = cursor.getString(i)
-            i++
-            val quality = Integer.parseInt(cursor.getString(i))
-            i++
-            val nationality = cursor.getString(i)
-            i++
-            val salary = Integer.parseInt(cursor.getString(i))
-            i++
-            val dayOfBirth = cursor.getString(i)
-            i++
-            val monthOfBirth = cursor.getString(i)
-            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
-            cursor.close()
-        }
-        db.close()
-        return worker
-    }
-    fun removeStaff(name: String): Int {
-        var result: Int = 0
-        getInstance(ctx).use {
-            result = delete("staff", "name = {name}", "name" to name)
-        }
-        return result
-    }
-
 
     fun getFactory(id: Int): Factory? {
         var type: Int = 0
@@ -274,7 +124,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
         return factory
     }
-
     fun setFactoryProperties( id:Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int) {
         getInstance(ctx).use {
             update("Factories", "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
@@ -290,33 +139,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
         return result
     }
-
-    fun setLaborExchangeWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
-        getInstance(ctx).use {
-            update("laborExchange",  "age" to age, "spec" to spec, "quality" to quality,
-                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
-                    .whereArgs("name = {name}", "name" to name).exec()
-        }
-    }
-    fun setStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
-        getInstance(ctx).use {
-            update("staff",  "age" to age, "spec" to spec, "quality" to quality,
-                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
-                    .whereArgs("name = {name}", "name" to name).exec()
-        }
-    }
-    fun setStaffWithProperties(staff:Staff) {
-        setStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
-    }
-
-    fun removeLaborExchange(name: String): Int {
-        var result: Int = 0
-        getInstance(ctx).use {
-            result = delete("laborExchange", "name = {name}", "name" to name)
-        }
-        return result
-    }
-    // For managing inventories
 
     fun addInventory(inv: Inventory) {
         getInstance(ctx).use {
@@ -371,4 +193,187 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable(name, true)
         db.close()
     }
+
+    fun addLaborExchangeWithProperties( name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            insert("laborExchange",
+                    "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
+                    "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+        }
+    }
+
+    fun addLaborExchangeWithProperties(staff: Staff){
+        addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second )
+    }
+    fun getListOfLaborExchange(): List<Staff> {
+        val query = "SELECT * FROM laborExchange"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Staff> = ArrayList()
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 0;
+                val name = cursor.getString(i)
+                i++
+                val age = Integer.parseInt(cursor.getString(i))
+                i++
+                val spec = cursor.getString(i)
+                i++
+                val quality = Integer.parseInt(cursor.getString(i))
+                i++
+                val nationality = cursor.getString(i)
+                i++
+                val salary = Integer.parseInt(cursor.getString(i))
+                i++
+                val dayOfBirth = cursor.getString(i)
+                i++
+                val monthOfBirth = cursor.getString(i)
+                i++
+                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
+    }
+    fun getWorkerFromLabor(name : String): Staff? {
+        val query = "SELECT * FROM laborExchange WHERE name = \"$name\""
+        val db = this.writableDatabase
+        var worker: Staff? = null
+        val cursor = db.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 0
+            val name = cursor.getString(i)
+            i++
+            val age = Integer.parseInt(cursor.getString(i))
+            i++
+            val spec = cursor.getString(i)
+            i++
+            val quality = Integer.parseInt(cursor.getString(i))
+            i++
+            val nationality = cursor.getString(i)
+            i++
+            val salary = Integer.parseInt(cursor.getString(i))
+            i++
+            val dayOfBirth = cursor.getString(i)
+            i++
+            val monthOfBirth = cursor.getString(i)
+            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
+            cursor.close()
+        }
+        db.close()
+        return worker
+    }
+
+    fun addStaffWithProperties( name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            insert("staff",
+                    "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
+                    "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+        }
+    }
+
+    fun addStaffWithProperties( staff:Staff) {
+        addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
+    }
+    fun getListOfStaff(): List<Staff> {
+        val query = "SELECT * FROM staff"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Staff> = ArrayList()
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 0
+                val name = cursor.getString(i)
+                i++
+                val age = Integer.parseInt(cursor.getString(i))
+                i++
+                val spec = cursor.getString(i)
+                i++
+                val quality = Integer.parseInt(cursor.getString(i))
+                i++
+                val nationality = cursor.getString(i)
+                i++
+                val salary = Integer.parseInt(cursor.getString(i))
+                i++
+                val dayOfBirth = cursor.getString(i)
+                i++
+                val monthOfBirth = cursor.getString(i)
+                i++
+                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
+    }
+
+
+    fun getWorkerFromStaff(name:String): Staff? {
+        val query = "SELECT * FROM staff WHERE name = \"$name\""
+        val db = this.writableDatabase
+        var worker: Staff? = null
+        val cursor = db.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 0
+            val name = cursor.getString(i)
+            i++
+            val age = Integer.parseInt(cursor.getString(i))
+            i++
+            val spec = cursor.getString(i)
+            i++
+            val quality = Integer.parseInt(cursor.getString(i))
+            i++
+            val nationality = cursor.getString(i)
+            i++
+            val salary = Integer.parseInt(cursor.getString(i))
+            i++
+            val dayOfBirth = cursor.getString(i)
+            i++
+            val monthOfBirth = cursor.getString(i)
+            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
+            cursor.close()
+        }
+        db.close()
+        return worker
+    }
+
+    fun removeStaff(name: String): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("staff", "name = {name}", "name" to name)
+        }
+        return result
+    }
+    fun setLaborExchangeWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            update("laborExchange",  "age" to age, "spec" to spec, "quality" to quality,
+                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+                    .whereArgs("name = {name}", "name" to name).exec()
+        }
+    }
+    fun setStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            update("staff",  "age" to age, "spec" to spec, "quality" to quality,
+                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+                    .whereArgs("name = {name}", "name" to name).exec()
+        }
+    }
+
+    fun setStaffWithProperties(staff:Staff) {
+        setStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
+    }
+    fun removeLaborExchange(name: String): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("laborExchange", "name = {name}", "name" to name)
+        }
+        return result
+    }
+
+    // For managing inventories
 }

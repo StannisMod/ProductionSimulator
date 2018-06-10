@@ -21,21 +21,11 @@ class MainActivity : AppCompatActivity() {
             DatabaseFactory.getInstance(this).removeLaborExchange("Вася")
             DatabaseFactory.getInstance(this).removeLaborExchange("Петя")
 
-            DatabaseFactory.getInstance(this).removeStaff("Вася")
-            DatabaseFactory.getInstance(this).removeStaff("Леха")
-            DatabaseFactory.getInstance(this).removeStaff("Петя")
-            DatabaseFactory.getInstance(this).removeStaff("ksm")
-
-
 
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties( "Леха", 30, "Токарь", 10, "русский", 1200, "01", "01")
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties( "Вася", 30, "Слесарь", 10, "русский", 1200, "01", "02")
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties( "Петя", 30, "Дровосек", 10, "русский", 1200, "01", "03")
 
-//            var staff:Staff = Staff("ksm", 12, "wer", 10, "russ", 1200,Pair("01", "01"))
-//            DatabaseFactory.getInstance(this).addStaffWithProperties(staff)
-//            //staff.salary = 2782
-           // DatabaseFactory.getInstance(this).setStaffWithProperties(staff)
             DatabaseFactory.getInstance(this).added = true
         }
         mail.setOnClickListener {
