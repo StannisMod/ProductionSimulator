@@ -7,6 +7,7 @@ import android.provider.ContactsContract
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.stats_panel.*
+import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.Models.Factory
 import stannis.ru.productionsimulator.Models.Staff
@@ -20,7 +21,6 @@ class MainActivity : AppCompatActivity() {
             DatabaseFactory.getInstance(this).removeLaborExchange("Леха")
             DatabaseFactory.getInstance(this).removeLaborExchange("Вася")
             DatabaseFactory.getInstance(this).removeLaborExchange("Петя")
-
 
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties( "Леха", 30, "Токарь", 10, "русский", 1200, "01", "01")
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties( "Вася", 30, "Слесарь", 10, "русский", 1200, "01", "02")

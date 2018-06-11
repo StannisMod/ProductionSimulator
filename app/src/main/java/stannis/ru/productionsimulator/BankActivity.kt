@@ -4,8 +4,11 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_bank.*
 import kotlinx.android.synthetic.main.stats_panel.*
+import stannis.ru.productionsimulator.Models.Credit_Deposit
+import stannis.ru.productionsimulator.Models.DatabaseFactory
 import java.util.*
 
 class BankActivity : AppCompatActivity() {
@@ -29,21 +32,12 @@ class BankActivity : AppCompatActivity() {
             intent1.putExtra("Type", "deposit")
             startActivity(intent1)
         }
-        val dataArray = Array(5) { i -> i.toString() }
-        for (i in 0..4) {
-            val kek = (Random().nextInt(10)) % 2
-            if (kek == 1) {
-                dataArray[i] = "Ваш кредит: ${0}, под ${0}%."
-            }else{                                                              //Забарать данные из класса пользователя
-                dataArray[i] = "Ваш депозит: ${0}, под ${0}%."
-
-            }
-        }
-        val adapter= ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray)
+        val dataArray = DatabaseFactory.getInstance(this).getListOfCreditDeposit()
+        val adapter= ArrayAdapter<Credit_Deposit>(this, android.R.layout.simple_list_item_1, dataArray)
         bankListView.adapter = adapter
         bankListView.setOnItemClickListener { adapterView, view, i, l ->
             val intent = Intent(this, ResetCredit_Deposit::class.java)
-            intent.putExtra("ID", i.toString())
+            intent.putExtra("infoAboutCreditDeposit", (view as TextView).text.toString() )
             startActivity(intent)
         }
     }

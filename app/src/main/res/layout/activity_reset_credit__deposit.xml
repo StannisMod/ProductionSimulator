@@ -32,6 +32,7 @@
             android:id="@+id/statics">
 
             <TextView
+                android:id="@+id/amountStatic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -39,21 +40,24 @@
                 android:textSize="18dp" />
 
             <TextView
+                android:id="@+id/percentStatic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ставка Вашего кредита:"
                 android:textSize="18dp" />
             <TextView
+                android:id="@+id/dataStatic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
                 android:text="Дата взятия кредита:"
                 android:textSize="18dp"/>
             <TextView
+                android:id="@+id/amountTakeGet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:text="Сумма погашения:"
+                android:text="Сколько Вы хотите внести:"
                 android:textSize="18dp"/>
         </LinearLayout>
         <LinearLayout
@@ -64,6 +68,7 @@
             android:layout_toRightOf="@id/statics"
             android:layout_marginLeft="15dp">
             <TextView
+                android:id="@+id/amountT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -71,11 +76,13 @@
                 android:textSize="18dp" />
 
             <TextView
+                android:id="@+id/percentT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.5%"
                 android:textSize="18dp" />
             <TextView
+                android:id="@+id/dateT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="08.06.2018"
@@ -83,9 +90,10 @@
                 android:textSize="18dp"
                 />
             <EditText
-                android:id="@+id/creditAmount"
+                android:id="@+id/resetAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLength="9"
                 android:hint="1000"
                 android:inputType="number"
                 />

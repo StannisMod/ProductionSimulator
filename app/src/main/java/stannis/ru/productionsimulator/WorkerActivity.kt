@@ -50,7 +50,6 @@ class WorkerActivity : AppCompatActivity() {
                         val tmp: Staff? = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
                         if (tmp != null) {
                             tmp.getPromotion()
-                            print(tmp.salary.toString())
                             salary.text = "${tmp.salary} $"
 
                             DatabaseFactory.getInstance(this).setStaffWithProperties(tmp)
