@@ -390,5 +390,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
+    fun addMessageWithProperties(hash: Int, caption : String, text : String, sender : String, date : Array<String>) {
+        getInstance(ctx).use {
+            insert("Factories",
+                    "hash" to hash, "text" to text, "sender" to sender, "date" to date, "caption" to caption)
+        }
+    }
     // For managing inventories
 }
