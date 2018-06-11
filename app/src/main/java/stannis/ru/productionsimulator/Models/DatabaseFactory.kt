@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.IntegerRes
 import android.util.Log
 import org.jetbrains.anko.db.*
+import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 7) {
@@ -70,7 +71,10 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "caption" to TEXT,
                 "sender" to TEXT,
                 "text" to TEXT,
-                "date" to TEXT)
+                "day" to TEXT,
+                "month" to TEXT,
+                "year" to TEXT
+                )
 
 //        db.createTable(Inventory.getInventory().name, true,
 //                "index" to INTEGER,
