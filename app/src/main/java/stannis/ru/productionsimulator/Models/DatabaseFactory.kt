@@ -7,7 +7,7 @@ import android.util.Log
 import org.jetbrains.anko.db.*
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 6) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 7) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -58,6 +58,19 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "name" to TEXT,
                 "id" to INTEGER,
                 "price" to INTEGER)
+        db.createTable("creditDeposit", true,
+                "type" to INTEGER,
+                "amount" to INTEGER,
+                "percent" to REAL,
+                "dayOfStart" to TEXT,
+                "monthOfStart" to TEXT
+                )
+        db.createTable("message", true,
+                "hash" to INTEGER,
+                "caption" to TEXT,
+                "sender" to TEXT,
+                "text" to TEXT,
+                "date" to TEXT)
 
 //        db.createTable(Inventory.getInventory().name, true,
 //                "index" to INTEGER,
@@ -73,6 +86,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("laborExchange", true)
         db.dropTable("staff", true)
         db.dropTable("buy", true)
+        db.dropTable("creditDeposit", true)
+        db.dropTable("message", true)
         //db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
