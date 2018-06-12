@@ -27,6 +27,10 @@ class MainActivity : AppCompatActivity() {
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties( "Петя", 30, "Дровосек", 10, "русский", 1200, "01", "03")
 
             DatabaseFactory.getInstance(this).added = true
+
+            DatabaseFactory.getInstance(this).getMessage()
+            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(caption = "Вы выграли приз!", sender = "Лото 'ТОТО'", text = "Здравствуйте.\nВаша лесопилка попала в список предприятий, владельцы которых претендуют на новую печку. Для того чтобы получить печку, вам надо взять кредит на сумму 10$. Чтобы мы были уверены в вашей финансовой состоятельности и не оказалось, что вы просто жулик\nС уважением комиссия лото 'ТОТО'", date = arrayOf("12", "06", "2018")))
+            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "ANONYMOUS", caption = "Твой брат у нас!", text = "Если хочешь увидеть своего брата живым, то положи на свой счет 1000000$ и передай нам номер этого счета. Номер счета напиши на бумажке положи в холодильник на складе и чтобы все покинули лесопилку до 31 июня! Всех кто завтра будет на лесопилке. Убьём!!!", date = arrayOf("30", "06", "2018")))
         }
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
