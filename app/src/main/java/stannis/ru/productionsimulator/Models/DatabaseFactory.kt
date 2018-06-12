@@ -9,7 +9,7 @@ import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 9) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -92,11 +92,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "tookDepositToday" to INTEGER
         )
 
-//        db.createTable(Inventory.getInventory().name, true,
-//                "index" to INTEGER,
-//                "id" to INTEGER,
-//                "stackSize" to INTEGER,
-//                "maxStackSize" to INTEGER)
+        db.createTable(Inventory.getInventory().name, true,
+                "index" to INTEGER,
+                "id" to INTEGER,
+                "stackSize" to INTEGER,
+                "maxStackSize" to INTEGER)
     }
 
 
@@ -110,7 +110,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("message", true)
         db.dropTable("PlayerStats", true)
 
-        //db.dropTable(Inventory.getInventory().name, true)
+        db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
 
