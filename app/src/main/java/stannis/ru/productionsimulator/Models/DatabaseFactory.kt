@@ -409,7 +409,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
         getInstance(ctx).use {
             insert("Messages",
-                    "hash" to message.hashCode(), "text" to message.text, "sender" to message.sender, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "caption" to message.caption)
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2])
         }
     }
 
@@ -433,17 +433,17 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 var i = 0
                 val hash = cursor.getString(i).toInt()
                 i++
-                val text = cursor.getString(i).toString()
+                val caption = cursor.getString(i).toString()
                 i++
                 val sender = cursor.getString(i).toString()
+                i++
+                val text = cursor.getString(i).toString()
                 i++
                 val day = cursor.getString(i).toString()
                 i++
                 val month = cursor.getString(i).toString()
                 i++
                 val year = cursor.getString(i).toString()
-                i++
-                val caption = cursor.getString(i).toString()
                 list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender))
             } while (cursor.moveToNext())
             cursor.close()
