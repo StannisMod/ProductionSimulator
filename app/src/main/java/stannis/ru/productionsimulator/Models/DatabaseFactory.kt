@@ -1,6 +1,7 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.IntegerRes
 import android.util.Log
@@ -8,7 +9,7 @@ import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 8) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 9) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -77,6 +78,19 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "month" to TEXT,
                 "year" to TEXT
         )
+        db.createTable("PlayerStats", true,
+                "money" to INTEGER,//Весь Integer
+                "stuff" to INTEGER,//>=0
+                "staff" to INTEGER,//>=0
+                "reputation" to INTEGER)//-100<= =>100
+        db.createTable("DataTime", true,
+                "currentDay" to TEXT,
+                "currentMonth" to TEXT,
+                "currentYear" to TEXT,
+                "currentTime" to INTEGER,
+                "tookCreditToday" to INTEGER,
+                "tookDepositToday" to INTEGER
+        )
 
 //        db.createTable(Inventory.getInventory().name, true,
 //                "index" to INTEGER,
@@ -94,6 +108,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("buy", true)
         db.dropTable("creditDeposit", true)
         db.dropTable("message", true)
+        db.dropTable("PlayerStats", true)
+
         //db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
@@ -499,4 +515,47 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
         return result
     }
+
+    fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int) {
+        getInstance(ctx).use {
+            insert("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation)
+        }
+    }
+
+    fun getPlayerStats(): Player? {
+        val query = "SELECT*FROM PlayerStats"
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        var player: Player? = null
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 0
+            val money = cursor.getString(i).toInt()
+            i++
+            val stuff = cursor.getString(i).toInt()
+            i++
+            val staff = cursor.getString(i).toInt()
+            i++
+            val reputation = cursor.getString(i).toInt()
+            player = Player(money, stuff, staff, reputation)
+
+        }
+        return player
+    }
+    fun setPlayerWithProperties(money:Int, stuff: Int, staff: Int, reputation: Int){
+        getInstance(ctx).use {
+            update("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation).exec()
+        }
+    }
+    fun setPlayerWithProperties(player: Player){
+        setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation)
+    }
+    fun removePlayer():Int{
+        var res = 0
+        getInstance(ctx).use {
+            res = delete("PlayerStats")
+        }
+        return res
+    }
+
 }

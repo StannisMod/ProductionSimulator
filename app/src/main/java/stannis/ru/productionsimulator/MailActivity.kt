@@ -7,12 +7,14 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_message.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
+import stannis.ru.productionsimulator.Models.DatabaseFactory
 
 class MailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mail)
+
 
         var list : List<Message> = List(5){i -> Message()}
         list[1].sender = "Власть"

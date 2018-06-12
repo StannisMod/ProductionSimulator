@@ -18,6 +18,13 @@ class Credit_DepositActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credit__deposit)
+        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        if (player != null) {
+            money.text = player.money.toString()
+            res.text = player.stuff.toString()
+            staff.text = player.staff.toString()
+            rep.progress = player.reputation
+        }
 
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -50,19 +57,34 @@ class Credit_DepositActivity : AppCompatActivity() {
 
             }
             confirmCredit.setOnClickListener {
-                val type = if (isCredit) 2 else 1
-                DatabaseFactory.getInstance(this).addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), "01", "02", "2018")
-                val mes = if (isCredit) "Кредит взят" else "Депозит открыт"
-                Toast.makeText(this, mes, Toast.LENGTH_SHORT)
-                val intent = Intent(this, BankActivity::class.java)
-                startActivity(intent)
+                if ( player != null) {
+                    if (!isCredit&&inputAmountOfCredit.text.toString().toInt() > player.money) {
+                        Toast.makeText(this, "Вы не вложите вложить больше денег, чем у вас сейчас есть", Toast.LENGTH_SHORT).show()
+                    } else {
+                        if(!isCredit) {
+                            player.money -= inputAmountOfCredit.text.toString().toInt()
+                        }else{
+                            player.money+=inputAmountOfCredit.text.toString().toInt()
+                        }
+                        DatabaseFactory.getInstance(this).setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation)
+
+
+                        val type = if (isCredit) 2 else 1
+                        DatabaseFactory.getInstance(this).addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), "01", "02", "2018")
+                        val mes = if (isCredit) "Кредит взят" else "Депозит открыт"
+                        Toast.makeText(this, mes, Toast.LENGTH_SHORT)
+
+                        val intent = Intent(this, BankActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
             }
         }
 
 
     }
 
-    fun round(a: Double, radix: Int):Double {
+    fun round(a: Double, radix: Int): Double {
         var b = a
         b *= Math.pow(10.0, radix.toDouble())
         b = b.roundToInt().toDouble()
