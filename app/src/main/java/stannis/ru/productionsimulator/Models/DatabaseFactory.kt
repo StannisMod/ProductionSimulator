@@ -404,11 +404,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    fun addMessageWithProperties(hash: Int, caption: String, text: String, sender: String, day: Int, month: Int, year: Int) {
+    fun addMessageWithProperties(hash: Int, caption: String, text: String, sender: String, date: Array<String>) {
 
         getInstance(ctx).use {
             insert("Messages",
-                    "hash" to hash, "text" to text, "sender" to sender, "day" to day, "caption" to caption, "month" to month)
+                    "hash" to hash, "text" to text, "sender" to sender, "day" to date[0],"month" to date[1], "year" to date[2], "caption" to caption)
         }
     }
 
