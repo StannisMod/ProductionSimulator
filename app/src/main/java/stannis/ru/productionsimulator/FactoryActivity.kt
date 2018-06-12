@@ -61,7 +61,6 @@ class FactoryActivity : AppCompatActivity() {
                 if (item == null)
                     while (factory.production > 0 && item.stackSize < inventory.getInventoryStackLimit())
                         Inventory.transferItem(factory.production, item, slotIndex, 1)   // transfer 1 item from item to factory.res
-
               */
         }
     }
