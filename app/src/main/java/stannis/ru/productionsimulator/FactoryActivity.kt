@@ -30,10 +30,8 @@ class FactoryActivity : AppCompatActivity() {
 
         // val factory = Factory.getFactoryById(intent.getIntExtra("TAG", 0))
 
-        factory_name.text = EnumFactory.SAWMILL.getName()
-
         val factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 1, 5,  10.0)
-        val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
+        val data = arrayOf("Сырьё: ${factory.res}/${factory.res.getInventoryStackLimit()}",
                 "Потребление сырья: ${factory.consumption}/сек",
                 "Выпуск продукции: ${factory.productivity}/сек",
                 "Продукция: ${factory.production}/${factory.production_cap}",
@@ -42,15 +40,12 @@ class FactoryActivity : AppCompatActivity() {
         stats.adapter = adapter
 
         fillRes.setOnClickListener {
-            var i : Int = 0
             val inv = Inventory.getInventory()
-            while (i in 0..(inv.getInventorySize() - 1)) {
+            for (i in 0..inv.getInventorySize()) {
                 var item = inv.getInventorySlotContents(i)
-                if (item.getType() == factory.type.getResType()) {
+                if (item.getType() == factory.type.getResType())
                     while (!factory.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0)
                         Inventory.transferItem(inv, factory.res, i, 1)   // transfer 1 item from item to factory.res
-                    i = inv.getInventorySize()
-                }
             }
         }
 

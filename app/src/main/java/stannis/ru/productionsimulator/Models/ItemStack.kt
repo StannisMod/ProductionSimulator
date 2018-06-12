@@ -9,6 +9,4 @@ class ItemStack(val itemId : Int, var stackSize : Int, val maxStackSize : Int) {
     fun duplicate() : ItemStack = ItemStack(itemId, stackSize, maxStackSize)
 
     fun isEmpty() : Boolean = stackSize == 0
-
-    override fun toString() : String = "ItemStack[ID: $itemId, SIZE: $stackSize, MAX: $maxStackSize]"
 }

@@ -71,7 +71,7 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
     fun save(ctx : Context) {
         if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null)
-            DatabaseFactory.getInstance(ctx).addInventory(ctx, this)
+            DatabaseFactory.getInstance(ctx).addInventory(this)
         else
             DatabaseFactory.getInstance(ctx).updateInventory(this)
     }
