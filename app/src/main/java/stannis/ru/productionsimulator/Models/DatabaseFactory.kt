@@ -409,7 +409,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
         getInstance(ctx).use {
             insert("Messages",
-                    "hash" to message.hash(), "text" to message.text, "sender" to message.sender, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "caption" to message.caption)
+                    "hash" to message.hashCode(), "text" to message.text, "sender" to message.sender, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "caption" to message.caption)
         }
     }
 

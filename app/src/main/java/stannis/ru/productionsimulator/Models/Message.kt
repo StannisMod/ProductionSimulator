@@ -13,7 +13,7 @@ class Message(var caption : String = "Отдайте деньги!", var text : 
         return arrayOf(caption, text, sender, "${date[0]}.${date[1]}.${date[2]}")
     }
 
-    fun hash():Int?{
-        return null
+    override fun hashCode():Int{
+        return text.hashCode()
     }
 }
