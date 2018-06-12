@@ -1,8 +1,8 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import android.support.annotation.IntegerRes
 import android.util.Log
 import org.jetbrains.anko.db.*
@@ -32,9 +32,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "id" to INTEGER,
                 "type" to INTEGER,
                 "res" to INTEGER,
+                "res_cap" to INTEGER,
                 "consumption" to INTEGER,
                 "productivity" to INTEGER,
                 "production" to INTEGER,
+                "production_cap" to INTEGER,
                 "machine_state" to REAL)
 
         db.createTable("laborExchange", true,
@@ -93,7 +95,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         )
 
         db.createTable(Inventory.getInventory().name, true,
-                "index" to INTEGER,
+                "num" to INTEGER,
                 "id" to INTEGER,
                 "stackSize" to INTEGER,
                 "maxStackSize" to INTEGER)
@@ -116,9 +118,10 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     val Context.database: DatabaseFactory
         get() = DatabaseFactory.getInstance(applicationContext)
+
     // To manage factory DB
 
-    fun addFactoryWithProperties(id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx : Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
                     "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
@@ -171,7 +174,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     }
 
     fun removeFactory(id: Int): Int {
-        var result: Int = 0
+        var result : Int = 0
         getInstance(ctx).use {
             result = delete("Factories", "id = {id}", "id" to id)
         }
@@ -187,7 +190,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun updateInventory(inv: Inventory) {
+    fun updateInventory(inv : Inventory) {
         getInstance(ctx).use {
             for (i in 0..inv.getInventorySize()) {
                 val slot = inv.getInventorySlotContents(i)
@@ -196,13 +199,13 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun getInventory(name: String): Inventory? {
+    fun getInventory(name : String) : Inventory? {
         // var index : Int
-        var id: Int
-        var stackSize: Int
-        var maxStackSize: Int
+        var id : Int
+        var stackSize : Int
+        var maxStackSize : Int
 
-        var inv: Inventory? = null
+        var inv : Inventory? = null
         val slots = ArrayList<ItemStack>()
 
         val query = "SELECT * FROM \"$name\""
@@ -219,6 +222,9 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 slots.add(ItemStack(id, stackSize, maxStackSize))
             } while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
+            for (i in 0..(slots.size - 1))
+                inv.setInventorySlotContents(i, slots.get(i))
+
             cursor.close()
         }
         db.close()
