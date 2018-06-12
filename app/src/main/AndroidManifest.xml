@@ -39,6 +39,10 @@
             android:name=".FactoryActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".InventoryActivity"></activity>
+        <activity
+            android:name=".FactoryActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".ResetCredit_Deposit" android:parentActivityName=".BankActivity"></activity>
     </application>
 
 </manifest>
