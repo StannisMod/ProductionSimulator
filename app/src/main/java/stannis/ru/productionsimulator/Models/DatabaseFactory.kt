@@ -7,7 +7,6 @@ import android.support.annotation.IntegerRes
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
-import stannis.ru.productionsimulator.Models.DatabaseFactory.Companion.getInstance
 
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
 
