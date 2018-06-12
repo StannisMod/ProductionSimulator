@@ -6,7 +6,7 @@ import android.util.Log
 import org.jetbrains.anko.db.*
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 5) {
+class DatabaseFactory(val ctx : Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
 
     companion object {
         private var instance: DatabaseFactory? = null
