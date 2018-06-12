@@ -9,6 +9,7 @@ import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.*
+import stannis.ru.productionsimulator.R.id.debug
 
 class MainActivity : AppCompatActivity() {
 
