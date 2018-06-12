@@ -4,10 +4,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import android.support.annotation.IntegerRes
-import android.util.Log
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
+import stannis.ru.productionsimulator.Models.DatabaseFactory.Companion.getInstance
 
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
 
@@ -181,11 +181,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    fun addInventory(inv: Inventory) {
+    fun addInventory(ctx : Context, inv : Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()) {
+            for (i in 0..(inv.getInventorySize() - 1)) {
                 val slot = inv.getInventorySlotContents(i)
-                insert(inv.name, "index" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
+                insert(inv.name, "num" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
             }
         }
     }
@@ -220,7 +220,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 maxStackSize = Integer.parseInt(cursor.getString(3))
 
                 slots.add(ItemStack(id, stackSize, maxStackSize))
-            } while (cursor.moveToNext())
+            }
+            while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
             for (i in 0..(slots.size - 1))
                 inv.setInventorySlotContents(i, slots.get(i))
@@ -232,11 +233,12 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return inv
     }
 
-    fun removeInventory(name: String) {
+    fun removeInventory(name : String) {
         val db = this.writableDatabase
         db.dropTable(name, true)
         db.close()
     }
+
     //For managing inventory
 
     fun addLaborExchangeWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
