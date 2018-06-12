@@ -431,7 +431,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         if (cursor.moveToFirst()) {
             do {
                 var i = 0
-                val hash = cursor.getInt(i).toInt()
+                val hash = cursor.getString(i).toInt()
                 i++
                 val text = cursor.getString(i).toString()
                 i++
