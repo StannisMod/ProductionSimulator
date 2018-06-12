@@ -12,4 +12,8 @@ class Message(var caption : String = "Отдайте деньги!", var text : 
     fun toStringArray(): Array<String>{
         return arrayOf(caption, text, sender, "${date[0]}.${date[1]}.${date[2]}")
     }
+
+    fun hash():Int?{
+        return null
+    }
 }

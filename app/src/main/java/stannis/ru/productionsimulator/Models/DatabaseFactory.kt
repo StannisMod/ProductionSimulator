@@ -7,6 +7,7 @@ import android.util.Log
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
+import stannis.ru.productionsimulator.Message
 
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 8) {
 
@@ -404,11 +405,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    fun addMessageWithProperties(hash: Int, caption: String, text: String, sender: String, date: Array<String>) {
+    fun addMessageWithProperties(message : Message) {
 
         getInstance(ctx).use {
             insert("Messages",
-                    "hash" to hash, "text" to text, "sender" to sender, "day" to date[0],"month" to date[1], "year" to date[2], "caption" to caption)
+                    "hash" to message.hash(), "text" to message.text, "sender" to message.sender, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "caption" to message.caption)
         }
     }
 
