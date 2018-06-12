@@ -16,6 +16,13 @@ class WorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
+        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        if (player != null) {
+            money.text = player.money.toString()
+            res.text = player.stuff.toString()
+            staff.text = player.staff.toString()
+            rep.progress = player.reputation
+        }
 
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -33,15 +40,25 @@ class WorkerActivity : AppCompatActivity() {
 
                 hire_prom.setOnClickListener {
                     val tmp = DatabaseFactory.getInstance(this).getWorkerFromLabor(arr[0].trim())
-                    DatabaseFactory.getInstance(this).removeLaborExchange(arr[0].trim())
-                    if (tmp != null) {
-                        DatabaseFactory.getInstance(this).addStaffWithProperties(tmp)
-                        DatabaseFactory.getInstance(this).removeLaborExchange(tmp.name)
-                        Toast.makeText(this, "${tmp.name}, ты нанят", Toast.LENGTH_SHORT).show()
-                    }
-                    val intent = Intent(this, MarketActivity::class.java)
-                    startActivity(intent)
+                    if (player != null && tmp != null) {
+                        if (player.money < tmp.salary) {
+                            Toast.makeText(this, "У вас недостаточно средств", Toast.LENGTH_SHORT).show()
+                        } else {
+                            player.money -= tmp.salary
+                            player.staff++
+                            DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
 
+                            DatabaseFactory.getInstance(this).removeLaborExchange(arr[0].trim())
+
+                            DatabaseFactory.getInstance(this).addStaffWithProperties(tmp)
+                            DatabaseFactory.getInstance(this).removeLaborExchange(tmp.name)
+                            Toast.makeText(this, "${tmp.name}, ты нанят", Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this, MarketActivity::class.java)
+                            startActivity(intent)
+
+                        }
+                    }
                 }
             } else {
                 worker = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
@@ -50,7 +67,6 @@ class WorkerActivity : AppCompatActivity() {
                         val tmp: Staff? = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
                         if (tmp != null) {
                             tmp.getPromotion()
-                            print(tmp.salary.toString())
                             salary.text = "${tmp.salary} $"
 
                             DatabaseFactory.getInstance(this).setStaffWithProperties(tmp)
@@ -60,13 +76,22 @@ class WorkerActivity : AppCompatActivity() {
                     }
                     fire.setOnClickListener {
                         val tmp: Staff? = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
-                        if (tmp != null) {
-                            DatabaseFactory.getInstance(this).removeStaff(tmp.name)
-                            Toast.makeText(this, "${tmp.name}, ты уволен", Toast.LENGTH_SHORT).show()
+                        if (tmp != null && player != null) {
+                            if (tmp.salary > player.money) {
+                                Toast.makeText(this, "У вас недостаточно средств, необходимо выплатить компенсацию работнику", Toast.LENGTH_SHORT).show()
+                            } else {
+                                DatabaseFactory.getInstance(this).removeStaff(tmp.name)
 
-                            val intent = Intent(this, StaffActivity::class.java)
-                            startActivity(intent)
+                                player.staff--;
+                                player.money -= tmp.salary
+                                DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
 
+                                Toast.makeText(this, "${tmp.name}, ты уволен", Toast.LENGTH_SHORT).show()
+
+                                val intent = Intent(this, StaffActivity::class.java)
+                                startActivity(intent)
+
+                            }
                         }
                     }
                 }
@@ -82,8 +107,10 @@ class WorkerActivity : AppCompatActivity() {
                 birth.text = "${worker.birth.first}.${worker.birth.second}"
             }
 
+
         }
-
     }
-
 }
+
+
+

@@ -1,13 +1,15 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.IntegerRes
 import android.util.Log
 import org.jetbrains.anko.db.*
+import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 7) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -21,7 +23,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
 
     }
-    var added  = false
+
+    var added = false
 
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -63,21 +66,38 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "amount" to INTEGER,
                 "percent" to REAL,
                 "dayOfStart" to TEXT,
-                "monthOfStart" to TEXT
-                )
+                "monthOfStart" to TEXT,
+                "yearOfStart" to TEXT
+        )
         db.createTable("message", true,
                 "hash" to INTEGER,
                 "caption" to TEXT,
                 "sender" to TEXT,
                 "text" to TEXT,
-                "date" to TEXT)
+                "day" to TEXT,
+                "month" to TEXT,
+                "year" to TEXT
+        )
+        db.createTable("PlayerStats", true,
+                "money" to INTEGER,//Весь Integer
+                "stuff" to INTEGER,//>=0
+                "staff" to INTEGER,//>=0
+                "reputation" to INTEGER)//-100<= =>100
+        db.createTable("DataTime", true,
+                "currentDay" to TEXT,
+                "currentMonth" to TEXT,
+                "currentYear" to TEXT,
+                "currentTime" to INTEGER,
+                "tookCreditToday" to INTEGER,
+                "tookDepositToday" to INTEGER
+        )
 
-//        db.createTable(Inventory.getInventory().name, true,
-//                "index" to INTEGER,
-//                "id" to INTEGER,
-//                "stackSize" to INTEGER,
-//                "maxStackSize" to INTEGER)
- }
+        db.createTable(Inventory.getInventory().name, true,
+                "index" to INTEGER,
+                "id" to INTEGER,
+                "stackSize" to INTEGER,
+                "maxStackSize" to INTEGER)
+    }
 
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -88,7 +108,9 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("buy", true)
         db.dropTable("creditDeposit", true)
         db.dropTable("message", true)
-        //db.dropTable(Inventory.getInventory().name, true)
+        db.dropTable("PlayerStats", true)
+
+        db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
 
@@ -139,7 +161,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
         return factory
     }
-    fun setFactoryProperties( id:Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int) {
+
+    fun setFactoryProperties(id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int) {
         getInstance(ctx).use {
             update("Factories", "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap)
@@ -208,8 +231,9 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable(name, true)
         db.close()
     }
+    //For managing inventory
 
-    fun addLaborExchangeWithProperties( name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+    fun addLaborExchangeWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
         getInstance(ctx).use {
             insert("laborExchange",
                     "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
@@ -217,9 +241,10 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun addLaborExchangeWithProperties(staff: Staff){
-        addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second )
+    fun addLaborExchangeWithProperties(staff: Staff) {
+        addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
     }
+
     fun getListOfLaborExchange(): List<Staff> {
         val query = "SELECT * FROM laborExchange"
         val db = this.writableDatabase
@@ -252,7 +277,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.close()
         return list
     }
-    fun getWorkerFromLabor(name : String): Staff? {
+
+    fun getWorkerFromLabor(name: String): Staff? {
         val query = "SELECT * FROM laborExchange WHERE name = \"$name\""
         val db = this.writableDatabase
         var worker: Staff? = null
@@ -282,7 +308,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return worker
     }
 
-    fun addStaffWithProperties( name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+    fun addStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
         getInstance(ctx).use {
             insert("staff",
                     "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
@@ -290,9 +316,10 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun addStaffWithProperties( staff:Staff) {
+    fun addStaffWithProperties(staff: Staff) {
         addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
     }
+
     fun getListOfStaff(): List<Staff> {
         val query = "SELECT * FROM staff"
         val db = this.writableDatabase
@@ -327,7 +354,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     }
 
 
-    fun getWorkerFromStaff(name:String): Staff? {
+    fun getWorkerFromStaff(name: String): Staff? {
         val query = "SELECT * FROM staff WHERE name = \"$name\""
         val db = this.writableDatabase
         var worker: Staff? = null
@@ -364,24 +391,27 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
         return result
     }
+
     fun setLaborExchangeWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
         getInstance(ctx).use {
-            update("laborExchange",  "age" to age, "spec" to spec, "quality" to quality,
-                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
-                    .whereArgs("name = {name}", "name" to name).exec()
-        }
-    }
-    fun setStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
-        getInstance(ctx).use {
-            update("staff",  "age" to age, "spec" to spec, "quality" to quality,
+            update("laborExchange", "age" to age, "spec" to spec, "quality" to quality,
                     "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
                     .whereArgs("name = {name}", "name" to name).exec()
         }
     }
 
-    fun setStaffWithProperties(staff:Staff) {
+    fun setStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
+        getInstance(ctx).use {
+            update("staff", "age" to age, "spec" to spec, "quality" to quality,
+                    "nationality" to nationality, "salary" to salary, "dayOfBirth" to dayOfBirth, "monthOfBirth" to monthOfBirth)
+                    .whereArgs("name = {name}", "name" to name).exec()
+        }
+    }
+
+    fun setStaffWithProperties(staff: Staff) {
         setStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
     }
+
     fun removeLaborExchange(name: String): Int {
         var result: Int = 0
         getInstance(ctx).use {
@@ -390,5 +420,142 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    // For managing inventories
+    fun addMessageWithProperties(hash: Int, caption: String, text: String, sender: String, day: Int, month: Int, year: Int) {
+
+        getInstance(ctx).use {
+            insert("Messages",
+                    "hash" to hash, "text" to text, "sender" to sender, "day" to day, "caption" to caption, "month" to month)
+        }
+    }
+
+    fun addCrDepWithProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {
+        getInstance(ctx).use {
+            insert("creditDeposit",
+                    "type" to type, "amount" to amount, "percent" to percent, "dayOfStart" to dayOfStart, "monthOfStart" to monthOfStart,
+                    "yearOfStart" to yearOfStart)
+        }
+    }
+
+    fun getListOfCreditDeposit(): ArrayList<Credit_Deposit> {
+        val query = "SELECT * FROM creditDeposit"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Credit_Deposit> = ArrayList()
+
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 0
+                val type = cursor.getString(i).toInt()
+                i++
+                val amount = cursor.getString(i).toInt()
+                i++
+                val percent = cursor.getString(i).toDouble()
+                i++
+                val dayOfStart = cursor.getString(i)
+                i++
+                val monthOfStart = cursor.getString(i)
+                i++
+                val yearOfStart = cursor.getString(i)
+                i++
+                list.add(Credit_Deposit(amount, percent, arrayOf(dayOfStart, monthOfStart, yearOfStart), type))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
+    }
+
+    fun getCreditDeposit(type: Int, dayOfStart: String, monthOfStart: String, yearOfStart: String): Credit_Deposit? {
+
+        val query = "SELECT * FROM Factories WHERE (type = \"$type\" AND dayOfStart = \"$dayOfStart\" AND monthOfStart = \"$monthOfStart\" AND yearOfStart = \"$yearOfStart\")"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var creDep: Credit_Deposit? = null
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 0
+            val type = Integer.parseInt(cursor.getString(i))
+            i++
+            val amount = Integer.parseInt(cursor.getString(i))
+            i++
+            val percent = (cursor.getString(i)).toDouble()
+            i++
+            val dayOfStart = cursor.getString(i)
+            i++
+            val monthOfStart = cursor.getString(i)
+            i++
+            val yearOfStart = cursor.getString(i)
+
+
+            creDep = Credit_Deposit(amount, percent, arrayOf(dayOfStart, monthOfStart, yearOfStart), type)
+            cursor.close()
+        }
+        db.close()
+
+        return creDep
+    }
+
+    fun setCreditDepositProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {
+        getInstance(ctx).use {
+            update("creditDeposit", "amount" to amount, "percent" to percent)
+                    .whereArgs("(type = {type}) and (dayOfStart = {dayOfStart}) and (monthOfStart = {monthOfStart}) and (yearOfStart = {yearOfStart})", "type" to type, "dayOfStart" to dayOfStart, "monthOfStart" to monthOfStart, "yearOfStart" to yearOfStart).exec()
+        }
+    }
+
+    fun setCreditDepositProperties(crDep: Credit_Deposit) {
+        setCreditDepositProperties(crDep.type, crDep.amount, crDep.percent, crDep.date[0], crDep.date[1], crDep.date[2])
+    }
+
+    fun removeCreditDeposit(type: Int, dayOfStart: String, monthOfStart: String, yearOfStart: String): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("creditDeposit", "(type = {type}) and (dayOfStart = {dayOfStart}) and (monthOfStart = {monthOfStart}) and (yearOfStart = {yearOfStart})", "type" to type, "dayOfStart" to dayOfStart, "monthOfStart" to monthOfStart, "yearOfStart" to yearOfStart)
+        }
+        return result
+    }
+
+    fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int) {
+        getInstance(ctx).use {
+            insert("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation)
+        }
+    }
+
+    fun getPlayerStats(): Player? {
+        val query = "SELECT*FROM PlayerStats"
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        var player: Player? = null
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 0
+            val money = cursor.getString(i).toInt()
+            i++
+            val stuff = cursor.getString(i).toInt()
+            i++
+            val staff = cursor.getString(i).toInt()
+            i++
+            val reputation = cursor.getString(i).toInt()
+            player = Player(money, stuff, staff, reputation)
+
+        }
+        return player
+    }
+    fun setPlayerWithProperties(money:Int, stuff: Int, staff: Int, reputation: Int){
+        getInstance(ctx).use {
+            update("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation).exec()
+        }
+    }
+    fun setPlayerWithProperties(player: Player){
+        setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation)
+    }
+    fun removePlayer():Int{
+        var res = 0
+        getInstance(ctx).use {
+            res = delete("PlayerStats")
+        }
+        return res
+    }
+
 }

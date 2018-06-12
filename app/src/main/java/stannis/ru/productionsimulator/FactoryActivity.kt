@@ -15,6 +15,13 @@ class FactoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_factory)
+        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        if (player != null) {
+            money.text = player.money.toString()
+            res.text = player.stuff.toString()
+            staff.text = player.staff.toString()
+            rep.progress = player.reputation
+        }
 
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
