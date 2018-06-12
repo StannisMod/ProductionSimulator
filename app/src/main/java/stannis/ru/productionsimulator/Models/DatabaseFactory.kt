@@ -421,6 +421,37 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
+    fun getMessage(): ArrayList<Message> {
+        val query = "SELECT * FROM message"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Message> = ArrayList()
+
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 0
+                val hash = cursor.getInt(i).toInt()
+                i++
+                val text = cursor.getString(i).toString()
+                i++
+                val sender = cursor.getString(i).toString()
+                i++
+                val day = cursor.getString(i).toString()
+                i++
+                val month = cursor.getString(i).toString()
+                i++
+                val year = cursor.getString(i).toString()
+                i++
+                val caption = cursor.getString(i).toString()
+                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
+    }
+
     fun getListOfCreditDeposit(): ArrayList<Credit_Deposit> {
         val query = "SELECT * FROM creditDeposit"
         val db = this.writableDatabase
