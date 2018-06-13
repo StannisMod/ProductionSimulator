@@ -408,9 +408,17 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     fun addMessageWithProperties(message : Message) {
 
         getInstance(ctx).use {
-            insert("Messages",
+            insert("Message",
                     "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2])
         }
+    }
+
+    fun removeMessage(hash: Int): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("Message", "hash = {hash}", "hash" to hash)
+        }
+        return result
     }
 
     fun addCrDepWithProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {
