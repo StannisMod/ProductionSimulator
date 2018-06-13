@@ -22,8 +22,14 @@ class Staff(var name: String, var age: Int, var prof: String, var quality: Int, 
         salary -= (0.05 * salary).roundToInt();
     }
 
-    fun birth_Day() {
+    fun birth_Day(toLabor:Boolean, ctx:Context) {
         age++
+        val ins = DatabaseFactory.getInstance(ctx)
+        if(toLabor){
+            ins.setLaborExchangeWithProperties(this)
+        }else{
+            ins.setStaffWithProperties(this)
+        }
     }
 
 

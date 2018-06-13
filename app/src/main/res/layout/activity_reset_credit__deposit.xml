@@ -9,6 +9,13 @@
         android:id="@+id/stats"
         layout="@layout/stats_panel"
         ></include>
+    <include
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/data"
+        layout="@layout/date_layout"
+        ></include>
     <TextView
         android:id="@+id/top"
         android:layout_below="@id/stats"
@@ -17,6 +24,7 @@
         android:text="Информация о вашем кредите"
         android:textSize="25sp"/>
     <RelativeLayout
+        android:layout_above="@id/data"
         android:layout_below="@id/top"
         android:id="@+id/middlePanel"
         android:layout_width="match_parent"

@@ -8,7 +8,7 @@ import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 12) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -83,15 +83,21 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "money" to INTEGER,//Весь Integer
                 "stuff" to INTEGER,//>=0
                 "staff" to INTEGER,//>=0
-                "reputation" to INTEGER)//-100<= =>100
+                "reputation" to INTEGER,
+                "firstTime" to INTEGER,
+                "nalog" to INTEGER
+        )
         db.createTable("DataTime", true,
                 "currentDay" to TEXT,
                 "currentMonth" to TEXT,
                 "currentYear" to TEXT,
-                "currentTime" to INTEGER,
                 "tookCreditToday" to INTEGER,
-                "tookDepositToday" to INTEGER
+                "tookDepositToday" to INTEGER,
+                "todaysCreditMinus" to INTEGER,
+                "todaysDepositGain" to INTEGER
         )
+        db.createTable("Names", true,
+                "name" to TEXT)
 
         db.createTable(Inventory.getInventory().name, true,
                 "num" to INTEGER,
@@ -110,7 +116,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("creditDeposit", true)
         db.dropTable("message", true)
         db.dropTable("PlayerStats", true)
-
+        db.dropTable("DataTime", true)
         db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
@@ -120,7 +126,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     // To manage factory DB
 
-    fun addFactoryWithProperties(ctx : Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
                     "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
@@ -173,14 +179,14 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     }
 
     fun removeFactory(id: Int): Int {
-        var result : Int = 0
+        var result: Int = 0
         getInstance(ctx).use {
             result = delete("Factories", "id = {id}", "id" to id)
         }
         return result
     }
 
-    fun addInventory(ctx : Context, inv : Inventory) {
+    fun addInventory(ctx: Context, inv: Inventory) {
         getInstance(ctx).use {
             for (i in 0..(inv.getInventorySize() - 1)) {
                 val slot = inv.getInventorySlotContents(i)
@@ -189,7 +195,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun updateInventory(inv : Inventory) {
+    fun updateInventory(inv: Inventory) {
         getInstance(ctx).use {
             for (i in 0..inv.getInventorySize()) {
                 val slot = inv.getInventorySlotContents(i)
@@ -198,13 +204,13 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun getInventory(name : String) : Inventory? {
+    fun getInventory(name: String): Inventory? {
         // var index : Int
-        var id : Int
-        var stackSize : Int
-        var maxStackSize : Int
+        var id: Int
+        var stackSize: Int
+        var maxStackSize: Int
 
-        var inv : Inventory? = null
+        var inv: Inventory? = null
         val slots = ArrayList<ItemStack>()
 
         val query = "SELECT * FROM \"$name\""
@@ -219,8 +225,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 maxStackSize = Integer.parseInt(cursor.getString(3))
 
                 slots.add(ItemStack(id, stackSize, maxStackSize))
-            }
-            while (cursor.moveToNext())
+            } while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
             for (i in 0..(slots.size - 1))
                 inv.setInventorySlotContents(i, slots.get(i))
@@ -232,7 +237,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return inv
     }
 
-    fun removeInventory(name : String) {
+    fun removeInventory(name: String) {
         val db = this.writableDatabase
         db.dropTable(name, true)
         db.close()
@@ -407,6 +412,10 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
+    fun setLaborExchangeWithProperties(staff: Staff) {
+        setLaborExchangeWithProperties(staff.name, staff.age, staff.nation, staff.quality, staff.prof, staff.salary, staff.birth.first, staff.birth.second)
+    }
+
     fun setStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
         getInstance(ctx).use {
             update("staff", "age" to age, "spec" to spec, "quality" to quality,
@@ -523,9 +532,15 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int) {
+    fun removeAllCredits() {
+        for (cDep in getListOfCreditDeposit()) {
+            removeCreditDeposit(cDep.type, cDep.date[0], cDep.date[1], cDep.date[2])
+        }
+    }
+
+    fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int, firstTime: Int, nalog : Int) {
         getInstance(ctx).use {
-            insert("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation)
+            insert("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "firstTime" to firstTime, "nalog" to nalog)
         }
     }
 
@@ -544,23 +559,86 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
             val staff = cursor.getString(i).toInt()
             i++
             val reputation = cursor.getString(i).toInt()
-            player = Player(money, stuff, staff, reputation)
+            i++
+            val firstTime = cursor.getString(i).toInt()
+            i++
+            val nalog = cursor.getString(i).toInt()
+            player = Player(money, stuff, staff, reputation, firstTime, nalog)
+            cursor.close()
 
         }
+        db.close()
         return player
     }
-    fun setPlayerWithProperties(money:Int, stuff: Int, staff: Int, reputation: Int){
+
+    fun setPlayerWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int, firstTime: Int, nalog: Int) {
         getInstance(ctx).use {
-            update("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation).exec()
+            update("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "firstTime" to firstTime, "nalog" to nalog).exec()
         }
     }
-    fun setPlayerWithProperties(player: Player){
-        setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation)
+
+    fun setPlayerWithProperties(player: Player) {
+        setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation, player.firstTime, player.nalog)
     }
-    fun removePlayer():Int{
+
+    fun removePlayer(): Int {
         var res = 0
         getInstance(ctx).use {
             res = delete("PlayerStats")
+        }
+        return res
+    }
+
+    fun addDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int,  todaysCreditMinus:Int, todaysDepositGain:Int ) {
+        getInstance(ctx).use {
+            insert("DataTime", "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday, "todaysCreditMinus" to todaysCreditMinus, "todaysDepositGain" to todaysDepositGain)
+        }
+    }
+
+    fun setDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int, todaysCreditMinus: Int, todaysDepositGain: Int) {
+        getInstance(ctx).use {
+            update("DataTime", "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday, "todaysCreditMinus" to todaysCreditMinus, "todaysDepositGain" to todaysDepositGain).exec()
+        }
+    }
+
+    fun setDataTimeWithProperties(currentData: DataTime) {
+        setDataTimeWithProperties(currentData.currentDay, currentData.currentMonth, currentData.currentYear, currentData.tookCreditToday, currentData.tookDepositToday, currentData.todaysCreditMinus, currentData.todaysDepositGain)
+    }
+
+    fun getDataTime(): DataTime? {
+        val query = "SELECT * FROM DataTime"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var curDate: DataTime? = null
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+
+            var i = 0;
+            val currentDay = cursor.getString(i)
+            i++
+            val currentMonth = cursor.getString(i)
+            i++
+            val currentYear = cursor.getString(i)
+            i++
+            val tookCreditToday = cursor.getString(i).toInt()
+            i++
+            val tookDepositToday = cursor.getString(i).toInt()
+            i++
+            val todaysCreditMinus = cursor.getString(i).toInt()
+            i++
+            val todaysDepositGain = cursor.getString(i).toInt()
+            curDate = DataTime(currentDay, currentMonth, currentYear, tookCreditToday, tookDepositToday, todaysCreditMinus, todaysDepositGain)
+            cursor.close()
+        }
+        db.close()
+        return curDate
+    }
+
+    fun removeDataTime(): Int {
+        var res = 0
+        getInstance(ctx).use {
+            res = delete("DataTime")
         }
         return res
     }

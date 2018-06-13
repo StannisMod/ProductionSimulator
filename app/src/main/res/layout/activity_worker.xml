@@ -10,8 +10,16 @@
     <include
         android:id="@+id/stats_panel"
         layout="@layout/stats_panel"></include>
+    <include
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/data"
+        layout="@layout/date_layout"
+        ></include>
 
     <RelativeLayout
+
         android:id="@+id/workerInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

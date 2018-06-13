@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.Models.Inventory
@@ -20,16 +21,22 @@ class MainActivity : AppCompatActivity() {
             DatabaseFactory.getInstance(this).removeLaborExchange("Леха")
             DatabaseFactory.getInstance(this).removeLaborExchange("Вася")
             DatabaseFactory.getInstance(this).removeLaborExchange("Петя")
+            DatabaseFactory.getInstance(this).removeStaff("Леха")
+            DatabaseFactory.getInstance(this).removeStaff("Вася")
+            DatabaseFactory.getInstance(this).removeStaff("Петя")
             DatabaseFactory.getInstance(this).removePlayer()
+            DatabaseFactory.getInstance(this).removeAllCredits()
+            DatabaseFactory.getInstance(this).removeDataTime()
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties("Леха", 30, "Токарь", 10, "русский", 1200, "01", "01")
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties("Вася", 30, "Слесарь", 10, "русский", 1200, "01", "02")
             DatabaseFactory.getInstance(this).addLaborExchangeWithProperties("Петя", 30, "Дровосек", 10, "русский", 1200, "01", "03")
-            DatabaseFactory.getInstance(this).addPlayerStatsWithProperties(500, 0, 0, 50)
+            DatabaseFactory.getInstance(this).addPlayerStatsWithProperties(500, 0, 0, 50, 0, 500)
+            DatabaseFactory.getInstance(this).addDataTimeWithProperties("25", "12", "2018", 0,0, 0, 0)
             DatabaseFactory.getInstance(this).added = true
         }
         mail.setOnClickListener {
-             val intent = Intent(this, MailActivity::class.java)
-             startActivity(intent)
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
         }
 
         val player = DatabaseFactory.getInstance(this).getPlayerStats()
@@ -39,6 +46,14 @@ class MainActivity : AppCompatActivity() {
             staff.text = player.staff.toString()
             rep.progress = player.reputation
 
+        }
+        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        if (curData != null) {
+            curDate.text = curData.toString()
+        }
+        endDay.setOnClickListener {
+            val intent = Intent(this, EndDayActivity::class.java)
+            startActivity(intent)
         }
 
         toinventory.setOnClickListener {
