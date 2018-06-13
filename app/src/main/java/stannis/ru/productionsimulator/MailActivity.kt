@@ -33,5 +33,9 @@ class MailActivity : AppCompatActivity() {
             intent.putExtra("message", list[position].toStringArray())
             startActivity(intent)
         }
+
+//        listview.setOnLongClickListener { parent, view, position, id ->
+//            list.
+//        }
     }
 }

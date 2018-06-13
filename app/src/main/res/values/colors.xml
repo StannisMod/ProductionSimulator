@@ -8,4 +8,5 @@
     <color name="colorTextMessageActivity">#000000</color>
     <color name="colorNameTextMailActivity">#ff6f00</color>
     <color name="colorTextMailActivity">#ee2a9cff</color>
+    <color name="colorReadedMessage">#ff0000</color>
 </resources>
