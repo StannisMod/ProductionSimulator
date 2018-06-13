@@ -18,6 +18,13 @@ class MarketActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
+        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        if (player != null) {
+            money.text = player.money.toString()
+            res.text = player.stuff.toString()
+            staff.text = player.staff.toString()
+            rep.progress = player.reputation
+        }
 
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)

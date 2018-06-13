@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_reset_credit__deposit.*
+import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 
@@ -15,8 +16,20 @@ class ResetCredit_Deposit : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_credit__deposit)
+        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        if (player != null) {
+            money.text = player.money.toString()
+            res.text = player.stuff.toString()
+            staff.text = player.staff.toString()
+            rep.progress = player.reputation
+        }
+        mail.setOnClickListener {
+            val intent = Intent(this, MailActivity::class.java)
+            startActivity(intent)
+        }
         var type = 0
         var crDep: Credit_Deposit? = null
+        var condition: Boolean = false
         if (intent.hasExtra("infoAboutCreditDeposit")) {
             val arr = intent.getStringExtra("infoAboutCreditDeposit").split(" ", ",", "%", "$")
             val amount = arr[3]
@@ -25,7 +38,8 @@ class ResetCredit_Deposit : AppCompatActivity() {
             amountT.text = "${amount} $"
             percentT.text = "${percent} %/месяц"
             dateT.text = date
-            if (arr[1].trim() == "депозит") {
+            condition = arr[1].trim() == "депозит"
+            if (condition) {
                 type = 1;
                 top.text = "Информация о вашем депозите"
                 amountStatic.text = "Сумма Вашего депозита:"
@@ -43,16 +57,30 @@ class ResetCredit_Deposit : AppCompatActivity() {
                 if (crDep != null) {
 
                     val cond = crDep.takeDep_payOff(resetAmount.text.toString().toInt())
+                    if (player != null) {
+                        if (!condition && resetAmount.text.toString().toInt() > player.money) {
+                            Toast.makeText(this, "Вы не можете внести больше денег, чем Вы сейчас имеете(", Toast.LENGTH_SHORT)
+                        } else {
+                            if(condition){
+                                player.money+=resetAmount.text.toString().toInt()
+                            }else{
+                                player.money-=resetAmount.text.toString().toInt()
+                            }
+                            DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
 
-                    if (cond) {
-                        DatabaseFactory.getInstance(this).removeCreditDeposit(crDep.type, crDep.date[0], crDep.date[1], crDep.date[2])
-                    } else {
-                        DatabaseFactory.getInstance(this).setCreditDepositProperties(crDep)
+
+                            if (cond) {
+                                DatabaseFactory.getInstance(this).removeCreditDeposit(crDep.type, crDep.date[0], crDep.date[1], crDep.date[2])
+                            } else {
+                                DatabaseFactory.getInstance(this).setCreditDepositProperties(crDep)
+                            }
+                            Toast.makeText(this, "Операция прошла успешно", Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this, BankActivity::class.java)
+                            startActivity(intent)
+                        }
+
                     }
-                    Toast.makeText(this, "Операция прошла успешно", Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this, BankActivity::class.java)
-                    startActivity(intent)
                 }
             }
         }

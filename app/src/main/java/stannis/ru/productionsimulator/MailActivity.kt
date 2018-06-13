@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
-//import kotlinx.android.synthetic.main.activity_message.view.*
-//import kotlinx.android.synthetic.main.stats_panel.*
+import kotlinx.android.synthetic.main.activity_message.view.*
+import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 
 class MailActivity : AppCompatActivity() {
@@ -15,7 +15,9 @@ class MailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mail)
 
+
         var list : ArrayList<Message> = DatabaseFactory.getInstance(this).getMessage()
+
         var listview : ListView = findViewById(R.id.listView)
         val dataArray = Array(list.size){i -> list[i].toCaption()}
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray)
