@@ -7,6 +7,7 @@ import android.support.annotation.IntegerRes
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
+import stannis.ru.productionsimulator.Message
 
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 12) {
 
@@ -77,7 +78,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "text" to TEXT,
                 "day" to TEXT,
                 "month" to TEXT,
-                "year" to TEXT
+                "year" to TEXT,
+                "readed" to TEXT
         )
         db.createTable("PlayerStats", true,
                 "money" to INTEGER,//Весь Integer
@@ -204,13 +206,13 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun getInventory(name: String): Inventory? {
+    fun getInventory(name : String) : Inventory? {
         // var index : Int
-        var id: Int
-        var stackSize: Int
-        var maxStackSize: Int
+        var id : Int
+        var stackSize : Int
+        var maxStackSize : Int
 
-        var inv: Inventory? = null
+        var inv : Inventory? = null
         val slots = ArrayList<ItemStack>()
 
         val query = "SELECT * FROM \"$name\""
@@ -225,7 +227,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 maxStackSize = Integer.parseInt(cursor.getString(3))
 
                 slots.add(ItemStack(id, stackSize, maxStackSize))
-            } while (cursor.moveToNext())
+            }
+            while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
             for (i in 0..(slots.size - 1))
                 inv.setInventorySlotContents(i, slots.get(i))
@@ -237,7 +240,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return inv
     }
 
-    fun removeInventory(name: String) {
+    fun removeInventory(name : String) {
         val db = this.writableDatabase
         db.dropTable(name, true)
         db.close()
@@ -436,12 +439,20 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    fun addMessageWithProperties(hash: Int, caption: String, text: String, sender: String, day: Int, month: Int, year: Int) {
+    fun addMessageWithProperties(message : Message) {
 
         getInstance(ctx).use {
-            insert("Messages",
-                    "hash" to hash, "text" to text, "sender" to sender, "day" to day, "caption" to caption, "month" to month)
+            insert("Message",
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
         }
+    }
+
+    fun removeMessage(hash: Int): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("Message", "hash = {hash}", "hash" to hash)
+        }
+        return result
     }
 
     fun addCrDepWithProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {
@@ -450,6 +461,39 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                     "type" to type, "amount" to amount, "percent" to percent, "dayOfStart" to dayOfStart, "monthOfStart" to monthOfStart,
                     "yearOfStart" to yearOfStart)
         }
+    }
+
+    fun getMessage(): ArrayList<Message> {
+        val query = "SELECT * FROM message"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Message> = ArrayList()
+
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 0
+                val hash = cursor.getString(i).toInt()
+                i++
+                val caption = cursor.getString(i).toString()
+                i++
+                val sender = cursor.getString(i).toString()
+                i++
+                val text = cursor.getString(i).toString()
+                i++
+                val day = cursor.getString(i).toString()
+                i++
+                val month = cursor.getString(i).toString()
+                i++
+                val year = cursor.getString(i).toString()
+                i++
+                val readed = cursor.getString(i).toString()
+                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender, readed = readed))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
     }
 
     fun getListOfCreditDeposit(): ArrayList<Credit_Deposit> {
