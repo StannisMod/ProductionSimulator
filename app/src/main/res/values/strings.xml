@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Production Simulator</string>
-    <string name="credit_deposit"></string>
     <string translatable="true" name="credit_deposit">kek</string>
 </resources>
