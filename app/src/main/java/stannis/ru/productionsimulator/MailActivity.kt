@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import kotlinx.android.synthetic.main.activity_market.*
+import kotlinx.android.synthetic.main.activity_market.view.*
 import kotlinx.android.synthetic.main.activity_message.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
@@ -24,6 +26,9 @@ class MailActivity : AppCompatActivity() {
         listview.adapter = adapter
 
         listview.setOnItemClickListener { parent, view, position, id ->
+            DatabaseFactory.getInstance(this).removeMessage(list[position].hashCode())
+            list[position].readed = "1"
+            DatabaseFactory.getInstance(this).addMessageWithProperties(list[position])
             val intent = Intent(this, MessageActivity::class.java)
             intent.putExtra("message", list[position].toStringArray())
             startActivity(intent)

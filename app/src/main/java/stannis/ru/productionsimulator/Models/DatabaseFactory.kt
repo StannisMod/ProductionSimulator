@@ -9,7 +9,7 @@ import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Message
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 10) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 11) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -78,7 +78,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "text" to TEXT,
                 "day" to TEXT,
                 "month" to TEXT,
-                "year" to TEXT
+                "year" to TEXT,
+                "readed" to TEXT
         )
         db.createTable("PlayerStats", true,
                 "money" to INTEGER,//Весь Integer
@@ -432,7 +433,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
         getInstance(ctx).use {
             insert("Message",
-                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2])
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
         }
     }
 
@@ -475,7 +476,9 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 val month = cursor.getString(i).toString()
                 i++
                 val year = cursor.getString(i).toString()
-                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender))
+                i++
+                val readed = cursor.getString(i).toString()
+                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender, readed = readed))
             } while (cursor.moveToNext())
             cursor.close()
         }
