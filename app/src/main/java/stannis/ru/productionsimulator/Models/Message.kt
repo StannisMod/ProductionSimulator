@@ -1,6 +1,6 @@
 package stannis.ru.productionsimulator
 
-class Message(var caption : String = "Отдайте деньги!", var text : String = "Здраствуйте, Кирилл Юрьевич.\nВаша задолженность банку составляет 5000$. Просим Вас до 31.12.2018 выплатить задолженность, иначе нам придется заблокировать ваш счет и забрать вашу лесопилку.\nС любовью банк!", var sender : String = "Банк", var date : Array<String> = arrayOf("19", "12", "2001")) {
+class Message(var caption : String = "Отдайте деньги!", var text : String = "Здраствуйте, Кирилл Юрьевич.\nВаша задолженность банку составляет 5000$. Просим Вас до 31.12.2018 выплатить задолженность, иначе нам придется заблокировать ваш счет и забрать вашу лесопилку.\nС любовью банк!", var sender : String = "Банк", var date : Array<String> = arrayOf("19", "12", "2001"), var readed : String = "0") {
     override fun toString(): String {
         return "${caption}\\ntext"
     }
