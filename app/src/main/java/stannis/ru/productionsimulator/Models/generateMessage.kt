@@ -42,7 +42,7 @@ fun generateUnhappyMessage(credit : Credit_Deposit, ctx : Context){
     var message : Message = Message()
     message.caption = "Вам крупно не повезло!"
     message.sender = "Гидрометцентр"
-    message.text = "Здравствуйте.\nВ вашу сторону надвигается мощный пожар. Видимо, бог вас за что-то покарал. Ваша лесопилка наверняка сгорит. А вы останетесь банкротом.\nС уважением судьба."
+    message.text = "Здравствуйте.\nВ вашу сторону надвигается мощный пожар. Видимо, Бог вас за что-то покарал. Ваша лесопилка наверняка сгорит. А вы останетесь банкротом.\nС уважением судьба."
     message.date = arrayOf(DatabaseFactory.getInstance(ctx).getDataTime()!!.currentDay, DatabaseFactory.getInstance(ctx).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(ctx).getDataTime()!!.currentYear)
     DatabaseFactory.getInstance(ctx).addMessageWithProperties(message)
 }
