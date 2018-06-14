@@ -3,7 +3,9 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_factory.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
@@ -28,36 +30,44 @@ class FactoryActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // val factory = Factory.getFactoryById(intent.getIntExtra("TAG", 0))
+        var factory = Factory.getFactoryById(0)//intent.getIntExtra("TAG", 0))
 
-        val factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 1, 5,  10.0)
-        val data = arrayOf("Сырьё: ${factory.res}/${factory.res.getInventoryStackLimit()}",
+        if (factory == null)
+            factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5,  10.0)
+
+        val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
                 "Потребление сырья: ${factory.consumption}/сек",
                 "Выпуск продукции: ${factory.productivity}/сек",
-                "Продукция: ${factory.production}/${factory.production_cap}",
+                "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}",
                 "Состояние оборудования: ${factory.machine_state}")
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data)
+        adapter.notifyDataSetChanged()
         stats.adapter = adapter
 
         fillRes.setOnClickListener {
             val inv = Inventory.getInventory()
-            for (i in 0..inv.getInventorySize()) {
-                var item = inv.getInventorySlotContents(i)
-                if (item.getType() == factory.type.getResType())
-                    while (!factory.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0)
-                        Inventory.transferItem(inv, factory.res, i, 1)   // transfer 1 item from item to factory.res
+            for (i in 0..(inv.getInventorySize() - 1)) {
+                val item = inv.getInventorySlotContents(i)
+                //Log.d("ITEM_1", item.toString())
+                if (item.getType() == factory.type.getResType().getId()) {
+                    //Log.d("ITEM_2", item.toString())
+                    while (!factory.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0) {
+                        //Log.d("ITEM_3", item.toString())
+                        Inventory.transferItem(factory.type.getResType().getId(), inv, factory.res, i, 1)
+                    }
+                }
             }
         }
 
         storeProd.setOnClickListener {
-            /*
-            val inv = inventory.getInventory()
-            for (item : inv)
-                if (item == null)
-                    while (factory.production > 0 && item.stackSize < inventory.getInventoryStackLimit())
-                        Inventory.transferItem(factory.production, item, slotIndex, 1)   // transfer 1 item from item to factory.res
-
-              */
+            val inv = Inventory.getInventory()
+            val i : Int? = inv.findFirstEqualSlot(factory.type.getResType().getId())
+            if (i != null){
+                while (!factory.production.isSlotEmpty(0) && inv.getInventorySlotContents(i).stackSize < Inventory.getInventory().getInventoryStackLimit())
+                    Inventory.transferItem(factory.type.getProdType().getId(), factory.production, inv, 0, 1)
+            }
+            else
+                Toast.makeText(this, "Ваш инвентарь заполнен", Toast.LENGTH_SHORT).show()
         }
     }
 }

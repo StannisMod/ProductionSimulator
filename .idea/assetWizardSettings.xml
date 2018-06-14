@@ -16,11 +16,26 @@
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="foregroundImage">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="scalingPercent" value="63" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundImage" value="$USER_HOME$/Desktop/transparency.png" />
-                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/camp.png" />
-                                      <entry key="outputName" value="camp" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/PRJ_IMG/tractor.png" />
+                                      <entry key="outputName" value="tractor" />
                                     </map>
                                   </option>
                                 </PersistentState>

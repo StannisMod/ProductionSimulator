@@ -1,6 +1,7 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
+import android.util.Log
 
 class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
@@ -15,19 +16,29 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
             return instance!!
         }
 
-        fun transferItem(from : Inventory, to : Inventory, slotIndex : Int, quantity : Int) {
+        fun transferItem(itemId : Int, from : Inventory, to : Inventory, slotIndex : Int, quantity : Int) {
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
                 return
 
-            to.setInventorySlotContents(to.findFirstEmptySlot(), ItemStack(from.getInventorySlotContents(slotIndex).itemId, quantity, to.getInventoryStackLimit()))
+            //Log.d("TRSF", "Begin transfer")
 
-            from.getInventorySlotContents(slotIndex).stackSize -= quantity
+            var i = to.findFirstEqualSlot(itemId)
+            if (to.isSlotEmpty(i))
+                to.setInventorySlotContents(i, ItemStack(from.getInventorySlotContents(slotIndex).itemId, quantity, to.getInventoryStackLimit()))
+            else
+                to.getInventorySlotContents(i).stackSize += quantity
+            /*
+            Log.d("TRSF", "$i")
+            Log.d("TRSF", from.getInventorySlotContents(slotIndex).toString())
+            Log.d("TRSF", "${to.getInventorySlotContents(i)}")
+            */
+            from.decrStackSize(slotIndex, quantity)
         }
 
         fun load(ctx : Context, name : String) : Inventory? = DatabaseFactory.getInstance(ctx).getInventory(name)
     }
 
-    var inv = Array<ItemStack>(size, {ItemStack(0, 0, this.maxStackSize)})
+    var inv = Array(size, {ItemStack(0, 0, this.maxStackSize)})
 
     fun setInventorySlotContents(slotIndex : Int, stack : ItemStack) {
         if (slotIndex < 0 || slotIndex > maxStackSize - 1)
@@ -49,19 +60,30 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     }
 
     fun findFirstEmptySlot() : Int {
-        var i = 0
-
-        for (i in 0..size) {
-            if (isSlotEmpty(i))
+        for (i in 0..(size - 1)) {
+            // Log.d("FIND", getInventorySlotContents(i).toString())
+            // Log.d("FIND", isSlotEmpty(i).toString())
+            if (isSlotEmpty(i)) {
+                // Log.d("FIND", "RETURNING $i")
                 return i
+            }
         }
-
         return -1
     }
 
+    fun findFirstEqualSlot(id : Int) : Int {
+        for (i in 0..(size - 1))
+            if (getInventorySlotContents(i).itemId == id)
+                return i
+
+        return findFirstEmptySlot()
+    }
+
     fun decrStackSize(slotIndex: Int, denominator : Int) {
-        if (slotIndex < 0 || slotIndex > maxStackSize - 1)
+        if (slotIndex < 0 || slotIndex > getInventorySize() - 1)
             return
+
+        Log.d("DECR", "DECR!!!")
 
         if (getInventorySlotContents(slotIndex).stackSize <= denominator)
             setSlotEmpty(slotIndex)

@@ -34,15 +34,17 @@
         <activity
             android:name=".MessageActivity"
             android:parentActivityName=".MailActivity" />
-        <activity android:name=".WorkerActivity" />
+        <activity
+            android:name=".WorkerActivity"
+            android:parentActivityName=".BankActivity"/>
         <activity
             android:name=".FactoryActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".InventoryActivity"></activity>
-        <activity
-            android:name=".FactoryActivity"
+        <activity android:name=".InventoryActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".ResetCredit_Deposit" android:parentActivityName=".BankActivity"></activity>
+        <activity
+            android:name=".ResetCredit_Deposit"
+            android:parentActivityName=".BankActivity" />
     </application>
 
 </manifest>

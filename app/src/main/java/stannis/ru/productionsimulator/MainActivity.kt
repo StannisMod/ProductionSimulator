@@ -37,18 +37,23 @@ class MainActivity : AppCompatActivity() {
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
-
         }
 
         toinventory.setOnClickListener {
-            // val intent = Intent(this, InventoryActivity::class.java)
-            // startActivity(inventory)
-            Inventory.getInventory().setInventorySlotContents(0, ItemStack(1, 2, 64))
-            DatabaseFactory.getInstance(this).addInventory(this, Inventory.getInventory())    //addFactoryWithProperties(this, 0, 0, 0, 10, 1, 2, 1, 5,  10.0)
-            debug.text = DatabaseFactory.getInstance(this).getInventory(Inventory.getInventory().name)?.getInventorySlotContents(0).toString()//.getFactory(0)?.toDetailedString()
+
+            val intent = Intent(this, InventoryActivity::class.java)
+            startActivity(intent)
         }
 
         tomarket.setOnClickListener {
+            Inventory.getInventory().setInventorySlotContents(0, ItemStack(1, 5, 64))
+            Inventory.getInventory().setInventorySlotContents(1, ItemStack(1, 2, 64))
+            Inventory.getInventory().setInventorySlotContents(2, ItemStack(2, 6, 64))
+            Inventory.getInventory().setInventorySlotContents(3, ItemStack(3, 12, 64))
+            Inventory.getInventory().setInventorySlotContents(4, ItemStack(5, 16, 64))
+            Inventory.getInventory().setInventorySlotContents(5, ItemStack(6, 22, 64))
+            Inventory.getInventory().save(this)
+
             val intent = Intent(this, MarketActivity::class.java)
             startActivity(intent)
         }

@@ -1,4 +1,4 @@
-package stannis.ru.productionsimulator
+package stannis.ru.productionsimulator.Models
 
 class Message(var caption : String = "Отдайте деньги!", var text : String = "Здраствуйте, Кирилл Юрьевич.\nВаша задолженность банку составляет 5000$. Просим Вас до 31.12.2018 выплатить задолженность, иначе нам придется заблокировать ваш счет и забрать вашу лесопилку.\nС любовью банк!", var sender : String = "Банк", var day : String = "19", var month : String = "12", var year : String = "2001") {
     override fun toString(): String {
