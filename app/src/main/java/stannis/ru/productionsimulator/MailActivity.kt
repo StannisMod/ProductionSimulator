@@ -1,10 +1,13 @@
 package stannis.ru.productionsimulator
 
 import android.content.Intent
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_market.*
 import kotlinx.android.synthetic.main.activity_market.view.*
 import kotlinx.android.synthetic.main.activity_message.view.*
@@ -25,6 +28,7 @@ class MailActivity : AppCompatActivity() {
         val dataArray = Array(list.size){i -> list[i].toCaption()}
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray)
         listview.adapter = adapter
+//        (listview.getChildAt(0) as TextView).setTextColor(getColor(R.color.minus))
 
         listview.setOnItemClickListener { parent, view, position, id ->
             DatabaseFactory.getInstance(this).removeMessage(list[position].hashCode())
