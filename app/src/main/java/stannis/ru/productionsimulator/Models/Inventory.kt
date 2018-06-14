@@ -8,19 +8,19 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     companion object {
         val TAG = "PlayerInv"
         var instance: Inventory? = null
-        val inventories = HashMap<String, Inventory>()
+        //val inventories = HashMap<String, Inventory>()
 
         @Synchronized
-        fun getInventory(name : String = TAG): Inventory {
-            if (instance == null && name == TAG) {
+        fun getInventory(): Inventory {
+            if (instance == null) {// && name == TAG) {
                 instance = Inventory(TAG, 16, 64)
             }
-            else
-                return inventories.get(name)!!
+           // else
+            //    return inventories.get(name)!!
             return instance!!
         }
 
-        fun createInventory(name : String, size : Int, maxStackSize : Int) = inventories.put(name, Inventory(name, size, maxStackSize))
+        //fun createInventory(name : String, size : Int, maxStackSize : Int) = inventories.put(name, Inventory(name, size, maxStackSize))
 
         fun transferItem(from : Inventory, to : Inventory, slotIndex : Int, quantity : Int) {
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
