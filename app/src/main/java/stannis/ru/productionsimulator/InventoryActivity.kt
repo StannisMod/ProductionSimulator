@@ -21,7 +21,7 @@ class InventoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
-
+        rep.setEnabled(false)
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
             startActivity(intent)

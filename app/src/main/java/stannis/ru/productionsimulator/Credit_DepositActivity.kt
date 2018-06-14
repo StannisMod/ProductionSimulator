@@ -39,6 +39,7 @@ class Credit_DepositActivity : AppCompatActivity() {
             val intent = Intent(this, MailActivity::class.java)
             startActivity(intent)
         }
+        rep.setEnabled(false)
 
         var isCredit: Boolean = true
         if (intent.hasExtra("Type")) {

@@ -8,7 +8,8 @@ import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Models.Message
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 15) {
+
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 16) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -93,15 +94,21 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "money" to INTEGER,//Весь Integer
                 "stuff" to INTEGER,//>=0
                 "staff" to INTEGER,//>=0
-                "reputation" to INTEGER)//-100<= =>100
+                "reputation" to INTEGER,
+                "firstTime" to INTEGER,
+                "nalog" to INTEGER)//-100<= =>100
         db.createTable("DataTime", true,
                 "currentDay" to TEXT,
                 "currentMonth" to TEXT,
                 "currentYear" to TEXT,
-                "currentTime" to INTEGER,
                 "tookCreditToday" to INTEGER,
-                "tookDepositToday" to INTEGER
+                "tookDepositToday" to INTEGER,
+                "todaysCreditMinus" to INTEGER,
+                "todaysDepositGain" to INTEGER
+
         )
+        db.createTable("Names", true,
+                "name" to TEXT)
 
         db.createTable(Inventory.getInventory().name, true,
                 "num" to INTEGER,
@@ -120,7 +127,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("Message", true)
         db.dropTable("MessageReaded", true)
         db.dropTable("PlayerStats", true)
-
+        db.dropTable("DataTime", true)
+        db.dropTable("Names", true)
         db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }

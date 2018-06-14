@@ -30,6 +30,7 @@ class StaffActivity : AppCompatActivity() {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
         }
+        rep.setEnabled(false)
 
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
