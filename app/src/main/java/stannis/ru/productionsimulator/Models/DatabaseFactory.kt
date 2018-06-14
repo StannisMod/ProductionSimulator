@@ -2,14 +2,13 @@ package stannis.ru.productionsimulator.Models
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import android.support.annotation.IntegerRes
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Models.Message
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 12) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 13) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -103,7 +102,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        Log.d("MAIN", "Dropped!")
         db.dropTable("Factories", true)
         db.dropTable("laborExchange", true)
         db.dropTable("staff", true)
@@ -183,16 +181,16 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     fun addInventory(inv: Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()) {
+            for (i in 0..inv.getInventorySize()-1) {
                 val slot = inv.getInventorySlotContents(i)
-                insert(inv.name, "index" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
+                insert(inv.name, "num" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
             }
         }
     }
 
     fun updateInventory(inv : Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()) {
+            for (i in 0..inv.getInventorySize()-1) {
                 val slot = inv.getInventorySlotContents(i)
                 update(inv.name, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize).whereArgs("index = {index}", "index" to i)
             }
