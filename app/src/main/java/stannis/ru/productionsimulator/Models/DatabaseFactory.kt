@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import android.support.annotation.IntegerRes
+import android.util.Log
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
@@ -78,28 +79,21 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "text" to TEXT,
                 "day" to TEXT,
                 "month" to TEXT,
-                "year" to TEXT,
-                "readed" to TEXT
+                "year" to TEXT
         )
         db.createTable("PlayerStats", true,
                 "money" to INTEGER,//Весь Integer
                 "stuff" to INTEGER,//>=0
                 "staff" to INTEGER,//>=0
-                "reputation" to INTEGER,
-                "firstTime" to INTEGER,
-                "nalog" to INTEGER
-        )
+                "reputation" to INTEGER)//-100<= =>100
         db.createTable("DataTime", true,
                 "currentDay" to TEXT,
                 "currentMonth" to TEXT,
                 "currentYear" to TEXT,
+                "currentTime" to INTEGER,
                 "tookCreditToday" to INTEGER,
-                "tookDepositToday" to INTEGER,
-                "todaysCreditMinus" to INTEGER,
-                "todaysDepositGain" to INTEGER
+                "tookDepositToday" to INTEGER
         )
-        db.createTable("Names", true,
-                "name" to TEXT)
 
         db.createTable(Inventory.getInventory().name, true,
                 "num" to INTEGER,
@@ -118,7 +112,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("creditDeposit", true)
         db.dropTable("message", true)
         db.dropTable("PlayerStats", true)
-        db.dropTable("DataTime", true)
+
         db.dropTable(Inventory.getInventory().name, true)
         onCreate(db)
     }
@@ -128,7 +122,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     // To manage factory DB
 
-    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx : Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
                     "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
@@ -181,23 +175,23 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     }
 
     fun removeFactory(id: Int): Int {
-        var result: Int = 0
+        var result : Int = 0
         getInstance(ctx).use {
             result = delete("Factories", "id = {id}", "id" to id)
         }
         return result
     }
 
-    fun addInventory(ctx: Context, inv: Inventory) {
+    fun addInventory(inv: Inventory) {
         getInstance(ctx).use {
-            for (i in 0..(inv.getInventorySize() - 1)) {
+            for (i in 0..inv.getInventorySize()) {
                 val slot = inv.getInventorySlotContents(i)
-                insert(inv.name, "num" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
+                insert(inv.name, "index" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
             }
         }
     }
 
-    fun updateInventory(inv: Inventory) {
+    fun updateInventory(inv : Inventory) {
         getInstance(ctx).use {
             for (i in 0..inv.getInventorySize()) {
                 val slot = inv.getInventorySlotContents(i)
@@ -227,8 +221,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 maxStackSize = Integer.parseInt(cursor.getString(3))
 
                 slots.add(ItemStack(id, stackSize, maxStackSize))
-            }
-            while (cursor.moveToNext())
+            } while (cursor.moveToNext())
             inv = Inventory(name, slots.size, maxStackSize)
             for (i in 0..(slots.size - 1))
                 inv.setInventorySlotContents(i, slots.get(i))
@@ -240,7 +233,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return inv
     }
 
-    fun removeInventory(name : String) {
+    fun removeInventory(name: String) {
         val db = this.writableDatabase
         db.dropTable(name, true)
         db.close()
@@ -452,7 +445,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         getInstance(ctx).use {
             result = delete("Message", "hash = {hash}", "hash" to hash)
         }
-        return result
     }
 
     fun addCrDepWithProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {

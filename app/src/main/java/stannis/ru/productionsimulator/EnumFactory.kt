@@ -1,10 +1,12 @@
 package stannis.ru.productionsimulator
 
-enum class EnumFactory(val factory : String, val type : Int, val res_type : Int) {
+enum class EnumFactory(val factory : String, val type : Int, val res_type : Items, val prod_type : Items) {
 
-    SAWMILL("Лесопилка", 0, 0);
+    SAWMILL("Лесопилка", 0, Items.WOOD, Items.PLANKS);
 
-    fun getResType() : Int = res_type
+    fun getResType() : Items = res_type
+
+    fun getProdType() : Items = prod_type
 
     fun getName() : String = factory
 

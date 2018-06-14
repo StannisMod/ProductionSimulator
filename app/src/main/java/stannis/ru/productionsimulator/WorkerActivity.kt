@@ -17,6 +17,7 @@ class WorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
+
         val player = DatabaseFactory.getInstance(this).getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()

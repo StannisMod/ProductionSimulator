@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_market.view.*
 import kotlinx.android.synthetic.main.activity_message.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Models.Message
 
 class MailActivity : AppCompatActivity() {
 
