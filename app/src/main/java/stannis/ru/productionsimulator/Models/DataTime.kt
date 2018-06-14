@@ -54,17 +54,19 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         }
         checkCreditsDeposits(ctx)
         checkBirthDays(ctx)
-        this.todaysDepositGain = 0
-        this.todaysCreditMinus = 0
+        this.todaysDepositGain=0
+        this.todaysCreditMinus=0
         this.tookCreditToday = 0
         this.tookDepositToday = 0
-        val fac = ins.getFactory(0)
-        if (fac != null) {
+        val fac = DatabaseFactory.getInstance(ctx).getFactory(0)
+        if(fac!=null){
             fac.runTick()
         }
         generateBuyInv(ctx)
         generateLabor(ctx)
         ins.setDataTimeWithProperties(this)
+
+        generateMessage(ctx)
     }
 
     fun checkCreditsDeposits(ctx: Context) {
@@ -72,9 +74,9 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         for (crDep in list) {
             if (this.currentDay == crDep.date[0]) {
                 crDep.rise(ctx)
-                if (crDep.type == 2) {
-                    generateCreditBankMessage(crDep, ctx)
-                }
+//                if(crDep.type == 2){
+//                    generateCreditBankMessage(crDep, ctx)
+//                }
             }
         }
     }
@@ -135,12 +137,11 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         }
 
     }
-
-    fun getAllWages(ctx: Context): Int {
+    fun getAllWages(ctx:Context):Int{
         val list1 = DatabaseFactory.getInstance(ctx).getListOfStaff()
         var res = 0
         for (st in list1) {
-            res += st.salary
+            res+=st.salary
         }
         return res
     }
