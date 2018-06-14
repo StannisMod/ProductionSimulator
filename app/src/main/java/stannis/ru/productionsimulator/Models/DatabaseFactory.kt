@@ -4,11 +4,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import android.support.annotation.IntegerRes
-import android.util.Log
 import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
-import stannis.ru.productionsimulator.Message
+import stannis.ru.productionsimulator.Models.Message
 
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 12) {
 
@@ -445,6 +444,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         getInstance(ctx).use {
             result = delete("Message", "hash = {hash}", "hash" to hash)
         }
+        return result
     }
 
     fun addCrDepWithProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {
