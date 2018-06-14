@@ -26,6 +26,7 @@ class WorkerActivity : AppCompatActivity() {
             rep.progress = player.reputation
         }
         val curData = DatabaseFactory.getInstance(this).getDataTime()
+        rep.setEnabled(false)
         if(curData!=null){
             curDate.text = curData.toString()
         }

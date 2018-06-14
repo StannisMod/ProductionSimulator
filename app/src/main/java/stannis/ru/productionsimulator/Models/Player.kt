@@ -6,7 +6,7 @@ class Player(var money: Int, var stuff: Int, var staff: Int, var reputation: Int
         var per = diff.toDouble() / nalog.toDouble()
         val coef = 2.3
         if (per < 0) {
-            val tmp = coef * reputation.toDouble() * (1.0 + per)
+            val tmp =  reputation.toDouble() * ((coef/2.0)*(1.0 + per))
             reputation = tmp.toInt()
         } else {
 
