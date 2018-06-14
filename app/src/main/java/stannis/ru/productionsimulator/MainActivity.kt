@@ -10,7 +10,7 @@ import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.*
-import stannis.ru.productionsimulator.R.id.debug
+//import stannis.ru.productionsimulator.R.id.debug
 
 class MainActivity : AppCompatActivity() {
 
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             // startActivity(inventory)
             Inventory.getInventory().setInventorySlotContents(0, ItemStack(1, 2, 64))
             DatabaseFactory.getInstance(this).addInventory(this, Inventory.getInventory())    //addFactoryWithProperties(this, 0, 0, 0, 10, 1, 2, 1, 5,  10.0)
-            debug.text = DatabaseFactory.getInstance(this).getInventory(Inventory.getInventory().name)?.getInventorySlotContents(0).toString()//.getFactory(0)?.toDetailedString()
+//            debug.text = DatabaseFactory.getInstance(this).getInventory(Inventory.getInventory().name)?.getInventorySlotContents(0).toString()//.getFactory(0)?.toDetailedString()
         }
 
         tomarket.setOnClickListener {

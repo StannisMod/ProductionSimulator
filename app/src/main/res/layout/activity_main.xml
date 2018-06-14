@@ -62,14 +62,14 @@
         android:layout_marginTop="20dp"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
-    <TextView
-        android:id="@+id/debug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/topersonal"
-        android:layout_toEndOf="@+id/tomarket"
-        android:textSize="20sp"
-        android:text="debug" />
+    <!--<TextView-->
+        <!--android:id="@+id/debug"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/topersonal"-->
+        <!--android:layout_toEndOf="@+id/tomarket"-->
+        <!--android:textSize="20sp"-->
+        <!--android:text="debug" />-->
     </RelativeLayout>
 
 </RelativeLayout>
