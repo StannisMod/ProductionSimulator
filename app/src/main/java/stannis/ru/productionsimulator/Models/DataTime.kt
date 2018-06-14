@@ -56,6 +56,8 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             fac.runTick()
         }
         DatabaseFactory.getInstance(ctx).setDataTimeWithProperties(this)
+
+        generateMessage(ctx)
     }
 
     fun checkCreditsDeposits(ctx: Context) {
@@ -63,9 +65,9 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         for (crDep in list) {
             if (this.currentDay == crDep.date[0]) {
                 crDep.rise(ctx)
-                if(crDep.type == 2){
-                    generateCreditBankMessage(crDep, ctx)
-                }
+//                if(crDep.type == 2){
+//                    generateCreditBankMessage(crDep, ctx)
+//                }
             }
         }
     }
