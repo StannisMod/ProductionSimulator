@@ -60,7 +60,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        app:srcCompat="@mipmap/lesopilka1_background" />
+        app:srcCompat="@mipmap/lesopilka1_foreground" />
 
     <!--<TextView-->
         <!--android:id="@+id/debug"-->
