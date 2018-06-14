@@ -38,6 +38,7 @@ class BankActivity : AppCompatActivity() {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
         }
+        rep.setEnabled(false)
 
         takeCredit.setOnClickListener {
             if(curData!=null) {
