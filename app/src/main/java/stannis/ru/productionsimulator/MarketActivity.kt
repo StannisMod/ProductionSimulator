@@ -1,17 +1,23 @@
 package stannis.ru.productionsimulator
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.TabHost
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.activity_market.*
 import kotlinx.android.synthetic.main.date_layout.*
+import kotlinx.android.synthetic.main.item.view.*
+import kotlinx.android.synthetic.main.item_buy.view.*
 import stannis.ru.productionsimulator.Models.Staff
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Models.Inventory
+import stannis.ru.productionsimulator.Models.ItemStack
 
 class MarketActivity : AppCompatActivity() {
 
@@ -59,11 +65,11 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
 
-        var listview1 : ListView = findViewById(R.id.tvTab1)
-        val dataArray1 = arrayOf( "Бензопила", "Грузовик", "Обрабатывающий станок")
-        val adapter1 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray1)
+        val slots = Inventory.getInventory().inv
+        val adapter = ItemAdapterBuy(this, slots.toCollection(ArrayList()))
 
-        listview1.adapter = adapter1
+        tvTab1.adapter = adapter
+
 
         var listview2 : ListView = findViewById(R.id.tvTab2)
         val dataArray2 = arrayOf( "Android", "IPhone", "Windows Phone", "BlackBerry")
@@ -91,3 +97,44 @@ class MarketActivity : AppCompatActivity() {
         }
     }
 }
+class ItemAdapterBuy : BaseAdapter {
+
+    var inv = ArrayList<ItemStack>()
+    var context : Context? = null
+
+    constructor(context: Context, inv: ArrayList<ItemStack>) : super() {
+        this.context = context
+        this.inv = inv
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val item = inv.get(position)
+        var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        var itemView = inflator.inflate(R.layout.item_buy, null)
+
+        itemView.imageItemSell.setImageResource(Items.findById(item.itemId).getItemImage())
+        itemView.nameBuy.text = Items.findById(item.itemId).getName()
+        if (item.getType() != 0)
+            itemView.price.text = "12$"
+        itemView.buy.setOnClickListener {
+           Toast.makeText(context, "KEK", Toast.LENGTH_SHORT).show()
+        }
+
+        return itemView
+    }
+
+    override fun getItem(position: Int): Any {
+        return inv.get(position)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return inv.size
+    }
+
+}
+
+

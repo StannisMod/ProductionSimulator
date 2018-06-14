@@ -59,8 +59,10 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "monthOfBirth" to TEXT)
 
         db.createTable("buy", true,
-                "name" to TEXT,
+                "num" to INTEGER,
                 "id" to INTEGER,
+                "stackSize" to INTEGER,
+                "maxStackSize" to INTEGER,
                 "price" to INTEGER)
         db.createTable("creditDeposit", true,
                 "type" to INTEGER,
@@ -127,7 +129,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     // To manage factory DB
 
-    fun addFactoryWithProperties(ctx : Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
                     "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
@@ -180,7 +182,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     }
 
     fun removeFactory(id: Int): Int {
-        var result : Int = 0
+        var result: Int = 0
         getInstance(ctx).use {
             result = delete("Factories", "id = {id}", "id" to id)
         }
@@ -189,29 +191,29 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     fun addInventory(inv: Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()-1) {
+            for (i in 0..inv.getInventorySize() - 1) {
                 val slot = inv.getInventorySlotContents(i)
                 insert(inv.name, "num" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
             }
         }
     }
 
-    fun updateInventory(inv : Inventory) {
+    fun updateInventory(inv: Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()-1) {
+            for (i in 0..inv.getInventorySize() - 1) {
                 val slot = inv.getInventorySlotContents(i)
                 update(inv.name, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize).whereArgs("index = {index}", "index" to i)
             }
         }
     }
 
-    fun getInventory(name : String) : Inventory? {
+    fun getInventory(name: String): Inventory? {
         // var index : Int
-        var id : Int
-        var stackSize : Int
-        var maxStackSize : Int
+        var id: Int
+        var stackSize: Int
+        var maxStackSize: Int
 
-        var inv : Inventory? = null
+        var inv: Inventory? = null
         val slots = ArrayList<ItemStack>()
 
         val query = "SELECT * FROM \"$name\""
@@ -437,11 +439,11 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
-    fun addMessageWithProperties(message : Message) {
+    fun addMessageWithProperties(message: Message) {
 
         getInstance(ctx).use {
             insert("Message",
-                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0], "month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
         }
     }
 
@@ -580,7 +582,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         }
     }
 
-    fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int, firstTime: Int, nalog : Int) {
+    fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int, firstTime: Int, nalog: Int) {
         getInstance(ctx).use {
             insert("PlayerStats", "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "firstTime" to firstTime, "nalog" to nalog)
         }
@@ -631,7 +633,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return res
     }
 
-    fun addDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int,  todaysCreditMinus:Int, todaysDepositGain:Int ) {
+    fun addDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int, todaysCreditMinus: Int, todaysDepositGain: Int) {
         getInstance(ctx).use {
             insert("DataTime", "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday, "todaysCreditMinus" to todaysCreditMinus, "todaysDepositGain" to todaysDepositGain)
         }

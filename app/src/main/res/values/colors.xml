@@ -10,4 +10,5 @@
     <color name="colorTextMailActivity">#ee2a9cff</color>
     <color name="minus">#fc030c</color>
     <color name="plus">#15f205</color>
+    <color name="white">#ffffff</color>
 </resources>
