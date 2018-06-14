@@ -26,6 +26,7 @@
         android:layout_below="@id/top_bar" />
 
     <GridView
+        android:layout_above="@id/data"
         android:id="@+id/inventory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

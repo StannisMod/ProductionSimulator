@@ -42,10 +42,7 @@ class InventoryActivity : AppCompatActivity() {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
         }
-        mail.setOnClickListener {
-            val intent = Intent(this, MailActivity::class.java)
-            startActivity(intent)
-        }
+
 
         inventory_name.text = "Инвентарь"
 

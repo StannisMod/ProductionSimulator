@@ -44,10 +44,8 @@ class FactoryActivity : AppCompatActivity() {
         if (factory == null)
             factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5,  10.0)
 
-        val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
         factory_name.text = EnumFactory.SAWMILL.getName()
 
-        val factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 1, 5,  10.0)
         val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
                 "Потребление сырья: ${factory.consumption}/сек",
                 "Выпуск продукции: ${factory.productivity}/сек",
