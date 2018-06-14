@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         if (Inventory.instance == null)
             Log.d("Instance", "Instance in DB is null!!!")
 
-        Log.d("Inv", Inventory.instance?.getInventorySlotContents(0).toString())
+        Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
         if (!DatabaseFactory.getInstance(this).added) {
             DatabaseFactory.getInstance(this).removeLaborExchange("Леха")
@@ -91,10 +91,12 @@ class MainActivity : AppCompatActivity() {
         stats_panel.setOnClickListener {
             // val intent = Intent(this, StatsActivity::class.java)
             // startActivity(stats)
+            Inventory.getInventory().setInventorySlotContents(Inventory.getInventory().findFirstEqualSlot(Items.WOOD.getId()), ItemStack(Items.WOOD.getId(), 32, 64))
         }
 
         tofactory.setOnClickListener {
             val intent = Intent(this, FactoryActivity::class.java)
+            intent.putExtra("FACTORY_ID", 0)
             startActivity(intent)
         }
         topersonal.setOnClickListener {

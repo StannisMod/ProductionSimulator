@@ -35,7 +35,7 @@ class Factory {
         val factories = ArrayList<Factory>()
 
         fun getFactoryById(id : Int): Factory? {
-            if (id < (factories.size - 1) && id >= 0)
+            if (id < factories.size && id >= 0)
                 return factories.get(id)
             return null
         }
@@ -45,6 +45,8 @@ class Factory {
             while (getFactoryById(i) != null)
                 getFactoryById(i)?.save(ctx)
         }
+
+        fun load(ctx : Context, id : Int) : Factory? = DatabaseFactory.getInstance(ctx).getFactory(id)
     }
 
     fun runTick() {
