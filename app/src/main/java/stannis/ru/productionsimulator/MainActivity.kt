@@ -27,32 +27,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
         if (!DatabaseFactory.getInstance(this).added) {
-            DatabaseFactory.getInstance(this).removeLaborExchange("Леха")
-            DatabaseFactory.getInstance(this).removeLaborExchange("Вася")
-            DatabaseFactory.getInstance(this).removeLaborExchange("Петя")
-            DatabaseFactory.getInstance(this).removeStaff("Леха")
-            DatabaseFactory.getInstance(this).removeStaff("Вася")
-            DatabaseFactory.getInstance(this).removeStaff("Петя")
-            DatabaseFactory.getInstance(this).removePlayer()
-            DatabaseFactory.getInstance(this).removeAllCredits()
-            DatabaseFactory.getInstance(this).removeDataTime()
-            DatabaseFactory.getInstance(this).addLaborExchangeWithProperties("Леха", 30, "Токарь", 10, "русский", 1200, "01", "01")
-            DatabaseFactory.getInstance(this).addLaborExchangeWithProperties("Вася", 30, "Слесарь", 10, "русский", 1200, "01", "02")
-            DatabaseFactory.getInstance(this).addLaborExchangeWithProperties("Петя", 30, "Дровосек", 10, "русский", 1200, "01", "03")
-            DatabaseFactory.getInstance(this).addPlayerStatsWithProperties(500, 0, 0, 50, 0, 500)
-            DatabaseFactory.getInstance(this).addDataTimeWithProperties("25", "12", "2018", 0, 0, 0, 0)
-            DatabaseFactory.getInstance(this).added = true
-
-            DatabaseFactory.getInstance(this).removeMessage("Здравствуйте.\nВаша лесопилка попала в список предприятий, владельцы которых претендуют на новую печку. Для того чтобы получить печку, вам надо взять кредит на сумму 10$. Чтобы мы были уверены в вашей финансовой состоятельности и не оказалось, что вы просто жулик\nС уважением комиссия лото 'ТОТО'".hashCode())
-            DatabaseFactory.getInstance(this).removeMessage("Если хочешь увидеть своего брата живым, то положи на свой счет 1000000$ и передай нам номер этого счета. Номер счета напиши на бумажке положи в холодильник на складе и чтобы все покинули лесопилку до 31 июня! Всех кто завтра будет на лесопилке. Убьём!!!".hashCode())
-            DatabaseFactory.getInstance(this).removeMessage("Здраствуйте.\nМы сообщаем Вам, что теперь всем владельцам лесопилок и других лесных сооруженний, нужно платить налог на сохранение лесов, в размере 1% от стоимости недвижимости на територии леса.".hashCode())
-            DatabaseFactory.getInstance(this).removeMessage("Здраствуйте, Кирилл Юрьевич.\nВаша задолженность банку составляет 5000$. Просим Вас до 31.12.2018 выплатить задолженность, иначе нам придется заблокировать ваш счет и забрать вашу лесопилку.\nС любовью банк!".hashCode())
-
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(caption = "Вы выграли приз!", sender = "Лото 'ТОТО'", text = "Здравствуйте.\nВаша лесопилка попала в список предприятий, владельцы которых претендуют на новую печку. Для того чтобы получить печку, вам надо взять кредит на сумму 10$. Чтобы мы были уверены в вашей финансовой состоятельности и не оказалось, что вы просто жулик\nС уважением комиссия лото 'ТОТО'", date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "ANONYMOUS", caption = "Твой брат у нас!", text = "Если хочешь увидеть своего брата живым, то положи на свой счет 1000000$ и передай нам номер этого счета. Номер счета напиши на бумажке положи в холодильник на складе и чтобы все покинули лесопилку до 31 июня! Всех кто завтра будет на лесопилке. Убьём!!!", date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "Власть", caption = "Новый закон о налогообложении", text = "Здраствуйте.\n" +
-                    "Мы сообщаем Вам, что теперь всем владельцам лесопилок и других лесных сооруженний, нужно платить налог на сохранение лесов, в размере 1% от стоимости недвижимости на територии леса.", date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
+           //fillDb(this)
         }
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)

@@ -67,7 +67,7 @@ class Credit_DepositActivity : AppCompatActivity() {
 
             }
             confirmCredit.setOnClickListener {
-                if (player != null && curData != null) {
+                if (player != null && curData != null && inputAmountOfCredit.text.toString() != "") {
                     if (!isCredit && inputAmountOfCredit.text.toString().toInt() > player.money) {
                         Toast.makeText(this, "Вы не вложите вложить больше денег, чем у вас сейчас есть", Toast.LENGTH_SHORT).show()
                     } else {

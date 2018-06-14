@@ -14,9 +14,12 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
         fun getInventory(name : String = TAG): Inventory {
             if (instance == null && name == TAG) {
                 instance = Inventory(TAG, 16, 64)
-            }
-            else
+            } else {
+                if( inventories.get(name) == null){
+                     createInventory(name, 16, 64)
+                }
                 return inventories.get(name)!!
+            }
             return instance!!
         }
 
