@@ -17,10 +17,10 @@ import stannis.ru.productionsimulator.Models.Message
 
 class MailActivity : AppCompatActivity() {
 
+//    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mail)
-
 
         var list : ArrayList<Message> = DatabaseFactory.getInstance(this).getMessage()
 
@@ -28,7 +28,7 @@ class MailActivity : AppCompatActivity() {
         val dataArray = Array(list.size){i -> list[i].toCaption()}
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray)
         listview.adapter = adapter
-//        (listview.getChildAt(0) as TextView).setTextColor(getColor(R.color.minus))
+        (listview.selectedItemPosition as TextView).background = getColor()
 
         listview.setOnItemClickListener { parent, view, position, id ->
             DatabaseFactory.getInstance(this).removeMessage(list[position].hashCode())

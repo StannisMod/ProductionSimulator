@@ -20,7 +20,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
             }
             return instance!!
         }
-
     }
 
     var added = false
