@@ -9,6 +9,7 @@ import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Models.Message
 
+
 class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 16) {
 
     companion object {
@@ -21,7 +22,6 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
             }
             return instance!!
         }
-
     }
 
     var added = false
@@ -71,7 +71,17 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "monthOfStart" to TEXT,
                 "yearOfStart" to TEXT
         )
-        db.createTable("message", true,
+        db.createTable("Message", true,
+                "hash" to INTEGER,
+                "caption" to TEXT,
+                "sender" to TEXT,
+                "text" to TEXT,
+                "day" to TEXT,
+                "month" to TEXT,
+                "year" to TEXT,
+                "readed" to TEXT
+        )
+        db.createTable("MessageReaded", true,
                 "hash" to INTEGER,
                 "caption" to TEXT,
                 "sender" to TEXT,
@@ -115,7 +125,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("staff", true)
         db.dropTable("buy", true)
         db.dropTable("creditDeposit", true)
-        db.dropTable("message", true)
+        db.dropTable("Message", true)
+        db.dropTable("MessageReaded", true)
         db.dropTable("PlayerStats", true)
         db.dropTable("DataTime", true)
         db.dropTable("Names", true)
@@ -466,6 +477,22 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return result
     }
 
+    fun addMessageReadedWithProperties(message : Message) {
+
+        getInstance(ctx).use {
+            insert("MessageReaded",
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0],"month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
+        }
+    }
+
+    fun removeMessageReaded(hash: Int): Int {
+        var result: Int = 0
+        getInstance(ctx).use {
+            result = delete("MessageReaded", "hash = {hash}", "hash" to hash)
+        }
+        return result
+    }
+
     fun addCrDepWithProperties(type: Int, amount: Int, percent: Double, dayOfStart: String, monthOfStart: String, yearOfStart: String) {
         getInstance(ctx).use {
             insert("creditDeposit",
@@ -476,6 +503,39 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     fun getMessage(): ArrayList<Message> {
         val query = "SELECT * FROM message"
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+        var list: ArrayList<Message> = ArrayList()
+
+        if (cursor.moveToFirst()) {
+            do {
+                var i = 0
+                val hash = cursor.getString(i).toInt()
+                i++
+                val caption = cursor.getString(i).toString()
+                i++
+                val sender = cursor.getString(i).toString()
+                i++
+                val text = cursor.getString(i).toString()
+                i++
+                val day = cursor.getString(i).toString()
+                i++
+                val month = cursor.getString(i).toString()
+                i++
+                val year = cursor.getString(i).toString()
+                i++
+                val readed = cursor.getString(i).toString()
+                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender, readed = readed))
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return list
+    }
+
+    fun getMessageReaded(): ArrayList<Message> {
+        val query = "SELECT * FROM messageReaded"
         val db = this.writableDatabase
 
         val cursor = db.rawQuery(query, null)

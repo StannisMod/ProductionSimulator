@@ -63,6 +63,9 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         for (crDep in list) {
             if (this.currentDay == crDep.date[0]) {
                 crDep.rise(ctx)
+                if(crDep.type == 2){
+                    generateCreditBankMessage(crDep, ctx)
+                }
             }
         }
     }
