@@ -1,5 +1,6 @@
 package stannis.ru.productionsimulator.Models
 
+import android.content.Context
 import java.util.*
 import stannis.ru.productionsimulator.EnumFactory
 
@@ -38,11 +39,24 @@ class Factory {
                 return factories.get(id)
             return null
         }
+
+        fun saveFactories(ctx : Context) {
+            var i = 0
+            while (getFactoryById(i) != null)
+                getFactoryById(i)?.save(ctx)
+        }
     }
 
     fun runTick() {
         res.decrStackSize(0, consumption)
         production.getInventorySlotContents(0).stackSize += productivity
         machine_state -= Random().nextInt(10) / 100
+    }
+
+    fun save(ctx : Context) {
+        if (DatabaseFactory.getInstance(ctx).getFactory(this.id) == null)
+            DatabaseFactory.getInstance(ctx).addFactory(ctx,this)
+        else
+            DatabaseFactory.getInstance(ctx).updateFactory(this)
     }
 }

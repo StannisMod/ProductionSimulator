@@ -8,7 +8,7 @@ import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Models.Message
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 13) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 14) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -119,6 +119,12 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     // To manage factory DB
 
+    fun addFactory(ctx : Context, factory : Factory) {
+        addFactoryWithProperties(ctx, factory.id, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
+                factory.res.getInventoryStackLimit(), factory.consumption, factory.productivity,
+                factory.production.getInventorySlotContents(0).stackSize, factory.production.getInventoryStackLimit(), factory.machine_state)
+    }
+
     fun addFactoryWithProperties(ctx : Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
@@ -163,10 +169,16 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         return factory
     }
 
-    fun setFactoryProperties(id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int) {
+    fun updateFactory(factory : Factory) {
+        setFactoryProperties(factory.id, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
+                factory.res.getInventoryStackLimit(), factory.consumption, factory.productivity,
+                factory.production.getInventorySlotContents(0).stackSize, factory.production.getInventoryStackLimit(), factory.machine_state)
+    }
+
+    fun setFactoryProperties(id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state : Double) {
         getInstance(ctx).use {
             update("Factories", "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
-                    "productivity" to productivity, "production" to production, "production_cap" to production_cap)
+                    "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
                     .whereArgs("id = {id}", "id" to id).exec()
         }
     }
@@ -181,7 +193,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     fun addInventory(inv: Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()-1) {
+            for (i in 0..(inv.getInventorySize() - 1)) {
                 val slot = inv.getInventorySlotContents(i)
                 insert(inv.name, "num" to i, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize)
             }
@@ -190,7 +202,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
     fun updateInventory(inv : Inventory) {
         getInstance(ctx).use {
-            for (i in 0..inv.getInventorySize()-1) {
+            for (i in 0..(inv.getInventorySize() - 1)) {
                 val slot = inv.getInventorySlotContents(i)
                 update(inv.name, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize).whereArgs("index = {index}", "index" to i)
             }

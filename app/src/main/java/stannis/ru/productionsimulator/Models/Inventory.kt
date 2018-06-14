@@ -6,12 +6,13 @@ import android.util.Log
 class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
     companion object {
-        private var instance: Inventory? = null
+        val TAG = "PlayerInv"
+        var instance: Inventory? = null
 
         @Synchronized
         fun getInventory(): Inventory {
             if (instance == null) {
-                instance = Inventory("PlayerInv", 16, 64)
+                instance = Inventory(TAG, 16, 64)
             }
             return instance!!
         }
@@ -92,9 +93,13 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     }
 
     fun save(ctx : Context) {
-        if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null)
+        if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null) {
+            Log.d("Shutdown thread", "Added!")
             DatabaseFactory.getInstance(ctx).addInventory(this)
-        else
+        }
+        else {
+            Log.d("Shutdown thread", "Updated!")
             DatabaseFactory.getInstance(ctx).updateInventory(this)
+        }
     }
 }
