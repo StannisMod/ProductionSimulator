@@ -40,10 +40,19 @@ class FactoryActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        var factory = Factory.getFactoryById(0)//intent.getIntExtra("TAG", 0))
+        var factory = Factory.getFactoryById(0)//intent.getIntExtra("FACTORY_ID", 0))
 
-        if (factory == null)
-            factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5,  10.0)
+        // if (factory == null)
+          //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
+
+        if (factory == null) {
+            Log.d("FACTORY", "Factory is null!!![${intent.getIntExtra("FACTORY_ID", 0)}]")
+        }
+
+        if (factory == null) {
+            Log.d("FACTORY", "Factory is null x2!!!")
+            factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5, 10.0)
+        }
 
         factory_name.text = factory.type.getName()
 
@@ -65,10 +74,12 @@ class FactoryActivity : AppCompatActivity() {
                     //Log.d("ITEM_2", item.toString())
                     while (!factory.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0) {
                         //Log.d("ITEM_3", item.toString())
-                        Inventory.transferItem(factory.type.getResType().getId(), inv, factory.res, i, 1)
+                        Inventory.transferItem(inv, factory.res, i, 1)
                     }
                 }
             }
+            data.set(0, "Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}")
+            adapter.notifyDataSetChanged()
         }
 
         storeProd.setOnClickListener {
@@ -76,10 +87,13 @@ class FactoryActivity : AppCompatActivity() {
             val i : Int? = inv.findFirstEqualSlot(factory.type.getResType().getId())
             if (i != null){
                 while (!factory.production.isSlotEmpty(0) && inv.getInventorySlotContents(i).stackSize < Inventory.getInventory().getInventoryStackLimit())
-                    Inventory.transferItem(factory.type.getProdType().getId(), factory.production, inv, 0, 1)
+                    Inventory.transferItem(factory.production, inv, 0, 1)
             }
             else
                 Toast.makeText(this, "Ваш инвентарь заполнен", Toast.LENGTH_SHORT).show()
+
+            data.set(3, "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}")
+            adapter.notifyDataSetChanged()
         }
     }
 }

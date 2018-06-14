@@ -3,6 +3,7 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
@@ -16,6 +17,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (Inventory.instance == null)
+            Inventory.instance = Inventory.load(this, Inventory.TAG)
+
+        if (Inventory.instance == null)
+            Log.d("Instance", "Instance in DB is null!!!")
+
+        Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
+
         if (!DatabaseFactory.getInstance(this).added) {
             DatabaseFactory.getInstance(this).removeLaborExchange("Леха")
             DatabaseFactory.getInstance(this).removeLaborExchange("Вася")
@@ -38,11 +48,11 @@ class MainActivity : AppCompatActivity() {
             DatabaseFactory.getInstance(this).removeMessage("Здраствуйте.\nМы сообщаем Вам, что теперь всем владельцам лесопилок и других лесных сооруженний, нужно платить налог на сохранение лесов, в размере 1% от стоимости недвижимости на територии леса.".hashCode())
             DatabaseFactory.getInstance(this).removeMessage("Здраствуйте, Кирилл Юрьевич.\nВаша задолженность банку составляет 5000$. Просим Вас до 31.12.2018 выплатить задолженность, иначе нам придется заблокировать ваш счет и забрать вашу лесопилку.\nС любовью банк!".hashCode())
 
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(caption = "Вы выграли приз!", sender = "Лото 'ТОТО'", text = "Здравствуйте.\nВаша лесопилка попала в список предприятий, владельцы которых претендуют на новую печку. Для того чтобы получить печку, вам надо взять кредит на сумму 10$. Чтобы мы были уверены в вашей финансовой состоятельности и не оказалось, что вы просто жулик\nС уважением комиссия лото 'ТОТО'", date = arrayOf("12", "06", "2018")))
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "ANONYMOUS", caption = "Твой брат у нас!", text = "Если хочешь увидеть своего брата живым, то положи на свой счет 1000000$ и передай нам номер этого счета. Номер счета напиши на бумажке положи в холодильник на складе и чтобы все покинули лесопилку до 31 июня! Всех кто завтра будет на лесопилке. Убьём!!!", date = arrayOf("30", "06", "2018")))
+            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(caption = "Вы выграли приз!", sender = "Лото 'ТОТО'", text = "Здравствуйте.\nВаша лесопилка попала в список предприятий, владельцы которых претендуют на новую печку. Для того чтобы получить печку, вам надо взять кредит на сумму 10$. Чтобы мы были уверены в вашей финансовой состоятельности и не оказалось, что вы просто жулик\nС уважением комиссия лото 'ТОТО'", date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
+            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "ANONYMOUS", caption = "Твой брат у нас!", text = "Если хочешь увидеть своего брата живым, то положи на свой счет 1000000$ и передай нам номер этого счета. Номер счета напиши на бумажке положи в холодильник на складе и чтобы все покинули лесопилку до 31 июня! Всех кто завтра будет на лесопилке. Убьём!!!", date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
             DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "Власть", caption = "Новый закон о налогообложении", text = "Здраствуйте.\n" +
-                    "Мы сообщаем Вам, что теперь всем владельцам лесопилок и других лесных сооруженний, нужно платить налог на сохранение лесов, в размере 1% от стоимости недвижимости на територии леса.", date = arrayOf("01", "06", "2018")))
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message())
+                    "Мы сообщаем Вам, что теперь всем владельцам лесопилок и других лесных сооруженний, нужно платить налог на сохранение лесов, в размере 1% от стоимости недвижимости на територии леса.", date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
+            DatabaseFactory.getInstance(this).addMessageWithProperties(Message(date = arrayOf(DatabaseFactory.getInstance(this).getDataTime()!!.currentDay, DatabaseFactory.getInstance(this).getDataTime()!!.currentMonth, DatabaseFactory.getInstance(this).getDataTime()!!.currentYear)))
         }
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -74,14 +84,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         tomarket.setOnClickListener {
-            Inventory.getInventory().setInventorySlotContents(0, ItemStack(1, 5, 64))
-            Inventory.getInventory().setInventorySlotContents(1, ItemStack(1, 2, 64))
-            Inventory.getInventory().setInventorySlotContents(2, ItemStack(2, 6, 64))
-            Inventory.getInventory().setInventorySlotContents(3, ItemStack(3, 12, 64))
-            Inventory.getInventory().setInventorySlotContents(4, ItemStack(5, 16, 64))
-            Inventory.getInventory().setInventorySlotContents(5, ItemStack(6, 22, 64))
-            Inventory.getInventory().save(this)
-
             val intent = Intent(this, MarketActivity::class.java)
             startActivity(intent)
         }
@@ -89,10 +91,12 @@ class MainActivity : AppCompatActivity() {
         stats_panel.setOnClickListener {
             // val intent = Intent(this, StatsActivity::class.java)
             // startActivity(stats)
+            Inventory.getInventory().setInventorySlotContents(Inventory.getInventory().findFirstEqualSlot(Items.WOOD.getId()), ItemStack(Items.WOOD.getId(), 32, 64))
         }
 
         tofactory.setOnClickListener {
             val intent = Intent(this, FactoryActivity::class.java)
+            intent.putExtra("FACTORY_ID", 0)
             startActivity(intent)
         }
         topersonal.setOnClickListener {
@@ -100,5 +104,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Shutdown thread", "Destroy!")
+        Inventory.getInventory().save(this)
+        Factory.saveFactories(this)
     }
 }

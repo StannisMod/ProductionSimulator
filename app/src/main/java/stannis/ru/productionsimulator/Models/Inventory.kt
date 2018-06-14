@@ -6,32 +6,32 @@ import android.util.Log
 class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
     companion object {
-        private var instance: Inventory? = null
+        val TAG = "PlayerInv"
+        var instance: Inventory? = null
+        val inventories = HashMap<String, Inventory>()
 
         @Synchronized
-        fun getInventory(): Inventory {
-            if (instance == null) {
-                instance = Inventory("PlayerInv", 16, 64)
+        fun getInventory(name : String = TAG): Inventory {
+            if (instance == null && name == TAG) {
+                instance = Inventory(TAG, 16, 64)
             }
+            else
+                return inventories.get(name)!!
             return instance!!
         }
 
-        fun transferItem(itemId : Int, from : Inventory, to : Inventory, slotIndex : Int, quantity : Int) {
+        fun createInventory(name : String, size : Int, maxStackSize : Int) = inventories.put(name, Inventory(name, size, maxStackSize))
+
+        fun transferItem(from : Inventory, to : Inventory, slotIndex : Int, quantity : Int) {
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
                 return
 
-            //Log.d("TRSF", "Begin transfer")
-
-            var i = to.findFirstEqualSlot(itemId)
+            var i = to.findFirstEqualSlot(from.getInventorySlotContents(slotIndex).itemId)
             if (to.isSlotEmpty(i))
                 to.setInventorySlotContents(i, ItemStack(from.getInventorySlotContents(slotIndex).itemId, quantity, to.getInventoryStackLimit()))
             else
                 to.getInventorySlotContents(i).stackSize += quantity
-            /*
-            Log.d("TRSF", "$i")
-            Log.d("TRSF", from.getInventorySlotContents(slotIndex).toString())
-            Log.d("TRSF", "${to.getInventorySlotContents(i)}")
-            */
+
             from.decrStackSize(slotIndex, quantity)
         }
 
@@ -92,9 +92,14 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     }
 
     fun save(ctx : Context) {
-        if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null)
+        if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null) {
+            //Log.d("Shutdown thread", "Added!")
             DatabaseFactory.getInstance(ctx).addInventory(this)
-        else
+        }
+        else {
+            //Log.d("Shutdown thread", "Updated!")
             DatabaseFactory.getInstance(ctx).updateInventory(this)
+            //Log.d("Inv_shutdown", DatabaseFactory.getInstance(ctx).getInventory(this.name)?.getInventorySlotContents(0).toString())
+        }
     }
 }
