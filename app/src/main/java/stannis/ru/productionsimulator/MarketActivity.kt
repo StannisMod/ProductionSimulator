@@ -8,6 +8,7 @@ import android.widget.ListView
 import android.widget.TabHost
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_market.*
+import kotlinx.android.synthetic.main.date_layout.*
 import stannis.ru.productionsimulator.Models.Staff
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
@@ -24,6 +25,14 @@ class MarketActivity : AppCompatActivity() {
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
+        }
+        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        if(curData!=null){
+            curDate.text = curData.toString()
+        }
+        endDay.setOnClickListener {
+            val intent = Intent(this, EndDayActivity::class.java)
+            startActivity(intent)
         }
 
         mail.setOnClickListener {

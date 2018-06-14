@@ -9,6 +9,13 @@
     <include
         android:id="@+id/top_bar"
         layout="@layout/stats_panel" />
+    <include
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/data"
+        layout="@layout/date_layout"
+        ></include>
 
     <TextView
         android:id="@+id/factory_name"

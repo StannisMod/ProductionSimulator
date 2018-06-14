@@ -1,5 +1,7 @@
 package stannis.ru.productionsimulator.Models
 
+import android.content.Context
+
 class Credit_Deposit(var amount: Int, var percent: Double, var date: Array<String>, var type: Int) {
 
 
@@ -24,8 +26,9 @@ class Credit_Deposit(var amount: Int, var percent: Double, var date: Array<Strin
     }
 
 
-    fun rise() {
+    fun rise(ctx : Context) {
         amount += (amount * (percent / 100.0)).toInt()
+        DatabaseFactory.getInstance(ctx).setCreditDepositProperties(this)
     }
 
 

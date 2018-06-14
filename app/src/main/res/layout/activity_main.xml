@@ -7,15 +7,29 @@
     tools:context=".MainActivity">
 
     <include
+        android:id="@+id/stats"
         layout="@layout/stats_panel"
         />
+    <include
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/data"
+        layout="@layout/date_layout"
+        ></include>
 
+    <RelativeLayout
+        android:layout_below="@id/stats"
+        android:layout_above= "@id/data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ImageButton
         android:id="@+id/toinventory"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/oval_button" />
         <!--- app:srcCompat="@android:drawable/ic_notification_overlay" /> -->
 
@@ -25,6 +39,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/oval_button" />
         <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
 
@@ -44,7 +59,17 @@
         android:layout_height="155dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/debug"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/topersonal"-->
+        <!--android:layout_toEndOf="@+id/tomarket"-->
+        <!--android:textSize="20sp"-->
+        <!--android:text="debug" />-->
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -9,6 +9,14 @@
     <include
         android:id="@+id/stats_panel"
         layout="@layout/stats_panel"></include>
+    <include
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/data"
+        layout="@layout/date_layout"
+        ></include>
+
 
     <TextView
         android:id="@+id/bank"
@@ -46,6 +54,7 @@
 
     <LinearLayout
         android:id="@+id/creditData"
+        android:layout_above="@id/data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/DepCred"

@@ -9,12 +9,26 @@
     <include
         android:id="@+id/stats_panel"
         layout="@layout/stats_panel"></include>
+    <include
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/data"
+        layout="@layout/date_layout"
+        ></include>
+    <RelativeLayout
+        android:layout_below="@id/stats_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/data">
+
+
 
     <TextView
         android:id="@+id/yourStaff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/stats_panel"
+
         android:layout_marginLeft="5dp"
         android:text="Ваши работники: "
         android:textSize="30sp" />
@@ -24,5 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/yourStaff"></ListView>
+    </RelativeLayout>
 
 </RelativeLayout>

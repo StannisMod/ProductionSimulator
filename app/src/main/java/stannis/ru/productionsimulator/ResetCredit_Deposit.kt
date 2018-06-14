@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_reset_credit__deposit.*
+import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Models.DatabaseFactory
@@ -22,6 +23,14 @@ class ResetCredit_Deposit : AppCompatActivity() {
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
+        }
+        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        if(curData!=null){
+            curDate.text = curData.toString()
+        }
+        endDay.setOnClickListener {
+            val intent = Intent(this, EndDayActivity::class.java)
+            startActivity(intent)
         }
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -57,16 +66,19 @@ class ResetCredit_Deposit : AppCompatActivity() {
                 if (crDep != null) {
 
                     val cond = crDep.takeDep_payOff(resetAmount.text.toString().toInt())
-                    if (player != null) {
+                    if (player != null&&curData!=null) {
                         if (!condition && resetAmount.text.toString().toInt() > player.money) {
                             Toast.makeText(this, "Вы не можете внести больше денег, чем Вы сейчас имеете(", Toast.LENGTH_SHORT)
                         } else {
                             if(condition){
                                 player.money+=resetAmount.text.toString().toInt()
+                                curData.todaysDepositGain+=resetAmount.text.toString().toInt()
                             }else{
                                 player.money-=resetAmount.text.toString().toInt()
+                                curData.todaysCreditMinus+=resetAmount.text.toString().toInt()
                             }
                             DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
+                            DatabaseFactory.getInstance(this).setDataTimeWithProperties(curData)
 
 
                             if (cond) {

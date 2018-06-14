@@ -8,4 +8,6 @@
     <color name="colorTextMessageActivity">#000000</color>
     <color name="colorNameTextMailActivity">#ff6f00</color>
     <color name="colorTextMailActivity">#ee2a9cff</color>
+    <color name="minus">#fc030c</color>
+    <color name="plus">#15f205</color>
 </resources>

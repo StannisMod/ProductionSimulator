@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_factory.*
+import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.Models.Factory
@@ -24,6 +25,14 @@ class FactoryActivity : AppCompatActivity() {
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
+        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        if(curData!=null){
+            curDate.text = curData.toString()
+        }
+        endDay.setOnClickListener {
+            val intent = Intent(this, EndDayActivity::class.java)
+            startActivity(intent)
+        }
 
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -35,6 +44,10 @@ class FactoryActivity : AppCompatActivity() {
         if (factory == null)
             factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5,  10.0)
 
+        val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
+        factory_name.text = EnumFactory.SAWMILL.getName()
+
+        val factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 1, 5,  10.0)
         val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
                 "Потребление сырья: ${factory.consumption}/сек",
                 "Выпуск продукции: ${factory.productivity}/сек",

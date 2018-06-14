@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_credit__deposit.*
+import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.DatabaseFactory
 import stannis.ru.productionsimulator.R.id.percent
@@ -24,6 +25,14 @@ class Credit_DepositActivity : AppCompatActivity() {
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
+        }
+        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        if (curData != null) {
+            curDate.text = curData.toString()
+        }
+        endDay.setOnClickListener {
+            val intent = Intent(this, EndDayActivity::class.java)
+            startActivity(intent)
         }
 
         mail.setOnClickListener {
@@ -44,9 +53,9 @@ class Credit_DepositActivity : AppCompatActivity() {
                 if ((v as EditText).text.toString() != "") {
                     var percent = 0.0
                     if (isCredit) {
-                        percent = myToDouble((v as EditText).text.toString()) / 100.0
+                        percent = player!!.countCreditPercent(v.text.toString().toInt())
                     } else {                                                                  //Write Some Normal Formula also there is a bug...
-                        percent = myToDouble((v as EditText).text.toString()) / 101.0
+                        percent = player!!.countDepositPercent(v.text.toString().toInt())
                     }
 
                     countedPercent.text = " ${round(percent, 2)}%/месяц"
@@ -57,20 +66,26 @@ class Credit_DepositActivity : AppCompatActivity() {
 
             }
             confirmCredit.setOnClickListener {
-                if ( player != null) {
-                    if (!isCredit&&inputAmountOfCredit.text.toString().toInt() > player.money) {
+                if (player != null && curData != null) {
+                    if (!isCredit && inputAmountOfCredit.text.toString().toInt() > player.money) {
                         Toast.makeText(this, "Вы не вложите вложить больше денег, чем у вас сейчас есть", Toast.LENGTH_SHORT).show()
                     } else {
-                        if(!isCredit) {
+                        if (!isCredit) {
                             player.money -= inputAmountOfCredit.text.toString().toInt()
-                        }else{
-                            player.money+=inputAmountOfCredit.text.toString().toInt()
+
+                            curData.tookDepositToday = inputAmountOfCredit.text.toString().toInt()
+
+
+                        } else {
+                            curData.tookCreditToday = inputAmountOfCredit.text.toString().toInt()
+                            player.money += inputAmountOfCredit.text.toString().toInt()
                         }
-                        DatabaseFactory.getInstance(this).setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation)
+                        DatabaseFactory.getInstance(this).setDataTimeWithProperties(curData)
+                        DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
 
 
                         val type = if (isCredit) 2 else 1
-                        DatabaseFactory.getInstance(this).addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), "01", "02", "2018")
+                        DatabaseFactory.getInstance(this).addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), curData.currentDay, curData.currentMonth, curData.currentYear)
                         val mes = if (isCredit) "Кредит взят" else "Депозит открыт"
                         Toast.makeText(this, mes, Toast.LENGTH_SHORT)
 
@@ -93,11 +108,5 @@ class Credit_DepositActivity : AppCompatActivity() {
 
     }
 
-    fun myToDouble(str: String?): Double {
-        if (str == null || str == "") {
-            return 0.0
-        }
-        return str.toDouble()
-    }
 }
 
