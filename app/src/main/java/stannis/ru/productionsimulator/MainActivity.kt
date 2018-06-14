@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "ANONYMOUS", caption = "Твой брат у нас!", text = "Если хочешь увидеть своего брата живым, то положи на свой счет 1000000$ и передай нам номер этого счета. Номер счета напиши на бумажке положи в холодильник на складе и чтобы все покинули лесопилку до 31 июня! Всех кто завтра будет на лесопилке. Убьём!!!", date = arrayOf("30", "06", "2018")))
             DatabaseFactory.getInstance(this).addMessageWithProperties(Message(sender = "Власть", caption = "Новый закон о налогообложении", text = "Здраствуйте.\n" +
                     "Мы сообщаем Вам, что теперь всем владельцам лесопилок и других лесных сооруженний, нужно платить налог на сохранение лесов, в размере 1% от стоимости недвижимости на територии леса.", date = arrayOf("01", "06", "2018")))
-            DatabaseFactory.getInstance(this).addMessageWithProperties(Message())
+           // DatabaseFactory.getInstance(this).addMessageWithProperties(Message())
         }
 
         mail.setOnClickListener {
