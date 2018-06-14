@@ -44,7 +44,7 @@ class FactoryActivity : AppCompatActivity() {
         if (factory == null)
             factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5,  10.0)
 
-        factory_name.text = EnumFactory.SAWMILL.getName()
+        factory_name.text = factory.type.getName()
 
         val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
                 "Потребление сырья: ${factory.consumption}/сек",
