@@ -22,6 +22,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
             }
             return instance!!
         }
+
     }
 
     var added = false
@@ -125,8 +126,7 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
         db.dropTable("staff", true)
         db.dropTable("buy", true)
         db.dropTable("creditDeposit", true)
-        db.dropTable("Message", true)
-        db.dropTable("MessageReaded", true)
+        db.dropTable("message", true)
         db.dropTable("PlayerStats", true)
         db.dropTable("DataTime", true)
         db.dropTable("Names", true)
