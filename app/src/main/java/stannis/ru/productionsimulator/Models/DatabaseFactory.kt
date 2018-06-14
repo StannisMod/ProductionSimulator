@@ -8,7 +8,7 @@ import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Models.Message
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 13) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 14) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -77,7 +77,8 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
                 "text" to TEXT,
                 "day" to TEXT,
                 "month" to TEXT,
-                "year" to TEXT
+                "year" to TEXT,
+                "readed" to TEXT
         )
         db.createTable("PlayerStats", true,
                 "money" to INTEGER,//Весь Integer
