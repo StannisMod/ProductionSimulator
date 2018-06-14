@@ -60,7 +60,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        app:srcCompat="@mipmap/lesopilka1_background" />
 
     <!--<TextView-->
         <!--android:id="@+id/debug"-->
