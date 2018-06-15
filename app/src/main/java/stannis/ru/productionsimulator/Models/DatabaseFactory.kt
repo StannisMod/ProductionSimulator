@@ -13,7 +13,7 @@ import java.util.*
 import kotlin.collections.RandomAccess
 
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 20) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 21) {
 
     companion object {
         private var instance: DatabaseFactory? = null
@@ -493,6 +493,18 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
     fun removeAllStaff() {
         getInstance(ctx).use {
             delete("staff")
+        }
+    }
+
+    fun removeAllMessage() {
+        getInstance(ctx).use {
+            delete("Message")
+        }
+    }
+
+    fun removeAllMessageReaded() {
+        getInstance(ctx).use {
+            delete("MessageReaded")
         }
     }
 
