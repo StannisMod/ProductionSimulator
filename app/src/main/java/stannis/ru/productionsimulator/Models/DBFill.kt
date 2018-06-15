@@ -75,6 +75,7 @@ fun fillDb(ctx: Context) {
     ins.removePlayer()
     ins.removeAllCredits()
     ins.removeDataTime()
+
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(2).getNationality(), 5, "01", "01")
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(3).getNationality(), 5, "01", "02")
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(5).getNationality(), 5, "01", "03")

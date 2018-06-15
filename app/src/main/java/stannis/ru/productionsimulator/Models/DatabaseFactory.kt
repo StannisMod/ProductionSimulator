@@ -13,7 +13,7 @@ import java.util.*
 import kotlin.collections.RandomAccess
 
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 21) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 22) {
 
     companion object {
         private var instance: DatabaseFactory? = null
