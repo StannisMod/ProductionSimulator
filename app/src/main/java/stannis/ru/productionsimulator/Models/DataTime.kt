@@ -3,6 +3,7 @@ package stannis.ru.productionsimulator.Models
 import android.content.Context
 import android.util.Log
 import stannis.ru.productionsimulator.Items
+import stannis.ru.productionsimulator.ItemsBuy
 import stannis.ru.productionsimulator.Nations
 import stannis.ru.productionsimulator.Profs
 import java.time.Year
@@ -54,16 +55,17 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         }
         checkCreditsDeposits(ctx)
         checkBirthDays(ctx)
-        this.todaysDepositGain=0
-        this.todaysCreditMinus=0
+        this.todaysDepositGain = 0
+        this.todaysCreditMinus = 0
         this.tookCreditToday = 0
         this.tookDepositToday = 0
         val fac = DatabaseFactory.getInstance(ctx).getFactory(0)
-        if(fac!=null){
+        if (fac != null) {
             fac.runTick()
         }
         generateBuyInv(ctx)
         generateLabor(ctx)
+        sellItems(ctx)
         ins.setDataTimeWithProperties(this)
 
         generateMessage(ctx)
@@ -81,44 +83,68 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         }
     }
 
+    fun sellItems(ctx: Context) {
+        val ins = DatabaseFactory.getInstance(ctx)
+        val player = ins.getPlayerStats()
+        // for (i in 1..3) {
+        val invent = ins.getInventory("sell")
+        var tmp = 0;
+        for (v in invent!!.inv) {
+            if (!v.isEmpty()) {
+                tmp++
+            }
+        }
+        for (i in 0 until tmp) {
+            if (Random().nextInt(3) == 0) {
+                player!!.money += invent.getInventorySlotContents(i).stackSize * (ItemsBuy.findById(invent.getInventorySlotContents(i).itemId).getItemPrice())
+                invent.setInventorySlotContents(i, ItemStack(0, 0, 0))
+            }
+        }
+        ins.setPlayerWithProperties(player!!)
+        ins.updateInventory(invent)
+
+    }
+
     fun generateLabor(ctx: Context) {
         val ins = DatabaseFactory.getInstance(ctx)
-       // for (i in 1..3) {
-            val sz = ins.getListOfLaborExchange().size
-            val p = Random().nextInt(sz + 1)
-            if (p == 0) {
-                val age = 25 + Random().nextInt(30)
-                val prof = Profs.findById(Random().nextInt(299) / 50)
-                val nat = Nations.findById(Random().nextInt(410) / 80)
-                val qual = nat.getAvQuality() - (Random().nextInt(5) - 3)
-                val day = Random().nextInt(10) + 10
-                val month = Random().nextInt(8) + 1
-                val staff = Staff(ins.getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
-                Log.d("Added", "paren Added")
-                ins.addLaborExchangeWithProperties(staff)
-            }
-       // }
+        // for (i in 1..3) {
+        val sz = ins.getListOfLaborExchange().size
+        val p = Random().nextInt(sz + 1)
+        if (p == 0) {
+            val age = 25 + Random().nextInt(30)
+            val prof = Profs.findById(Random().nextInt(299) / 50)
+            val nat = Nations.findById(Random().nextInt(410) / 80)
+            val qual = nat.getAvQuality() - (Random().nextInt(5) - 3)
+            val day = Random().nextInt(10) + 10
+            val month = Random().nextInt(8) + 1
+            val staff = Staff(ins.getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
+            Log.d("Added", "paren Added")
+            ins.addLaborExchangeWithProperties(staff)
+        }
+        // }
 
     }
 
     fun generateBuyInv(ctx: Context) {
         val ins = DatabaseFactory.getInstance(ctx)
-       // for (i in 1..3) {
-            val invent = ins.getInventory("buy")
-            var tmp = 0;
-            for(v in invent!!.inv){
-                if(!v.isEmpty()){tmp++}
+        // for (i in 1..3) {
+        val invent = ins.getInventory("buy")
+        var tmp = 0;
+        for (v in invent!!.inv) {
+            if (!v.isEmpty()) {
+                tmp++
             }
+        }
 
-            val p = Random().nextInt(tmp+1)
-            if (p == 0) {
-                val id = Random().nextInt(11)
-                invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
-                        .itemId, Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
-                invent.save(ctx)
-                Log.d("Added", "inv Added")
-            }
-       // }
+        val p = Random().nextInt(tmp + 1)
+        if (p == 0) {
+            val id = Random().nextInt(11)
+            invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                    .itemId, Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
+            invent.save(ctx)
+            Log.d("Added", "inv Added")
+        }
+        // }
     }
 
     fun checkBirthDays(ctx: Context) {
@@ -137,11 +163,12 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         }
 
     }
-    fun getAllWages(ctx:Context):Int{
+
+    fun getAllWages(ctx: Context): Int {
         val list1 = DatabaseFactory.getInstance(ctx).getListOfStaff()
         var res = 0
         for (st in list1) {
-            res+=st.salary
+            res += st.salary
         }
         return res
     }

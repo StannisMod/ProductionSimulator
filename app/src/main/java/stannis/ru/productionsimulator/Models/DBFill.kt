@@ -8,6 +8,15 @@ import java.util.*
 
 fun fillDb(ctx: Context) {
     val ins = DatabaseFactory.getInstance(ctx)
+    ins.removeAllLabor()
+    ins.removeAllStaff()
+    ins.removePlayer()
+    ins.removeAllCredits()
+    ins.removeDataTime()
+    Inventory.getInventory("buy").clear()
+    Inventory.getInventory("sell").clear()
+    Inventory.getInventory().clear()
+    ins.removeAllNames()
     val invent = Inventory.getInventory("buy")
     if (invent != null) {
         invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.SHOVEL.getId()), ItemStack(Items.SHOVEL
@@ -17,7 +26,6 @@ fun fillDb(ctx: Context) {
 
         invent.save(ctx)
     }
-    ins.removeAllNames()
     val arrayNames = arrayOf("Абрам", " Август", " Авдей", " Аверкий", " Адам", " Адриан", " Азарий", " Аким", " Александр", " Алексей", " Амвросий", " Амос", " Ананий", " Анатолий", " Андрей", " Андриан", " Андрон", " Аристарх", " Аркадий", " Арсен", " Арсений", " Артём", " Артемий", " Архип", " Аскольд", " Афанасий", " Афиноген", "Кирилл", " Карл", " Касим", " Кастор", " Касьян", " Каюм", " Кеша", " Кирсан", " Клим", " Кондрат", " Корней", " Корнелий", " Косьма", " Кристиан", " Кузьма",
             "Лавр", " Лаврентий", " Ладимир", " Лазарь", " Леонид", " Леонтий", " Лонгин", " Лука", " Наум", " Нестор", " Нестер", " Никандр", " Никанор", " Никита", " Никифор", " Никодим", " Никола", " Николай", " Никон", " Нил", " Нифонт",
 
@@ -70,11 +78,7 @@ fun fillDb(ctx: Context) {
 
 
 
-    ins.removeAllLabor()
-    ins.removeAllStaff()
-    ins.removePlayer()
-    ins.removeAllCredits()
-    ins.removeDataTime()
+
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(2).getNationality(), 5, "01", "01")
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(3).getNationality(), 5, "01", "02")
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(5).getNationality(), 5, "01", "03")

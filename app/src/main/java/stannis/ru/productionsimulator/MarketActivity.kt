@@ -70,7 +70,7 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
 
-        val slots =  Inventory.load(this, "buy")!!.inv
+        val slots =  Inventory.getInventory("buy").inv
 
         val arrayList: ArrayList<ItemStack> = ArrayList()
         for (inv in slots) {
@@ -149,21 +149,21 @@ class ItemAdapterBuy : BaseAdapter {
         var itemView = inflator.inflate(R.layout.item_buy, null)
 
         itemView.imageItemSell.setImageResource(ItemsBuy.findById(item.itemId).getItemImage())
-        itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize}"
+        itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize})"
         itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
-//        itemView.buy.setOnClickListener {
-//            val player = DatabaseFactory.getInstance(context!!).getPlayerStats()
-//            if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
-//                player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
-//                DatabaseFactory.getInstance(context!!).setPlayerWithProperties(player)
-//                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
-//                Inventory.getInventory("buy").save(context!!)
-//                Inventory.getInventory().save(context!!)
-//
-//                val intent = Intent(context!!, MarketActivity::class.java)
-//                ContextCompat.startActivity(context!!, intent, Bundle.EMPTY)
-//            }
-//        }
+        itemView.buy.setOnClickListener {
+            val player = DatabaseFactory.getInstance(context!!).getPlayerStats()
+            if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
+                player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
+                DatabaseFactory.getInstance(context!!).setPlayerWithProperties(player)
+                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
+                Inventory.getInventory("buy").save(context!!)
+                Inventory.getInventory().save(context!!)
+
+                val intent = Intent(context!!, MarketActivity::class.java)
+                ContextCompat.startActivity(context!!, intent, Bundle.EMPTY)
+            }
+        }
 
         return itemView
     }
