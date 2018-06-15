@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
             Inventory.inventories.put("buy", Inventory.load(this, "buy"))
 
 
+        if (Factory.getFactoryById(0) == null)
+            Factory(0, EnumFactory.findById(0))
+
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
 
@@ -39,10 +42,9 @@ class MainActivity : AppCompatActivity() {
         val player = DatabaseFactory.getInstance(this).getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
-            res.text = player.stuff.toString()
+            res.text = Factory.getFactoryById(0)!!.res!!.getInventorySlotContents(0).stackSize.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
-
         }
         val curData = DatabaseFactory.getInstance(this).getDataTime()
         if (curData != null) {

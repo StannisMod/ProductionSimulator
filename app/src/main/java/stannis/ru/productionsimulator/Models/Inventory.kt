@@ -105,16 +105,10 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     }
 
     fun save(ctx : Context) {
-        if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null) {
-            //Log.d("Shutdown thread", "Added!")
+        if (DatabaseFactory.getInstance(ctx).getInventory(this.name) == null)
             DatabaseFactory.getInstance(ctx).addInventory(this)
-        }
-        else {
-
-            //Log.d("Shutdown thread", "Updated!")
+        else
             DatabaseFactory.getInstance(ctx).updateInventory(this)
-            //Log.d("Inv_shutdown", DatabaseFactory.getInstance(ctx).getInventory(this.name)?.getInventorySlotContents(0).toString())
-        }
     }
 
     fun clear() {
