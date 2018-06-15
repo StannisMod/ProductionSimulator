@@ -22,7 +22,7 @@
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/data"
+        android:layout_above="@id/toBank"
         android:layout_below="@id/stats">
 
         <LinearLayout
@@ -68,21 +68,23 @@
                     android:layout_height="wrap_content"></ListView>
             </FrameLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@mipmap/coins_round" />
-            </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
     </TabHost>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/toBank"
+        android:layout_above="@id/data"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@mipmap/coins_round" />
+    </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

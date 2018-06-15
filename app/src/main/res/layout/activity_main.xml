@@ -23,24 +23,25 @@
         android:layout_above= "@id/data"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ImageButton
-        android:id="@+id/toinventory"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/oval_button" />
+
+        <ImageButton
+            android:id="@+id/toinventory"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="2dp"
+            android:background="@mipmap/sklad_background" />
         <!--- app:srcCompat="@android:drawable/ic_notification_overlay" /> -->
 
     <ImageButton
         android:id="@+id/tomarket"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/oval_button" />
+        android:background="@mipmap/market_button_round"/>
         <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
 
     <ImageView
@@ -48,8 +49,9 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginRight="-30dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentRight="true"
         android:layout_toStartOf="@+id/toinventory"
         app:srcCompat="@mipmap/camp_foreground" />
 
@@ -60,7 +62,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        app:srcCompat="@mipmap/lesopilka1_background" />
 
     <!--<TextView-->
         <!--android:id="@+id/debug"-->

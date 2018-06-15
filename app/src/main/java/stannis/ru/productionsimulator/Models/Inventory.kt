@@ -15,9 +15,11 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
             Log.d("Inv", name)
             if (instance == null && name == TAG) {
                 instance = Inventory(TAG, 16, 64)
-            }
-            else if (name != TAG)
+            } else if (name != TAG) {
+                if( inventories.get(name) == null)
+                     createInventory(name, 16, 64)
                 return inventories.get(name)!!
+            }
             return instance!!
         }
 
