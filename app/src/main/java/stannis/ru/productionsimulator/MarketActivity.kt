@@ -83,11 +83,18 @@ class MarketActivity : AppCompatActivity() {
         tvTab1.adapter = adapter
 
 
-        var listview2: ListView = findViewById(R.id.tvTab2)
-        val dataArray2 = arrayOf("Android", "IPhone", "Windows Phone", "BlackBerry")
-        val adapter2 = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataArray2)
+        val slots1 =  Inventory.load(this, "sell")!!.inv
 
-        listview2.adapter = adapter2
+        val arrayList1: ArrayList<ItemStack> = ArrayList()
+        for (inv in slots1) {
+            if (!inv.isEmpty()) {
+                arrayList1.add(inv)
+            }
+        }
+        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
+
+        tvTab1.adapter = adapter
+
 
         var listview3: ListView = findViewById(R.id.tvTab3)
         val dataArray3 = DatabaseFactory.getInstance(this).getListOfLaborExchange()
@@ -135,7 +142,7 @@ class ItemAdapterBuy : BaseAdapter {
         var itemView = inflator.inflate(R.layout.item_buy, null)
 
         itemView.imageItemSell.setImageResource(ItemsBuy.findById(item.itemId).getItemImage())
-        itemView.nameBuy.text = ItemsBuy.findById(item.itemId).getName()
+        itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize}"
         itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
         itemView.buy.setOnClickListener {
             val player = DatabaseFactory.getInstance(context!!).getPlayerStats()
@@ -149,6 +156,46 @@ class ItemAdapterBuy : BaseAdapter {
                 val intent = Intent(context!!, MarketActivity::class.java)
                 ContextCompat.startActivity(context!!, intent, Bundle.EMPTY)
             }
+        }
+
+        return itemView
+    }
+
+    override fun getItem(position: Int): Any {
+        return inv.get(position)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return inv.size
+    }
+
+}
+class ItemAdapterSell : BaseAdapter {
+
+    var inv = ArrayList<ItemStack>()
+    var context : Context? = null
+
+    constructor(context: Context, inv: ArrayList<ItemStack>) : super() {
+        this.context = context
+        this.inv = inv
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val item = inv.get(position)
+        var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        var itemView = inflator.inflate(R.layout.item, null)
+
+        itemView.imageView.setImageResource(Items.findById(item.itemId).getItemImage())
+        itemView.name.text = Items.findById(item.itemId).getName()
+        if (item.getType() != 0)
+            itemView.count.text = item.stackSize.toString()
+
+        itemView.setOnClickListener {
+            Toast.makeText(context!!, "Ваш товар продастся по окончанию дня (количество зависит от репутации)", Toast.LENGTH_SHORT).show()
         }
 
         return itemView

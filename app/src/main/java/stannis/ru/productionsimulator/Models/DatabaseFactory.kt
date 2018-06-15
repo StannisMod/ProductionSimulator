@@ -8,12 +8,12 @@ import org.jetbrains.anko.db.*
 import org.w3c.dom.Text
 import stannis.ru.productionsimulator.EnumFactory
 import stannis.ru.productionsimulator.Models.Message
-import stannis.ru.productionsimulator.R.id.name
+
 import java.util.*
 import kotlin.collections.RandomAccess
 
 
-class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 19) {
+class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "ProductionSimulatorDB", null, 20) {
 
     companion object {
         private var instance: DatabaseFactory? = null
