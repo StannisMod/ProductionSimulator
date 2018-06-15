@@ -29,7 +29,6 @@ class MarketActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
 
-
         val player = DatabaseFactory.getInstance(this).getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
@@ -96,18 +95,18 @@ class MarketActivity : AppCompatActivity() {
             }
         }
 
+        val slots1 = Inventory.getInventory("sell").inv
 
-//        val slots1 =  Inventory.load(this, "sell")!!.inv
-//
-//        val arrayList1: ArrayList<ItemStack> = ArrayList()
-//        for (inv in slots1) {
-//            if (!inv.isEmpty()) {
-//                arrayList1.add(inv)
-//            }
-//        }
-//        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
-//
-//        tvTab2.adapter = adapter1
+        val arrayList1: ArrayList<ItemStack> = ArrayList()
+
+        for (inv in slots1) {
+            if (!inv.isEmpty()) {
+                arrayList1.add(inv)
+            }
+        }
+        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
+
+        tvTab2.adapter = adapter1
 
 
         var listview3: ListView = findViewById(R.id.tvTab3)

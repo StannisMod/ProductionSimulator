@@ -47,13 +47,22 @@ class InventoryActivity : AppCompatActivity() {
 
         inventory_name.text = "Инвентарь"
 
-        val slots = Inventory.getInventory().inv
+        var slots = Inventory.getInventory().inv
         val adapter = ItemAdapter(this, slots.toCollection(ArrayList()))
 
         inventory.adapter = adapter
 
         inventory.setOnItemClickListener { adapterView, view, i, l ->
-            // Inventory.transferItem(Inventory.getInventory(), )
+            Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, 1)
+            slots = Inventory.getInventory().inv
+            adapter.notifyDataSetChanged()
+        }
+
+        inventory.setOnItemLongClickListener { adapterView, view, i, l ->
+            Inventory.getInventory().decrStackSize(i, 1)
+            slots = Inventory.getInventory().inv
+            adapter.notifyDataSetChanged()
+            true
         }
     }
 }
