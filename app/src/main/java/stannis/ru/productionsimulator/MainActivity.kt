@@ -26,9 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
-        if (DatabaseFactory.getInstance(this).getPlayerStats() == null) {
-           fillDb(this)
-        }
+
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
             startActivity(intent)
@@ -50,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         endDay.setOnClickListener {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         toinventory.setOnClickListener {

@@ -37,6 +37,7 @@ class BankActivity : AppCompatActivity() {
         endDay.setOnClickListener {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
+            finish()
         }
         rep.setEnabled(false)
 
@@ -47,6 +48,7 @@ class BankActivity : AppCompatActivity() {
                     val intent1 = Intent(this, Credit_DepositActivity::class.java)
                     intent1.putExtra("Type", "credit")
                     startActivity(intent1)
+                    finish()
                 }else{
                     Toast.makeText(this, "Вы не можете брать больше одного кредита в день", Toast.LENGTH_SHORT).show()
                 }
@@ -58,6 +60,7 @@ class BankActivity : AppCompatActivity() {
                     val intent1 = Intent(this, Credit_DepositActivity::class.java)
                     intent1.putExtra("Type", "deposit")
                     startActivity(intent1)
+                    finish()
                 }else{
                     Toast.makeText(this, "Вы не можете открывать более одного депозита в день", Toast.LENGTH_SHORT).show()
                 }

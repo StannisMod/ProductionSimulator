@@ -12,6 +12,9 @@ fun fillDb(ctx: Context) {
     if (invent != null) {
         invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.SHOVEL.getId()), ItemStack(Items.SHOVEL
                 .itemId, 8, invent.getInventoryStackLimit()))
+        invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.IRON.getId()), ItemStack(Items.IRON
+                .itemId, 3, invent.getInventoryStackLimit()))
+
         invent.save(ctx)
     }
     ins.removeAllNames()
@@ -75,7 +78,7 @@ fun fillDb(ctx: Context) {
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(2).getNationality(), 5, "01", "01")
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(3).getNationality(), 5, "01", "02")
     ins.addLaborExchangeWithProperties("${ins.getName()}", 30, Profs.findById(Random().nextInt(6)).getProff(), 10, Nations.findById(5).getNationality(), 5, "01", "03")
-    ins.addPlayerStatsWithProperties(500, 0, 0, 50, 0, 500)
+    ins.addPlayerStatsWithProperties(500, 0, 0, 50, 0, 100)
     ins.addDataTimeWithProperties("25", "12", "2018", 0, 0, 0, 0)
     ins.added = true
 

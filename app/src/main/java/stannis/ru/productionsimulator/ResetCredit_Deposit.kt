@@ -32,6 +32,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
         endDay.setOnClickListener {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
+            finish()
         }
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -91,6 +92,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
 
                             val intent = Intent(this, BankActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
 
                     }
