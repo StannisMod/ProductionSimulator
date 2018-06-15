@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import stannis.ru.productionsimulator.Models.Factory
+import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_market.*
 import stannis.ru.productionsimulator.Models.fillDb
 
 class ListProductionActivity : AppCompatActivity() {
@@ -21,6 +23,8 @@ class ListProductionActivity : AppCompatActivity() {
 
         listview.setOnItemClickListener { parent, view, position, id ->
             Factory(0, EnumFactory.findById(position))
+            var text : TextView = findViewById(R.id.text2)
+            text.text = "Подождите около минуты...\nСпасибо за понимание"
             val intent = Intent(this, MainActivity::class.java)
             fillDb(this)
             startActivity(intent)
