@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
-        if (!DatabaseFactory.getInstance(this).added) {
+        if (DatabaseFactory.getInstance(this).getPlayerStats() == null) {
            fillDb(this)
         }
         mail.setOnClickListener {
