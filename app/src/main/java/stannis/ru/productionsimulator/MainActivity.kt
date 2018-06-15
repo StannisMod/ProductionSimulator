@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
         if (!DatabaseFactory.getInstance(this).added) {
-           //fillDb(this)
+           fillDb(this)
         }
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)

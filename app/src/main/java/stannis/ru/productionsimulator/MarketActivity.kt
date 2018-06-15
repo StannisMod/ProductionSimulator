@@ -83,17 +83,17 @@ class MarketActivity : AppCompatActivity() {
         tvTab1.adapter = adapter
 
 
-        val slots1 =  Inventory.load(this, "sell")!!.inv
-
-        val arrayList1: ArrayList<ItemStack> = ArrayList()
-        for (inv in slots1) {
-            if (!inv.isEmpty()) {
-                arrayList1.add(inv)
-            }
-        }
-        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
-
-        tvTab1.adapter = adapter
+//        val slots1 =  Inventory.load(this, "sell")!!.inv
+//
+//        val arrayList1: ArrayList<ItemStack> = ArrayList()
+//        for (inv in slots1) {
+//            if (!inv.isEmpty()) {
+//                arrayList1.add(inv)
+//            }
+//        }
+//        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
+//
+//        tvTab2.adapter = adapter1
 
 
         var listview3: ListView = findViewById(R.id.tvTab3)
