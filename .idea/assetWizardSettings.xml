@@ -16,40 +16,11 @@
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
-                                  <option name="children">
-                                    <map>
-                                      <entry key="backgroundImage">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="scalingPercent" value="104" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                      <entry key="foregroundImage">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="scalingPercent" value="56" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                    </map>
-                                  </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\lesopilka7.png" />
-                                      <entry key="backgroundLayerName" value="lesopilka1_background" />
-                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\lesopilka7.png" />
-                                      <entry key="foregroundLayerName" value="lesopilka1_foreground" />
-                                      <entry key="outputName" value="lesopilka" />
-                                      <entry key="webIconShape" value="NONE" />
+                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\shop2.png" />
+                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\shop2.png" />
+                                      <entry key="outputName" value="shop" />
                                     </map>
                                   </option>
                                 </PersistentState>
