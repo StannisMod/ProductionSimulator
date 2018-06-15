@@ -131,12 +131,6 @@ class MarketActivity : AppCompatActivity() {
 
     }
 
-    companion object {
-        fun kek(ctx: Context) {
-
-        }
-    }
-
 }
 
 
