@@ -56,12 +56,12 @@
             android:layout_marginEnd="10dp"
             app:srcCompat="@drawable/arrow" />
 
-        <ImageView
-            android:id="@+id/remove"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            app:srcCompat="@drawable/red_cross" />
+        <!--<ImageView-->
+            <!--android:id="@+id/remove"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:layout_marginStart="10dp"-->
+            <!--app:srcCompat="@drawable/red" />-->
     </LinearLayout>
 </RelativeLayout>

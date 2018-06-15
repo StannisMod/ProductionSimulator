@@ -16,15 +16,13 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_start)
         if(DatabaseFactory.getInstance(this).getPlayerStats()==null){
             continueGame.visibility = View.GONE
-            fillDb(this)
         }
         continueGame.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
         newGame.setOnClickListener {
-            fillDb(this)
-            //startActivity(Intent(this, //ListProductionActivity::class.java))
+            startActivity(Intent(this, ListProductionActivity::class.java))
         }
 
 
