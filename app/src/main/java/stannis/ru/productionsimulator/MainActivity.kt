@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
         if (Inventory.inventories.get("sell") == null)
             Inventory.inventories.put("sell", Inventory.load(this, "sell"))
+        if (Inventory.inventories.get("buy") == null)
+            Inventory.inventories.put("buy", Inventory.load(this, "buy"))
+
 
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 

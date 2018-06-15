@@ -14,7 +14,7 @@ class Factory {
     var production : Inventory
     var machine_state : Double
 
-    constructor(id : Int, type : EnumFactory, res : Int, res_cap : Int, consumption : Int, productivity : Int, production : Int, production_cap : Int, machine_state : Double) {
+    constructor(id : Int, type : EnumFactory, res : Int = 5, res_cap : Int = 10, consumption : Int = 2, productivity : Int = 1, production : Int = 2, production_cap : Int = 5, machine_state : Double = 10.0) {
         this.id = id
         this.type = type
         this.res = Inventory("${id}_Res", 1, res_cap)

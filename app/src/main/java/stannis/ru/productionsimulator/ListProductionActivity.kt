@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import stannis.ru.productionsimulator.Models.Factory
 import stannis.ru.productionsimulator.Models.fillDb
 
 class ListProductionActivity : AppCompatActivity() {
@@ -19,6 +20,7 @@ class ListProductionActivity : AppCompatActivity() {
         listview.adapter = adapter
 
         listview.setOnItemClickListener { parent, view, position, id ->
+            Factory(0, EnumFactory.findById(position))
             val intent = Intent(this, MainActivity::class.java)
             fillDb(this)
             startActivity(intent)

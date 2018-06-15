@@ -70,7 +70,7 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
 
-        val slots =  Inventory.load(this, "buy")!!.inv
+        val slots =  Inventory.getInventory("buy").inv
 
         val arrayList: ArrayList<ItemStack> = ArrayList()
         for (inv in slots) {

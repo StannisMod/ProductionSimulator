@@ -240,12 +240,14 @@ class DatabaseFactory(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Producti
 
 
     fun updateInventory(inv: Inventory) {
+        var result = 0;
         getInstance(ctx).use {
             for (i in 0..(inv.getInventorySize() - 1)) {
                 val slot = inv.getInventorySlotContents(i)
-                update(inv.name, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize).whereArgs("num = {num}", "num" to i).exec()
+                result = update(inv.name, "id" to slot.itemId, "stackSize" to slot.stackSize, "maxStackSize" to slot.maxStackSize).whereArgs("num = {num}", "num" to i).exec()
             }
         }
+        Log.d("Added", result.toString())
     }
 
     fun getInventory(name: String): Inventory? {
