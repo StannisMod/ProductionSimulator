@@ -106,8 +106,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         Log.d("Shutdown thread", "Destroy!")
         Inventory.getInventory().save(this)
         Factory.saveFactories(this)
