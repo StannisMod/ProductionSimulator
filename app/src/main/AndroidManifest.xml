@@ -10,11 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MarketActivity"
@@ -36,16 +31,25 @@
             android:parentActivityName=".MailActivity" />
         <activity
             android:name=".WorkerActivity"
-            android:parentActivityName=".BankActivity"/>
+            android:parentActivityName=".BankActivity" />
         <activity
             android:name=".FactoryActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".InventoryActivity"
+        <activity
+            android:name=".InventoryActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ResetCredit_Deposit"
             android:parentActivityName=".BankActivity" />
-        <activity android:name=".EndDayActivity"></activity>
+        <activity android:name=".EndDayActivity" />
+        <activity android:name=".StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

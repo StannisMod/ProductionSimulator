@@ -44,6 +44,7 @@ class MarketActivity : AppCompatActivity() {
         endDay.setOnClickListener {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
+            finish()
         }
         rep.setEnabled(false)
 
@@ -81,19 +82,32 @@ class MarketActivity : AppCompatActivity() {
         val adapter = ItemAdapterBuy(this, arrayList/*slots.toCollection(ArrayList())*/)
 
         tvTab1.adapter = adapter
+        tvTab1.setOnItemClickListener{adapterView, view, i, l ->
+            val player = DatabaseFactory.getInstance(this).getPlayerStats()
+            if (player!!.money > ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()) {
+                player!!.money -= ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()
+                DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
+                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)
+                Inventory.getInventory("buy").save(this)
+                Inventory.getInventory().save(this)
 
-
-        val slots1 =  Inventory.load(this, "sell")!!.inv
-
-        val arrayList1: ArrayList<ItemStack> = ArrayList()
-        for (inv in slots1) {
-            if (!inv.isEmpty()) {
-                arrayList1.add(inv)
+                val intent = Intent(this, MarketActivity::class.java)
+                ContextCompat.startActivity(this, intent, Bundle.EMPTY)
             }
         }
-        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
 
-        tvTab1.adapter = adapter
+
+//        val slots1 =  Inventory.load(this, "sell")!!.inv
+//
+//        val arrayList1: ArrayList<ItemStack> = ArrayList()
+//        for (inv in slots1) {
+//            if (!inv.isEmpty()) {
+//                arrayList1.add(inv)
+//            }
+//        }
+//        val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
+//
+//        tvTab2.adapter = adapter1
 
 
         var listview3: ListView = findViewById(R.id.tvTab3)
@@ -144,19 +158,19 @@ class ItemAdapterBuy : BaseAdapter {
         itemView.imageItemSell.setImageResource(ItemsBuy.findById(item.itemId).getItemImage())
         itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize}"
         itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
-        itemView.buy.setOnClickListener {
-            val player = DatabaseFactory.getInstance(context!!).getPlayerStats()
-            if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
-                player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
-                DatabaseFactory.getInstance(context!!).setPlayerWithProperties(player)
-                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
-                Inventory.getInventory("buy").save(context!!)
-                Inventory.getInventory().save(context!!)
-
-                val intent = Intent(context!!, MarketActivity::class.java)
-                ContextCompat.startActivity(context!!, intent, Bundle.EMPTY)
-            }
-        }
+//        itemView.buy.setOnClickListener {
+//            val player = DatabaseFactory.getInstance(context!!).getPlayerStats()
+//            if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
+//                player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
+//                DatabaseFactory.getInstance(context!!).setPlayerWithProperties(player)
+//                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
+//                Inventory.getInventory("buy").save(context!!)
+//                Inventory.getInventory().save(context!!)
+//
+//                val intent = Intent(context!!, MarketActivity::class.java)
+//                ContextCompat.startActivity(context!!, intent, Bundle.EMPTY)
+//            }
+//        }
 
         return itemView
     }

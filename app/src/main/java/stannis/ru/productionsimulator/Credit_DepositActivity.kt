@@ -92,6 +92,7 @@ class Credit_DepositActivity : AppCompatActivity() {
 
                         val intent = Intent(this, BankActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                 }
             }

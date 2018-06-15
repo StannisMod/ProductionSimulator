@@ -33,6 +33,7 @@ class WorkerActivity : AppCompatActivity() {
         endDay.setOnClickListener {
             val intent = Intent(this, EndDayActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         mail.setOnClickListener {
