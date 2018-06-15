@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         if (Inventory.instance == null)
             Inventory.instance = Inventory.load(this, Inventory.TAG)
 
-        if (Inventory.instance == null)
-            Log.d("Instance", "Instance in DB is null!!!")
+        if (Inventory.inventories.get("sell") == null)
+            Inventory.inventories.put("sell", Inventory.load(this, "sell"))
 
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
@@ -84,7 +84,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("Shutdown thread", "Destroy!")
-        Inventory.getInventory().save(this)
+        // Inventory.getInventory().save(this)
+        Inventory.saveInventories(this)
         Factory.saveFactories(this)
     }
 }

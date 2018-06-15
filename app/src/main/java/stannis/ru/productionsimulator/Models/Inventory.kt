@@ -8,7 +8,7 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     companion object {
         const val TAG = "PlayerInv"
         var instance: Inventory? = null
-        private val inventories = HashMap<String, Inventory>()
+        val inventories = HashMap<String, Inventory?>()
 
         @Synchronized
         fun getInventory(name : String = TAG): Inventory {
@@ -16,11 +16,21 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
             if (instance == null && name == TAG) {
                 instance = Inventory(TAG, 16, 64)
             } else if (name != TAG) {
-                if( inventories.get(name) == null)
-                     createInventory(name, 16, 64)
+               // if (inventories.get(name) == null)
+               //     inventories.put(name, load())
+                if (inventories.get(name) == null)
+                    createInventory(name, 16, 64)
                 return inventories.get(name)!!
             }
             return instance!!
+        }
+
+        fun saveInventories(ctx : Context) {
+            val iterator = inventories.iterator()
+
+            getInventory().save(ctx)
+            while (iterator.hasNext())
+                iterator.next().value?.save(ctx)
         }
 
         fun createInventory(name : String, size : Int, maxStackSize : Int) = inventories.put(name, Inventory(name, size, maxStackSize))
@@ -104,5 +114,10 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
             DatabaseFactory.getInstance(ctx).updateInventory(this)
             //Log.d("Inv_shutdown", DatabaseFactory.getInstance(ctx).getInventory(this.name)?.getInventorySlotContents(0).toString())
         }
+    }
+
+    fun clear() {
+        for (i in 0..(getInventorySize() - 1))
+            setSlotEmpty(i)
     }
 }
