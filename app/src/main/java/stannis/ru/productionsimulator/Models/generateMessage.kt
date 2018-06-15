@@ -4,6 +4,7 @@ import android.content.Context
 import java.util.*
 
 fun generateMessage(ctx: Context){
+    var r : Random = Random()
     //УСЛОВИЯ: Письмо приходит по истечение 6 месяцев с взятия не погашенного кредита. ПОСЛЕДСТВИЯ: Нет
     val list = DatabaseFactory.getInstance(ctx).getListOfCreditDeposit()
     for (crDep in list) {
@@ -24,12 +25,12 @@ fun generateMessage(ctx: Context){
     }
 
     //УСЛОВИЕ: Ежедневно с вероятностью 5% ПОСЛЕДСТВИЯ: Нет
-    if(Math.random() < 0.05){
+    if(r.nextDouble() < 0.05){
         generateWorkerMessage(ctx)
     }
 
     //УСЛОВИЕ: Ежедневно с вероятностью 0,5% ПОСЛЕДСТВИЯ: Добавляется 5000$
-    if(Math.random() < 0.005){
+    if(r.nextDouble() < 0.005){
         generateLotoMessage(ctx)
         var player = DatabaseFactory.getInstance(ctx).getPlayerStats()
         if(player != null) {
@@ -39,13 +40,13 @@ fun generateMessage(ctx: Context){
     }
 
     //УСЛОВИЕ: В дни, когда репутация меньше 10 с вероятностью 15% ПОСЛЕДСТВИЯ: GAME OVER
-    if(DatabaseFactory.getInstance(ctx).getPlayerStats()!!.reputation < 10 && Math.random() < 0.15){
+    if(DatabaseFactory.getInstance(ctx).getPlayerStats()!!.reputation < 10 && r.nextDouble() < 0.15){
         generateUnhappyMessage(ctx)
         //gameover()
     }
 
     //УСЛОВИЕ: Верятность 5,1%-(реп)/20 ПОСЛЕДСТВИЯ: ежедневный налог увеличен на 100$
-    if(Math.random() < 5.1-DatabaseFactory.getInstance(ctx).getPlayerStats()!!.reputation/20){
+    if(r.nextDouble() < 5.1-DatabaseFactory.getInstance(ctx).getPlayerStats()!!.reputation/20){
         generateControlMessage(ctx)
         var player = DatabaseFactory.getInstance(ctx).getPlayerStats()
         if(player != null) {
@@ -55,7 +56,7 @@ fun generateMessage(ctx: Context){
     }
 
     //УСЛОВИЕ: Если репутация меньше 10 с вероятностью 20% ПОСЛЕДСТВИЯ: Изымается 70% от текушей суммы. И репутация приравнивается 40
-    if(DatabaseFactory.getInstance(ctx).getPlayerStats()!!.reputation < 10 && Math.random()<0.2){
+    if(DatabaseFactory.getInstance(ctx).getPlayerStats()!!.reputation < 10 && r.nextDouble()<0.2){
         generateFNSControlMessage(ctx)
         var player = DatabaseFactory.getInstance(ctx).getPlayerStats()
         if(player != null) {
@@ -66,7 +67,7 @@ fun generateMessage(ctx: Context){
     }
 
     //УСЛОВИЕ: Ежедневно с вероятностью 1% ПОСЛЕДСТВИЯ: Сумма денег уменьшена на 300
-    if(Math.random() < 0.01){
+    if(r.nextDouble() < 0.01){
         var player = DatabaseFactory.getInstance(ctx).getPlayerStats()
         if(player != null) {
             player.money -= 300
@@ -75,7 +76,7 @@ fun generateMessage(ctx: Context){
     }
 
     //УСЛОВИЕ: Если деньги отрицательны, то вероятность 5% ПОСЛЕДСТВИЯ: Репутация всегда 0
-    if(DatabaseFactory.getInstance(ctx).getPlayerStats()!!.money < 0 && Math.random() < 0.05){
+    if(DatabaseFactory.getInstance(ctx).getPlayerStats()!!.money < 0 && r.nextDouble() < 0.05){
         var player = DatabaseFactory.getInstance(ctx).getPlayerStats()
         if(player != null) {
             player.reputation = 0

@@ -6,18 +6,18 @@ import android.util.Log
 class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
     companion object {
-        val TAG = "PlayerInv"
+        const val TAG = "PlayerInv"
         var instance: Inventory? = null
-        val inventories = HashMap<String, Inventory>()
+        private val inventories = HashMap<String, Inventory>()
 
         @Synchronized
         fun getInventory(name : String = TAG): Inventory {
+            Log.d("Inv", name)
             if (instance == null && name == TAG) {
                 instance = Inventory(TAG, 16, 64)
-            } else {
-                if( inventories.get(name) == null){
+            } else if (name != TAG) {
+                if( inventories.get(name) == null)
                      createInventory(name, 16, 64)
-                }
                 return inventories.get(name)!!
             }
             return instance!!
