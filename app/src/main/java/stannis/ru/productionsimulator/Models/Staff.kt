@@ -15,7 +15,7 @@ class Staff(var name: String, var age: Int, var prof: String, var quality: Int, 
     fun toDetailedString(): String = "${name},${age},${prof},${nation},${salary},${birth.first},${birth.second}"
 
     fun getPromotion() {
-        salary += (0.05*salary).roundToInt()
+        salary += (0.2*salary.toDouble()).roundToInt()
     }
 
     fun getPromotionN_t() {
