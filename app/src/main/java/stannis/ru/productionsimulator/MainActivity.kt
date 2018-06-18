@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d("Shutdown thread", "Destroy!")
-        // Inventory.getInventory().save(this)
+//        Inventory.getInventory().save(this)
         Inventory.saveInventories(this)
         Factory.saveFactories(this)
     }

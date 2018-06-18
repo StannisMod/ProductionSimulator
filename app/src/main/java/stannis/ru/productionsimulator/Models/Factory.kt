@@ -1,6 +1,8 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import java.util.*
 import stannis.ru.productionsimulator.EnumFactory
 
@@ -42,8 +44,13 @@ class Factory {
 
         fun saveFactories(ctx : Context) {
             var i = 0
-            while (getFactoryById(i) != null)
+            while (getFactoryById(i) != null && i < factories.size) {
                 getFactoryById(i)?.save(ctx)
+                i++
+                Log.d("Shutdown thread", "${i}")
+                Log.d("Shutdown thread", "${factories.size}")
+
+            }
         }
 
         fun load(ctx : Context, id : Int) : Factory? = DatabaseFactory.getInstance(ctx).getFactory(id)
