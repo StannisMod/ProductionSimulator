@@ -10,22 +10,22 @@ import kotlinx.android.synthetic.main.activity_bank.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
-import stannis.ru.productionsimulator.Models.DatabaseFactory
-import java.util.*
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 
 class BankActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank)
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val player = PlayerStatsDatabase.getInstance(this).getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = PlayerStatsDatabase.getInstance(this).getDataTime()
         if(curData!=null){
             curDate.text = curData.toString()
         }
@@ -66,7 +66,7 @@ class BankActivity : AppCompatActivity() {
                 }
             }
         }
-        val dataArray = DatabaseFactory.getInstance(this).getListOfCreditDeposit()
+        val dataArray = PlayerStatsDatabase.getInstance(this).getListOfCreditDeposit()
         val adapter= ArrayAdapter<Credit_Deposit>(this, android.R.layout.simple_list_item_1, dataArray)
         bankListView.adapter = adapter
         bankListView.setOnItemClickListener { adapterView, view, i, l ->

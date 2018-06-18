@@ -3,8 +3,6 @@ package stannis.ru.productionsimulator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
 
 class MessageActivity : AppCompatActivity() {
 

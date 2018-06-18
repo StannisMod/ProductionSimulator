@@ -3,14 +3,13 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_credit__deposit.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
-import stannis.ru.productionsimulator.R.id.percent
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import kotlin.math.roundToInt
 
 
@@ -19,14 +18,15 @@ class Credit_DepositActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credit__deposit)
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         if (curData != null) {
             curDate.text = curData.toString()
         }
@@ -81,12 +81,12 @@ class Credit_DepositActivity : AppCompatActivity() {
                             curData.tookCreditToday = inputAmountOfCredit.text.toString().toInt()
                             player.money += inputAmountOfCredit.text.toString().toInt()
                         }
-                        DatabaseFactory.getInstance(this).setDataTimeWithProperties(curData)
-                        DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
+                        ins.setDataTimeWithProperties(curData)
+                        ins.setPlayerWithProperties(player)
 
 
                         val type = if (isCredit) 2 else 1
-                        DatabaseFactory.getInstance(this).addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), curData.currentDay, curData.currentMonth, curData.currentYear)
+                        ins.addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), curData.currentDay, curData.currentMonth, curData.currentYear)
                         val mes = if (isCredit) "Кредит взят" else "Депозит открыт"
                         Toast.makeText(this, mes, Toast.LENGTH_SHORT)
 

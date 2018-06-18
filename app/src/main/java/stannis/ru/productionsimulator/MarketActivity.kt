@@ -1,24 +1,24 @@
 package stannis.ru.productionsimulator
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.activity_market.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.item_buy.view.*
 import stannis.ru.productionsimulator.Models.Staff
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.Items
+import stannis.ru.productionsimulator.Functions.ItemsBuy
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 
@@ -28,15 +28,15 @@ class MarketActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
-
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         if (curData != null) {
             curDate.text = curData.toString()
         }
@@ -82,10 +82,10 @@ class MarketActivity : AppCompatActivity() {
 
         tvTab1.adapter = adapter
         tvTab1.setOnItemClickListener{adapterView, view, i, l ->
-            val player = DatabaseFactory.getInstance(this).getPlayerStats()
+            val player = ins.getPlayerStats()
             if (player!!.money > ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()) {
                 player!!.money -= ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()
-                DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
+                ins.setPlayerWithProperties(player)
                 Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)
                 Inventory.getInventory("buy").save(this)
                 Inventory.getInventory().save(this)
@@ -138,12 +138,14 @@ class ItemAdapterBuy : BaseAdapter {
     var inv = ArrayList<ItemStack>()
     var context: Context? = null
 
+
     constructor(context: Context, inv: ArrayList<ItemStack>) : super() {
         this.context = context
         this.inv = inv
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val ins = PlayerStatsDatabase.getInstance(context!!)
         val item = inv.get(position)
         var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var itemView = inflator.inflate(R.layout.item_buy, null)
@@ -152,10 +154,10 @@ class ItemAdapterBuy : BaseAdapter {
         itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize})"
         itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
         itemView.buy.setOnClickListener {
-            val player = DatabaseFactory.getInstance(context!!).getPlayerStats()
+            val player = ins.getPlayerStats()
             if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
                 player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
-                DatabaseFactory.getInstance(context!!).setPlayerWithProperties(player)
+                ins.setPlayerWithProperties(player)
                 Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
                 Inventory.getInventory("buy").save(context!!)
                 Inventory.getInventory().save(context!!)

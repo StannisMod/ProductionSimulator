@@ -8,7 +8,8 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_worker.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Models.Staff
 
 
@@ -17,15 +18,16 @@ class WorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
+        val ins = PlayerStatsDatabase.getInstance(this)
 
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         rep.setEnabled(false)
         if(curData!=null){
             curDate.text = curData.toString()
@@ -58,7 +60,7 @@ class WorkerActivity : AppCompatActivity() {
                         } else {
                             player.money -= tmp.salary
                             player.staff++
-                            DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
+                            ins.setPlayerWithProperties(player)
 
                             DatabaseFactory.getInstance(this).removeLaborExchange(arr[0].trim())
 
@@ -96,7 +98,7 @@ class WorkerActivity : AppCompatActivity() {
 
                                 player.staff--;
                                 player.money -= tmp.salary
-                                DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
+                                ins.setPlayerWithProperties(player)
 
                                 Toast.makeText(this, "${tmp.name}, ты уволен", Toast.LENGTH_SHORT).show()
 

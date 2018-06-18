@@ -1,4 +1,4 @@
-package stannis.ru.productionsimulator
+package stannis.ru.productionsimulator.Enums
 
 enum class Nations(val nation: String, val quality: Int) {
     RUS("россиянин", 10),

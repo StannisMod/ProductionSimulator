@@ -7,7 +7,8 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_workers.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Models.Staff
 
 class StaffActivity : AppCompatActivity() {
@@ -15,14 +16,15 @@ class StaffActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workers)
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         if(curData!=null){
             curDate.text = curData.toString()
         }

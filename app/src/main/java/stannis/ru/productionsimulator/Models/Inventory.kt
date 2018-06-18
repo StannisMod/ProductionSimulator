@@ -2,6 +2,7 @@ package stannis.ru.productionsimulator.Models
 
 import android.content.Context
 import android.util.Log
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
 
 class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
@@ -69,6 +70,7 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
     fun isSlotEmpty(slotIndex : Int) : Boolean = getInventorySlotContents(slotIndex).isEmpty()
 
     fun setSlotEmpty(slotIndex : Int) {
+        inv.drop(slotIndex)
         getInventorySlotContents(slotIndex).stackSize = 0
     }
 

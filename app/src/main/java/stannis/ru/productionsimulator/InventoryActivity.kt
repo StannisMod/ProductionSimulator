@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,9 @@ import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 
@@ -27,15 +29,15 @@ class InventoryActivity : AppCompatActivity() {
             val intent = Intent(this, MailActivity::class.java)
             startActivity(intent)
         }
-
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         if(curData!=null){
             curDate.text = curData.toString()
         }

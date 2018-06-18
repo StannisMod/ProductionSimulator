@@ -1,4 +1,4 @@
-package stannis.ru.productionsimulator
+package stannis.ru.productionsimulator.Enums
 
 enum class Profs(val prof: String, val averSalary: Int) {
     TOK("Токарь", 10),

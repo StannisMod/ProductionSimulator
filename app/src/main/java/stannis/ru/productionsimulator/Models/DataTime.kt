@@ -2,17 +2,19 @@ package stannis.ru.productionsimulator.Models
 
 import android.content.Context
 import android.util.Log
-import stannis.ru.productionsimulator.Items
-import stannis.ru.productionsimulator.ItemsBuy
-import stannis.ru.productionsimulator.Nations
-import stannis.ru.productionsimulator.Profs
-import java.time.Year
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Functions.generateMessage
+import stannis.ru.productionsimulator.Enums.Items
+import stannis.ru.productionsimulator.Functions.ItemsBuy
+import stannis.ru.productionsimulator.Enums.Nations
+import stannis.ru.productionsimulator.Enums.Profs
 import java.util.*
 
 class DataTime(var currentDay: String, var currentMonth: String, var currentYear: String, var tookCreditToday: Int, var tookDepositToday: Int, var todaysCreditMinus: Int, var todaysDepositGain: Int) {
 
     fun nextDay(ctx: Context) {
-        val ins = DatabaseFactory.getInstance(ctx)
+        val ins = PlayerStatsDatabase.getInstance(ctx)
         var day = currentDay.toInt()
         if (day < 28) {
             if (day + 1 < 10) {
@@ -46,10 +48,14 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                 "04", "06" -> if (day == 30) {
                     currentMonth = "0${currentMonth.toInt() + 1}"
                     currentDay = "01"
+                }else{
+                    currentDay = "${day+1}"
                 }
                 "09", "11" -> if (day == 30) {
                     currentMonth = "${currentMonth.toInt() + 1}"
 
+                }else{
+                    currentDay = "${day+1}"
                 }
             }
         }
@@ -60,8 +66,10 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         this.tookCreditToday = 0
         this.tookDepositToday = 0
         val fac = DatabaseFactory.getInstance(ctx).getFactory(0)
+        Log.d("EndDay", "nextWillBe")
         if (fac != null) {
             fac.runTick()
+            Log.d("EndDay", "runTick!")
         }
         generateBuyInv(ctx)
         generateLabor(ctx)
@@ -72,7 +80,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun checkCreditsDeposits(ctx: Context) {
-        val list = DatabaseFactory.getInstance(ctx).getListOfCreditDeposit()
+        val list = PlayerStatsDatabase.getInstance(ctx).getListOfCreditDeposit()
         for (crDep in list) {
             if (this.currentDay == crDep.date[0]) {
                 crDep.rise(ctx)
@@ -84,10 +92,10 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun sellItems(ctx: Context) {
-        val ins = DatabaseFactory.getInstance(ctx)
+        val ins = PlayerStatsDatabase.getInstance(ctx)
         val player = ins.getPlayerStats()
         // for (i in 1..3) {
-        val invent = ins.getInventory("sell")
+        val invent = DatabaseFactory.getInstance(ctx).getInventory("sell")
         var tmp = 0;
         for (v in invent!!.inv) {
             if (!v.isEmpty()) {
@@ -101,7 +109,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             }
         }
         ins.setPlayerWithProperties(player!!)
-        ins.updateInventory(invent)
+        DatabaseFactory.getInstance(ctx).updateInventory(invent)
 
     }
 
@@ -117,7 +125,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             val qual = nat.getAvQuality() - (Random().nextInt(5) - 3)
             val day = Random().nextInt(10) + 10
             val month = Random().nextInt(8) + 1
-            val staff = Staff(ins.getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
+            val staff = Staff(PlayerStatsDatabase.getInstance(ctx).getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
             Log.d("Added", "paren Added")
             ins.addLaborExchangeWithProperties(staff)
         }
@@ -128,7 +136,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     fun generateBuyInv(ctx: Context) {
         val ins = DatabaseFactory.getInstance(ctx)
         // for (i in 1..3) {
-        val invent = ins.getInventory("buy")
+        val invent = Inventory.getInventory("buy")
         var tmp = 0;
         for (v in invent!!.inv) {
             if (!v.isEmpty()) {

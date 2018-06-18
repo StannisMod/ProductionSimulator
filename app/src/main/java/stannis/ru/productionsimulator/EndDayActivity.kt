@@ -8,8 +8,8 @@ import android.support.annotation.RequiresApi
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_end_day.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
-import stannis.ru.productionsimulator.R
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 
 class EndDayActivity : AppCompatActivity() {
 
@@ -17,7 +17,8 @@ class EndDayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_end_day)
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val curData = ins.getDataTime()
         number.text = curData.toString()
         wages.text = "-${curData!!.getAllWages(this)}$"
         creditsPayOff.text = "-${curData!!.todaysCreditMinus}$"
@@ -46,10 +47,10 @@ class EndDayActivity : AppCompatActivity() {
                 val moneyDiff = (0-(nalogs.text.toString().toInt()))+
                         wages.text.toString().split("$")[0].toInt()+
                         sellings.text.toString().split( "$")[0].toInt()
-                val player = DatabaseFactory.getInstance(this).getPlayerStats()
+                val player = ins.getPlayerStats()
                 player!!.countReputationChange(nalogs.text.toString().toInt())
                 player!!.money+=moneyDiff
-                DatabaseFactory.getInstance(this).setPlayerWithProperties(player!!)
+                ins.setPlayerWithProperties(player!!)
                 if (curData != null) {
                     curData.nextDay(this)
                 }

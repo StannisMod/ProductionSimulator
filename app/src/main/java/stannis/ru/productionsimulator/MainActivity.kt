@@ -7,7 +7,10 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.*
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if (Factory.getFactoryById(0) == null)
-            Factory(0, EnumFactory.findById(0))
+            Factory(true,0, EnumFactory.findById(0))
 
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
@@ -39,14 +42,14 @@ class MainActivity : AppCompatActivity() {
         }
         rep.setEnabled(false)
 
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val player = PlayerStatsDatabase.getInstance(this).getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = Factory.getFactoryById(0)!!.res!!.getInventorySlotContents(0).stackSize.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = PlayerStatsDatabase.getInstance(this).getDataTime()
         if (curData != null) {
             curDate.text = curData.toString()
         }
@@ -90,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         Log.d("Shutdown thread", "Destroy!")
         // Inventory.getInventory().save(this)
         Inventory.saveInventories(this)
+        Log.d("Shutdown thread", "Kek1")
         Factory.saveFactories(this)
+        Log.d("Shutdown thread", "Kek2")
     }
 }

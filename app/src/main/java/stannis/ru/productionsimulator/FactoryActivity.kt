@@ -9,7 +9,9 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_factory.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Models.Factory
 import stannis.ru.productionsimulator.Models.Inventory
 
@@ -18,7 +20,8 @@ class FactoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_factory)
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
@@ -26,7 +29,7 @@ class FactoryActivity : AppCompatActivity() {
             rep.progress = player.reputation
         }
         rep.setEnabled(false)
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         if(curData!=null){
             curDate.text = curData.toString()
         }
@@ -52,7 +55,7 @@ class FactoryActivity : AppCompatActivity() {
 
         if (factory == null) {
             Log.d("FACTORY", "Factory is null x2!!!")
-            factory = Factory(0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5, 10.0)
+            factory = Factory(true,0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5, 10.0)
         }
 
         factory_name.text = factory.type.getName()

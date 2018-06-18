@@ -3,13 +3,13 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_reset_credit__deposit.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
-import stannis.ru.productionsimulator.Models.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 
 
 class ResetCredit_Deposit : AppCompatActivity() {
@@ -17,7 +17,8 @@ class ResetCredit_Deposit : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_credit__deposit)
-        val player = DatabaseFactory.getInstance(this).getPlayerStats()
+        val ins = PlayerStatsDatabase.getInstance(this)
+        val player = ins.getPlayerStats()
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
@@ -25,7 +26,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
             rep.progress = player.reputation
         }
         rep.setEnabled(false)
-        val curData = DatabaseFactory.getInstance(this).getDataTime()
+        val curData = ins.getDataTime()
         if(curData!=null){
             curDate.text = curData.toString()
         }
@@ -79,14 +80,14 @@ class ResetCredit_Deposit : AppCompatActivity() {
                                 player.money-=resetAmount.text.toString().toInt()
                                 curData.todaysCreditMinus+=resetAmount.text.toString().toInt()
                             }
-                            DatabaseFactory.getInstance(this).setPlayerWithProperties(player)
-                            DatabaseFactory.getInstance(this).setDataTimeWithProperties(curData)
+                            ins.setPlayerWithProperties(player)
+                            ins.setDataTimeWithProperties(curData)
 
 
                             if (cond) {
-                                DatabaseFactory.getInstance(this).removeCreditDeposit(crDep.type, crDep.date[0], crDep.date[1], crDep.date[2])
+                                ins.removeCreditDeposit(crDep.type, crDep.date[0], crDep.date[1], crDep.date[2])
                             } else {
-                                DatabaseFactory.getInstance(this).setCreditDepositProperties(crDep)
+                                ins.setCreditDepositProperties(crDep)
                             }
                             Toast.makeText(this, "Операция прошла успешно", Toast.LENGTH_SHORT).show()
 
