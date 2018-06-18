@@ -7,6 +7,7 @@ import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 class Credit_Deposit(var amount: Int, var percent: Double, var date: Array<String>, var type: Int) {
 
 
+
     fun takeDep_payOff(sum: Int): Boolean {
         if (sum >= this.amount) {
             this.amount = 0

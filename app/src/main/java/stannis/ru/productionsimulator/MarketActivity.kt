@@ -13,14 +13,12 @@ import kotlinx.android.synthetic.main.activity_market.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.item_buy.view.*
-import stannis.ru.productionsimulator.Models.Staff
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Functions.ItemsBuy
-import stannis.ru.productionsimulator.Models.Inventory
-import stannis.ru.productionsimulator.Models.ItemStack
+import stannis.ru.productionsimulator.Models.*
 
 class MarketActivity : AppCompatActivity() {
 
@@ -29,14 +27,14 @@ class MarketActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
         val ins = PlayerStatsDatabase.getInstance(this)
-        val player = ins.getPlayerStats()
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         if (curData != null) {
             curDate.text = curData.toString()
         }
@@ -69,7 +67,7 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setIndicator("Биржа труда")
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
-
+        Inventory.getInventory("buy").normalize()
         val slots =  Inventory.getInventory("buy").inv
 
         val arrayList: ArrayList<ItemStack> = ArrayList()
@@ -82,10 +80,10 @@ class MarketActivity : AppCompatActivity() {
 
         tvTab1.adapter = adapter
         tvTab1.setOnItemClickListener{adapterView, view, i, l ->
-            val player = ins.getPlayerStats()
+            val player = Player.getInstance(this)
             if (player!!.money > ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()) {
                 player!!.money -= ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()
-                ins.setPlayerWithProperties(player)
+
                 Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)
                 Inventory.getInventory("buy").save(this)
                 Inventory.getInventory().save(this)
@@ -94,7 +92,7 @@ class MarketActivity : AppCompatActivity() {
                 ContextCompat.startActivity(this, intent, Bundle.EMPTY)
             }
         }
-
+        Inventory.getInventory("sell").normalize()
         val slots1 = Inventory.getInventory("sell").inv
 
         val arrayList1: ArrayList<ItemStack> = ArrayList()
@@ -154,10 +152,10 @@ class ItemAdapterBuy : BaseAdapter {
         itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize})"
         itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
         itemView.buy.setOnClickListener {
-            val player = ins.getPlayerStats()
+            val player = Player.getInstance(context!!)
             if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
                 player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
-                ins.setPlayerWithProperties(player)
+
                 Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
                 Inventory.getInventory("buy").save(context!!)
                 Inventory.getInventory().save(context!!)

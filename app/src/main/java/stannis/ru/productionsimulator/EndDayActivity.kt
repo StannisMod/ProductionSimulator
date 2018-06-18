@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.annotation.RequiresApi
 import android.view.LayoutInflater
 import android.view.View
@@ -19,19 +20,45 @@ import kotlinx.android.synthetic.main.item.view.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Models.ItemStack
+import stannis.ru.productionsimulator.Models.*
 import java.util.*
 
 class EndDayActivity : AppCompatActivity() {
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_end_day)
         val ins = PlayerStatsDatabase.getInstance(this)
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         number.text = curData.toString()
-        gridView.adapter = MoneyStatsAdapter(this, arrayListOf(0,1))
+        val sum = curData.nextDay(this)
+        gridView.adapter = MoneyStatsAdapter(this, arrayListOf(0, 1), sum + DataTime.getInstance(this).getAllWages(this))
+        nalogValue.setOnKeyListener { view, i, keyEvent ->
+            if ((view as EditText).text.toString() != "") {
+                allInAllValue.text = "${sum - view.text.toString().toInt()}$"
+            } else {
+                allInAllValue.text = "${sum}$"
+            }
+            if (allInAllValue.text.toString()[0] == '-') {
+                allInAllValue.setTextColor(Color.RED)
+            } else {
+                allInAllValue.text = "+${allInAllValue.text}"
+                allInAllValue.setTextColor(Color.GREEN)
+            }
+            false
+        }
+        nextDay.setOnClickListener {
+            if(nalogValue.text.toString()!="") {
+                Player.getInstance(this).money-=nalogValue.text.toString().toInt()
+                Inventory.saveInventories(this)
+                Factory.saveFactories(this)
+                Player.save(this)
+                DataTime.save(this)
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+        }
 
     }
 }
@@ -40,10 +67,12 @@ class MoneyStatsAdapter : BaseAdapter {
 
     var nums = ArrayList<Int>()
     var context: Context? = null
+    var sum = 0
 
-    constructor(context: Context, nums: ArrayList<Int>) : super() {
+    constructor(context: Context, nums: ArrayList<Int>, sum: Int) : super() {
         this.context = context
         this.nums = nums
+        this.sum = sum
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -55,12 +84,12 @@ class MoneyStatsAdapter : BaseAdapter {
             itemView.namePunct.text = "Зарплаты:"
             itemView.value.text = "-${data.getAllWages(context!!)}$"
             itemView.value.setTextColor(Color.RED)
-        }else{
-            if(position == 1){
+        } else {
+            if (position == 1) {
                 itemView.namePunct.text = "Продажи:"
-                itemView.value.text = "+${10}$"
+                itemView.value.text = "+${sum}$"
                 itemView.value.setTextColor(Color.GREEN)
-            }else{
+            } else {
 
             }
         }

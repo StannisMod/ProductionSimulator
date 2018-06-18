@@ -12,20 +12,22 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Player
 
 class BankActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank)
-        val player = PlayerStatsDatabase.getInstance(this).getPlayerStats()
+        val player =Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = PlayerStatsDatabase.getInstance(this).getDataTime()
+        val curData = DataTime.getInstance(this)
         if(curData!=null){
             curDate.text = curData.toString()
         }

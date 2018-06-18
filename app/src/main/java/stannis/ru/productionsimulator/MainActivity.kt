@@ -42,14 +42,14 @@ class MainActivity : AppCompatActivity() {
         }
         rep.setEnabled(false)
 
-        val player = PlayerStatsDatabase.getInstance(this).getPlayerStats()
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = Factory.getFactoryById(0)!!.res!!.getInventorySlotContents(0).stackSize.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = PlayerStatsDatabase.getInstance(this).getDataTime()
+        val curData = DataTime.getInstance(this)
         if (curData != null) {
             curDate.text = curData.toString()
         }
@@ -93,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         Log.d("Shutdown thread", "Destroy!")
         // Inventory.getInventory().save(this)
         Inventory.saveInventories(this)
+        Player.save(this)
+        DataTime.save(this)
         Log.d("Shutdown thread", "Kek1")
         Factory.saveFactories(this)
         Log.d("Shutdown thread", "Kek2")

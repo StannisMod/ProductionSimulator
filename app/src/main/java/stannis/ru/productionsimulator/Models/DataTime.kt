@@ -12,8 +12,21 @@ import stannis.ru.productionsimulator.Enums.Profs
 import java.util.*
 
 class DataTime(var currentDay: String, var currentMonth: String, var currentYear: String, var tookCreditToday: Int, var tookDepositToday: Int) {
+    companion object {
+        var instance: DataTime? = null
+        fun getInstance(ctx: Context): DataTime {
+            if (instance == null) {
+                instance = PlayerStatsDatabase.getInstance(ctx).getDataTime()
+            }
+            return instance!!
+        }
 
-    fun nextDay(ctx: Context) {
+        fun save(ctx: Context) {
+            PlayerStatsDatabase.getInstance(ctx).setDataTimeWithProperties(getInstance(ctx))
+        }
+    }
+
+    fun nextDay(ctx: Context): Int {
         val ins = PlayerStatsDatabase.getInstance(ctx)
         var day = currentDay.toInt()
         if (day < 28) {
@@ -64,17 +77,18 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         this.tookCreditToday = 0
         this.tookDepositToday = 0
 
-        for(fac in Factory.factories){
-            if(fac!=null){
+        for (fac in Factory.factories) {
+            if (fac != null) {
                 fac.runTick(ctx)
             }
         }
         generateBuyInv(ctx)
         generateLabor(ctx)
-        sellItems(ctx)
-        ins.setDataTimeWithProperties(this)
 
-        //generateMessage(ctx)
+        val sum = sellItems(ctx)
+        Player.getInstance(ctx).money += (sum - getAllWages(ctx))
+        generateMessage(ctx)
+        return sum - getAllWages(ctx)
     }
 
     fun checkCreditsDeposits(ctx: Context) {
@@ -89,10 +103,10 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         }
     }
 
-    fun sellItems(ctx: Context) {
+    fun sellItems(ctx: Context): Int {
         val ins = PlayerStatsDatabase.getInstance(ctx)
-        val player = ins.getPlayerStats()
-        // for (i in 1..3) {
+        val player = Player.getInstance(ctx)
+
         val invent = Inventory.getInventory("sell")
         var tmp = 0;
         for (v in invent!!.inv) {
@@ -100,20 +114,24 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                 tmp++
             }
         }
+        var sum = 0
         for (i in 0 until tmp) {
-            val p = Random().nextInt(3)
-            Log.d("Sell", p.toString())
+            val p = Random().nextInt(2)
+
 
             if (p == 0) {
-                Log.d("Sell", player!!.money.toString())
-                player!!.money += (ItemsBuy.findById(invent.getInventorySlotContents(i).itemId).getItemPrice())
-                invent.decrStackSize(i, 1)
-                Log.d("Sell", player!!.money.toString())
+                var count = Random().nextInt((((player.reputation / 100.0)+0.2) * invent.inv[i].stackSize).toInt() + 1)
+                Log.d("Sell", count.toString())
+                if (count > invent.inv[i].stackSize) {
+                    count = invent.inv[i].stackSize
+                }
+                sum += count * (ItemsBuy.findById(invent.getInventorySlotContents(i).itemId).getItemPrice())
+                invent.decrStackSize(i, count)
+                Log.d("Sell", sum.toString())
             }
         }
-        ins.setPlayerWithProperties(player!!)
-        invent.save(ctx)
 
+        return sum
     }
 
     fun generateLabor(ctx: Context) {
@@ -149,7 +167,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
 
             val p = Random().nextInt(tmp + 1)
             if (p == 0) {
-                val id = Random().nextInt(5)
+                val id =1 //Random().nextInt(5)
                 invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
                         .itemId, Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
                 invent.save(ctx)

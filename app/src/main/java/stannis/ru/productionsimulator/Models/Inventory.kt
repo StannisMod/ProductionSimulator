@@ -43,11 +43,13 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
                 return false
 
             var i = to.findFirstEqualSlot(from.getInventorySlotContents(slotIndex).itemId)
-            if (to.isSlotEmpty(i))
+            if (to.isSlotEmpty(i)) {
+                Log.d("Store", "created")
                 to.setInventorySlotContents(i, ItemStack(from.getInventorySlotContents(slotIndex).itemId, quantity, to.getInventoryStackLimit()))
-            else
+            }else {
+                Log.d("Store", "added")
                 to.getInventorySlotContents(i).stackSize += quantity
-
+            }
             return from.decrStackSize(slotIndex, quantity)
         }
 

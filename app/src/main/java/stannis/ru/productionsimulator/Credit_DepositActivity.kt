@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Player
 import kotlin.math.roundToInt
 
 
@@ -19,14 +21,14 @@ class Credit_DepositActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credit__deposit)
         val ins = PlayerStatsDatabase.getInstance(this)
-        val player = ins.getPlayerStats()
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         if (curData != null) {
             curDate.text = curData.toString()
         }
@@ -54,9 +56,9 @@ class Credit_DepositActivity : AppCompatActivity() {
                 if ((v as EditText).text.toString() != "") {
                     var percent = 0.0
                     if (isCredit) {
-                        percent = player!!.countCreditPercent(v.text.toString().toInt())
+                        percent = player.countCreditPercent(v.text.toString().toInt())
                     } else {                                                                  //Write Some Normal Formula also there is a bug...
-                        percent = player!!.countDepositPercent(v.text.toString().toInt())
+                        percent = player.countDepositPercent(v.text.toString().toInt())
                     }
 
                     countedPercent.text = " ${round(percent, 2)}%/месяц"
@@ -67,7 +69,7 @@ class Credit_DepositActivity : AppCompatActivity() {
 
             }
             confirmCredit.setOnClickListener {
-                if (player != null && curData != null && inputAmountOfCredit.text.toString() != "") {
+                if ( inputAmountOfCredit.text.toString() != "") {
                     if (!isCredit && inputAmountOfCredit.text.toString().toInt() > player.money) {
                         Toast.makeText(this, "Вы не вложите вложить больше денег, чем у вас сейчас есть", Toast.LENGTH_SHORT).show()
                     } else {
@@ -81,8 +83,7 @@ class Credit_DepositActivity : AppCompatActivity() {
                             curData.tookCreditToday = inputAmountOfCredit.text.toString().toInt()
                             player.money += inputAmountOfCredit.text.toString().toInt()
                         }
-                        ins.setDataTimeWithProperties(curData)
-                        ins.setPlayerWithProperties(player)
+
 
 
                         val type = if (isCredit) 2 else 1

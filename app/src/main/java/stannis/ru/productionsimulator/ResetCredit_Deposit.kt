@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Player
 
 
 class ResetCredit_Deposit : AppCompatActivity() {
@@ -18,7 +20,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_credit__deposit)
         val ins = PlayerStatsDatabase.getInstance(this)
-        val player = ins.getPlayerStats()
+        val player =Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
@@ -26,7 +28,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
             rep.progress = player.reputation
         }
         rep.setEnabled(false)
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         if(curData!=null){
             curDate.text = curData.toString()
         }
@@ -78,8 +80,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
                             }else{
                                 player.money-=resetAmount.text.toString().toInt()
                             }
-                            ins.setPlayerWithProperties(player)
-                            ins.setDataTimeWithProperties(curData)
+
 
 
                             if (cond) {

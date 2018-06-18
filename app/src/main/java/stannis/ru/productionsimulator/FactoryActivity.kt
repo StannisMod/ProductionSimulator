@@ -12,8 +12,10 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Factory
 import stannis.ru.productionsimulator.Models.Inventory
+import stannis.ru.productionsimulator.Models.Player
 
 class FactoryActivity : AppCompatActivity() {
 
@@ -21,7 +23,7 @@ class FactoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_factory)
         val ins = PlayerStatsDatabase.getInstance(this)
-        val player = ins.getPlayerStats()
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
@@ -29,7 +31,7 @@ class FactoryActivity : AppCompatActivity() {
             rep.progress = player.reputation
         }
         rep.setEnabled(false)
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         if(curData!=null){
             curDate.text = curData.toString()
         }
@@ -89,6 +91,7 @@ class FactoryActivity : AppCompatActivity() {
         storeProd.setOnClickListener {
             val inv = Inventory.getInventory()
             val i : Int? = inv.findFirstEqualSlot(factory.type.getResType().getId())
+            Log.d("Store", i.toString())
             if (i != null){
                 while (!factory.production.isSlotEmpty(0) && inv.getInventorySlotContents(i).stackSize < Inventory.getInventory().getInventoryStackLimit())
                     Inventory.transferItem(factory.production, inv, 0, 1)

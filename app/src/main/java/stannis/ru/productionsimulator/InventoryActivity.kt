@@ -16,8 +16,10 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
+import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
+import stannis.ru.productionsimulator.Models.Player
 
 class InventoryActivity : AppCompatActivity() {
 
@@ -30,14 +32,14 @@ class InventoryActivity : AppCompatActivity() {
             startActivity(intent)
         }
         val ins = PlayerStatsDatabase.getInstance(this)
-        val player = ins.getPlayerStats()
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         if(curData!=null){
             curDate.text = curData.toString()
         }
@@ -49,6 +51,7 @@ class InventoryActivity : AppCompatActivity() {
 
         inventory_name.text = "Инвентарь"
 
+        Inventory.getInventory().normalize()
         var slots = Inventory.getInventory().inv
         val arrayList: ArrayList<ItemStack> = ArrayList()
         for (inv in slots) {

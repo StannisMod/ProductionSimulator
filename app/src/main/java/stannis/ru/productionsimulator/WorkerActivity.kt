@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Staff
 
 
@@ -20,14 +22,14 @@ class WorkerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_worker)
         val ins = PlayerStatsDatabase.getInstance(this)
 
-        val player = ins.getPlayerStats()
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             res.text = player.stuff.toString()
             staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
-        val curData = ins.getDataTime()
+        val curData = DataTime.getInstance(this)
         rep.setEnabled(false)
         if(curData!=null){
             curDate.text = curData.toString()
@@ -60,7 +62,7 @@ class WorkerActivity : AppCompatActivity() {
                         } else {
                             player.money -= tmp.salary
                             player.staff++
-                            ins.setPlayerWithProperties(player)
+
 
                             DatabaseFactory.getInstance(this).removeLaborExchange(arr[0].trim())
 
@@ -98,7 +100,7 @@ class WorkerActivity : AppCompatActivity() {
 
                                 player.staff--;
                                 player.money -= tmp.salary
-                                ins.setPlayerWithProperties(player)
+
 
                                 Toast.makeText(this, "${tmp.name}, ты уволен", Toast.LENGTH_SHORT).show()
 
