@@ -5,6 +5,7 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_end_day.*

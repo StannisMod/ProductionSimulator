@@ -44,12 +44,11 @@ class Factory {
 
         fun saveFactories(ctx : Context) {
             var i = 0
-            while (getFactoryById(i) != null && i < factories.size) {
+            while (getFactoryById(i) != null) {
+//                Log.d("Size1", "${factories.size}")
                 getFactoryById(i)?.save(ctx)
                 i++
-                Log.d("Shutdown thread", "${i}")
-                Log.d("Shutdown thread", "${factories.size}")
-
+//                Log.d("Size2", "${factories.size}")
             }
         }
 
@@ -63,8 +62,8 @@ class Factory {
     }
 
     fun save(ctx : Context) {
-        if (DatabaseFactory.getInstance(ctx).getFactory(this.id) == null)
-            DatabaseFactory.getInstance(ctx).addFactory(ctx,this)
+        if (id >= factories.size && DatabaseFactory.getInstance(ctx).getFactory(this.id) == null)
+            DatabaseFactory.getInstance(ctx).addFactory(ctx, this)
         else
             DatabaseFactory.getInstance(ctx).updateFactory(this)
     }
