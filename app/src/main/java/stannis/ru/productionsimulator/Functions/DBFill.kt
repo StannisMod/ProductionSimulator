@@ -86,7 +86,7 @@ fun fillDb(ctx: Context) {
     kek.removeAllNames()
     kek.addNames(arrayNames, arraySecondNames)
     kek.addPlayerStatsWithProperties(1200, 0,0,50,100)
-    kek.addDataTimeWithProperties("24", "04", "2014", 0,0,0,0)
+    kek.addDataTimeWithProperties("24", "04", "2014", 0,0)
 }
 
 fun testFillDb(ctx: Context) {

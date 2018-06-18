@@ -1,8 +1,10 @@
 package stannis.ru.productionsimulator.Models
 
+import android.content.ClipData
 import android.content.Context
 import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Enums.Items
 
 class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
@@ -36,9 +38,9 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
         fun createInventory(name : String, size : Int, maxStackSize : Int) = inventories.put(name, Inventory(name, size, maxStackSize))
 
-        fun transferItem(from : Inventory, to : Inventory, slotIndex : Int, quantity : Int) {
+        fun transferItem(from : Inventory, to : Inventory, slotIndex : Int, quantity : Int):Boolean {
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
-                return
+                return false
 
             var i = to.findFirstEqualSlot(from.getInventorySlotContents(slotIndex).itemId)
             if (to.isSlotEmpty(i))
@@ -46,7 +48,7 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
             else
                 to.getInventorySlotContents(i).stackSize += quantity
 
-            from.decrStackSize(slotIndex, quantity)
+            return from.decrStackSize(slotIndex, quantity)
         }
 
         fun load(ctx : Context, name : String) : Inventory? = DatabaseFactory.getInstance(ctx).getInventory(name)
@@ -94,16 +96,21 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
         return findFirstEmptySlot()
     }
 
-    fun decrStackSize(slotIndex: Int, denominator : Int) {
+    fun decrStackSize(slotIndex: Int, denominator : Int):Boolean {
         if (slotIndex < 0 || slotIndex > getInventorySize() - 1)
-            return
+            return false
 
         Log.d("DECR", "DECR!!!")
 
-        if (getInventorySlotContents(slotIndex).stackSize <= denominator)
+        if (getInventorySlotContents(slotIndex).stackSize <= denominator) {
             setSlotEmpty(slotIndex)
-        else
+            normalize()
+            return true
+        }
+        else {
             getInventorySlotContents(slotIndex).stackSize -= denominator
+            return false
+        }
     }
 
     fun save(ctx : Context) {
@@ -112,9 +119,28 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
         else
             DatabaseFactory.getInstance(ctx).updateInventory(this)
     }
+    fun normalize(){
+        var tmpInv = Array(size, {ItemStack(0,0,maxStackSize)})
+        var i = 0
+        for(st in inv){
+            if(!st.isEmpty()){
+                tmpInv.set(i, st)
+                i++
+            }
+        }
+        inv = tmpInv
+        Log.d("Normalize", inv.toDetailedString())
+    }
 
     fun clear() {
         for (i in 0..(getInventorySize() - 1))
             setSlotEmpty(i)
     }
+}
+fun Array<ItemStack>.toDetailedString():String{
+    var str : String=""
+    for(inv in this){
+        str = str + Items.findById(inv.itemId).name
+    }
+    return str
 }

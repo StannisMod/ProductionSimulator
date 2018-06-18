@@ -11,7 +11,7 @@ import stannis.ru.productionsimulator.Enums.Nations
 import stannis.ru.productionsimulator.Enums.Profs
 import java.util.*
 
-class DataTime(var currentDay: String, var currentMonth: String, var currentYear: String, var tookCreditToday: Int, var tookDepositToday: Int, var todaysCreditMinus: Int, var todaysDepositGain: Int) {
+class DataTime(var currentDay: String, var currentMonth: String, var currentYear: String, var tookCreditToday: Int, var tookDepositToday: Int) {
 
     fun nextDay(ctx: Context) {
         val ins = PlayerStatsDatabase.getInstance(ctx)
@@ -48,35 +48,33 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                 "04", "06" -> if (day == 30) {
                     currentMonth = "0${currentMonth.toInt() + 1}"
                     currentDay = "01"
-                }else{
-                    currentDay = "${day+1}"
+                } else {
+                    currentDay = "${day + 1}"
                 }
                 "09", "11" -> if (day == 30) {
                     currentMonth = "${currentMonth.toInt() + 1}"
 
-                }else{
-                    currentDay = "${day+1}"
+                } else {
+                    currentDay = "${day + 1}"
                 }
             }
         }
         checkCreditsDeposits(ctx)
         checkBirthDays(ctx)
-        this.todaysDepositGain = 0
-        this.todaysCreditMinus = 0
         this.tookCreditToday = 0
         this.tookDepositToday = 0
-        val fac = DatabaseFactory.getInstance(ctx).getFactory(0)
-        Log.d("EndDay", "nextWillBe")
-        if (fac != null) {
-            fac.runTick()
-            Log.d("EndDay", "runTick!")
+
+        for(fac in Factory.factories){
+            if(fac!=null){
+                fac.runTick(ctx)
+            }
         }
         generateBuyInv(ctx)
         generateLabor(ctx)
         sellItems(ctx)
         ins.setDataTimeWithProperties(this)
 
-        generateMessage(ctx)
+        //generateMessage(ctx)
     }
 
     fun checkCreditsDeposits(ctx: Context) {
@@ -95,7 +93,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         val ins = PlayerStatsDatabase.getInstance(ctx)
         val player = ins.getPlayerStats()
         // for (i in 1..3) {
-        val invent = DatabaseFactory.getInstance(ctx).getInventory("sell")
+        val invent = Inventory.getInventory("sell")
         var tmp = 0;
         for (v in invent!!.inv) {
             if (!v.isEmpty()) {
@@ -103,56 +101,61 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             }
         }
         for (i in 0 until tmp) {
-            if (Random().nextInt(3) == 0) {
-                player!!.money += invent.getInventorySlotContents(i).stackSize * (ItemsBuy.findById(invent.getInventorySlotContents(i).itemId).getItemPrice())
-                invent.setInventorySlotContents(i, ItemStack(0, 0, 0))
+            val p = Random().nextInt(3)
+            Log.d("Sell", p.toString())
+
+            if (p == 0) {
+                Log.d("Sell", player!!.money.toString())
+                player!!.money += (ItemsBuy.findById(invent.getInventorySlotContents(i).itemId).getItemPrice())
+                invent.decrStackSize(i, 1)
+                Log.d("Sell", player!!.money.toString())
             }
         }
         ins.setPlayerWithProperties(player!!)
-        DatabaseFactory.getInstance(ctx).updateInventory(invent)
+        invent.save(ctx)
 
     }
 
     fun generateLabor(ctx: Context) {
         val ins = DatabaseFactory.getInstance(ctx)
-        // for (i in 1..3) {
-        val sz = ins.getListOfLaborExchange().size
-        val p = Random().nextInt(sz + 1)
-        if (p == 0) {
-            val age = 25 + Random().nextInt(30)
-            val prof = Profs.findById(Random().nextInt(299) / 50)
-            val nat = Nations.findById(Random().nextInt(410) / 80)
-            val qual = nat.getAvQuality() - (Random().nextInt(5) - 3)
-            val day = Random().nextInt(10) + 10
-            val month = Random().nextInt(8) + 1
-            val staff = Staff(PlayerStatsDatabase.getInstance(ctx).getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
-            Log.d("Added", "paren Added")
-            ins.addLaborExchangeWithProperties(staff)
+        for (i in 1..3) {
+            val sz = ins.getListOfLaborExchange().size
+            val p = Random().nextInt(sz + 1)
+            if (p == 0) {
+                val age = 25 + Random().nextInt(30)
+                val prof = Profs.findById(Random().nextInt(299) / 50)
+                val nat = Nations.findById(Random().nextInt(410) / 80)
+                val qual = nat.getAvQuality() - (Random().nextInt(5) - 3)
+                val day = Random().nextInt(10) + 10
+                val month = Random().nextInt(8) + 1
+                val staff = Staff(PlayerStatsDatabase.getInstance(ctx).getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
+                Log.d("Added", "paren Added")
+                ins.addLaborExchangeWithProperties(staff)
+            }
         }
-        // }
 
     }
 
     fun generateBuyInv(ctx: Context) {
         val ins = DatabaseFactory.getInstance(ctx)
-        // for (i in 1..3) {
-        val invent = Inventory.getInventory("buy")
-        var tmp = 0;
-        for (v in invent!!.inv) {
-            if (!v.isEmpty()) {
-                tmp++
+        for (i in 1..3) {
+            val invent = Inventory.getInventory("buy")
+            var tmp = 0;
+            for (v in invent!!.inv) {
+                if (!v.isEmpty()) {
+                    tmp++
+                }
+            }
+
+            val p = Random().nextInt(tmp + 1)
+            if (p == 0) {
+                val id = Random().nextInt(5)
+                invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                        .itemId, Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
+                invent.save(ctx)
+                Log.d("Added", "inv Added")
             }
         }
-
-        val p = Random().nextInt(tmp + 1)
-        if (p == 0) {
-            val id = Random().nextInt(11)
-            invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
-                    .itemId, Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
-            invent.save(ctx)
-            Log.d("Added", "inv Added")
-        }
-        // }
     }
 
     fun checkBirthDays(ctx: Context) {

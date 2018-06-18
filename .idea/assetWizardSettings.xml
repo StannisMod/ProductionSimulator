@@ -29,12 +29,23 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="foregroundClipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="a3a631" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="foregroundImage">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="67" />
+                                                <entry key="scalingPercent" value="32" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -44,9 +55,12 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\icon.png" />
-                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\icon.png" />
-                                      <entry key="outputName" value="icon" />
+                                      <entry key="backgroundColor" value="6b281b" />
+                                      <entry key="backgroundImage" value="C:\Users\nadya\Desktop\toPersonal.png" />
+                                      <entry key="foregroundImage" value="C:\Users\nadya\Desktop\background.png" />
+                                      <entry key="outputName" value="to_personal" />
+                                      <entry key="previewDensity" value="MEDIUM" />
+                                      <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
                                 </PersistentState>

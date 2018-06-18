@@ -9,7 +9,7 @@ import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 import java.util.*
 
-class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "PlayerStats", null, 1) {
+class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "PlayerStats", null, 2) {
     companion object {
         var instance: PlayerStatsDatabase? = null
         fun getInstance(ctx: Context): PlayerStatsDatabase {
@@ -58,9 +58,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
                 "currentMonth" to TEXT,
                 "currentYear" to TEXT,
                 "tookCreditToday" to INTEGER,
-                "tookDepositToday" to INTEGER,
-                "todaysCreditMinus" to INTEGER,
-                "todaysDepositGain" to INTEGER
+                "tookDepositToday" to INTEGER
 
         )
         db.createTable(CREDIT_DEPOSIT_NAME, true,
@@ -343,20 +341,20 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
         return res
     }
 
-    fun addDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int, todaysCreditMinus: Int, todaysDepositGain: Int) {
+    fun addDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int) {
         PlayerStatsDatabase.getInstance(ctx).use {
-            insert(DATA_TIME_NAME, "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday, "todaysCreditMinus" to todaysCreditMinus, "todaysDepositGain" to todaysDepositGain)
+            insert(DATA_TIME_NAME, "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday)
         }
     }
 
-    fun setDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int, todaysCreditMinus: Int, todaysDepositGain: Int) {
+    fun setDataTimeWithProperties(currentDay: String, currentMonth: String, currentYear: String, tookCreditToday: Int, tookDepositToday: Int) {
         PlayerStatsDatabase.getInstance(ctx).use {
-            update(DATA_TIME_NAME, "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday, "todaysCreditMinus" to todaysCreditMinus, "todaysDepositGain" to todaysDepositGain).exec()
+            update(DATA_TIME_NAME, "currentDay" to currentDay, "currentMonth" to currentMonth, "currentYear" to currentYear, "tookCreditToday" to tookCreditToday, "tookDepositToday" to tookDepositToday).exec()
         }
     }
 
     fun setDataTimeWithProperties(currentData: DataTime) {
-        setDataTimeWithProperties(currentData.currentDay, currentData.currentMonth, currentData.currentYear, currentData.tookCreditToday, currentData.tookDepositToday, currentData.todaysCreditMinus, currentData.todaysDepositGain)
+        setDataTimeWithProperties(currentData.currentDay, currentData.currentMonth, currentData.currentYear, currentData.tookCreditToday, currentData.tookDepositToday)
     }
 
     fun getDataTime(): DataTime? {
@@ -378,11 +376,8 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
             val tookCreditToday = cursor.getString(i).toInt()
             i++
             val tookDepositToday = cursor.getString(i).toInt()
-            i++
-            val todaysCreditMinus = cursor.getString(i).toInt()
-            i++
-            val todaysDepositGain = cursor.getString(i).toInt()
-            curDate = DataTime(currentDay, currentMonth, currentYear, tookCreditToday, tookDepositToday, todaysCreditMinus, todaysDepositGain)
+
+            curDate = DataTime(currentDay, currentMonth, currentYear, tookCreditToday, tookDepositToday)
             cursor.close()
         }
         db.close()

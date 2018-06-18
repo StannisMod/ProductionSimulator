@@ -75,10 +75,8 @@ class ResetCredit_Deposit : AppCompatActivity() {
                         } else {
                             if(condition){
                                 player.money+=resetAmount.text.toString().toInt()
-                                curData.todaysDepositGain+=resetAmount.text.toString().toInt()
                             }else{
                                 player.money-=resetAmount.text.toString().toInt()
-                                curData.todaysCreditMinus+=resetAmount.text.toString().toInt()
                             }
                             ins.setPlayerWithProperties(player)
                             ins.setDataTimeWithProperties(curData)

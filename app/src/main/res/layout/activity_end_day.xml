@@ -29,266 +29,65 @@
             android:textSize="24dp"
             android:textColor="@color/colorPrimary"/>
     </LinearLayout>
-    <ScrollView
-        android:id="@+id/table"
-        android:layout_below="@id/head"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
     <RelativeLayout
-
+        android:layout_below="@id/head"
+        android:layout_above="@id/allInAll"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="50dp"
-        >
-
-        <RelativeLayout
-            android:id="@+id/left"
+        android:layout_height="match_parent">
+    <LinearLayout
+       android:id="@+id/nalogView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_weight="4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
-
-            <TextView
-                android:id="@+id/moneyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Зарплаты:"
-                android:textSize="18dp"/>
-            <LinearLayout
-                android:layout_below="@id/moneyText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/stuffText"
-                android:layout_marginTop="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/moneyText"
-                android:text="Налоги:"
-                android:textSize="18dp"
-                />
-            <LinearLayout
-                android:layout_below="@id/stuffText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/staffText"
-                android:layout_marginTop="25dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/stuffText"
-                android:textSize="18dp"
-                android:text="Уплаты кредитов:" />
-            <LinearLayout
-
-                android:layout_below="@id/staffText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/gainCreditText"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/staffText"
-                android:textSize="18dp"
-                android:text="Кредит:" />
-            <LinearLayout
-
-                android:layout_below="@id/gainCreditText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/openDepositText"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/gainCreditText"
-                android:textSize="18dp"
-                android:text="Депозит:" />
-            <LinearLayout
-
-                android:layout_below="@id/openDepositText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/repText"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/openDepositText"
-                android:textSize="18dp"
-                android:text="Получения депозитов" />
-            <LinearLayout
-                android:layout_below="@id/repText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/sellingsText"
-                android:layout_below="@id/repText"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textSize="18dp"
-                android:layout_height="wrap_content"
-                android:text="Доходы с продажи:"/>
-            <LinearLayout
-                android:layout_below="@id/sellingsText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/allInAllText"
-                android:layout_below="@id/sellingsText"
-                android:layout_marginTop="10dp"
-                android:textSize="18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Итого"/>
-            <LinearLayout
-                android:layout_below="@id/allInAllText"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextMessageActivity">
-
-            </LinearLayout>
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/right"
+            android:text="Налог:"
+            android:textSize="18dp"/>
+        <EditText
+            android:layout_weight="2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
-            <TextView
-                android:id="@+id/wages"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18dp"
-                android:text="+100$"
-                android:textColor="@color/minus"/>
-            <LinearLayout
-                android:id="@+id/panelWithNalogs"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/wages"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" -"
-                    android:textColor="@color/minus"
-                    />
+            android:gravity="right"
+            android:inputType="number"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$"/>
+    </LinearLayout>
 
-            <EditText
-                android:id="@+id/nalogs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/minus"
-                android:textSize="18dp"
-                android:hint="500"
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_below="@id/nalogView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="1">
 
-                android:inputType="number"
-                 />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$"
-                    android:textColor="@color/minus"
-                    android:textSize="18dp"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/creditsPayOff"
-                android:layout_marginTop="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/panelWithNalogs"
-                android:textSize="18dp"
-                android:text="+1 чел."
-                android:textColor="@color/minus"/>
-            <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/credit"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/creditsPayOff"
-                android:textSize="18dp"
-                android:text="+1 чел."
-                android:textColor="@color/plus"/>
-            <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/deposit"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/credit"
-                android:textSize="18dp"
-                android:text="+1 чел."
-                android:textColor="@color/minus"/>
-
-
-            <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/depositsGain"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/deposit"
-                android:textSize="18dp"
-                android:text="-12%"
-                android:textColor="@color/plus"/>
-            <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/sellings"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/depositsGain"
-                android:textSize="18dp"
-                android:text="-12%"
-                android:textColor="@color/plus"/>
-            <TextView
-                android:layout_alignParentRight="true"
-                android:id="@+id/allinAll"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/sellings"
-                android:textSize="18dp"
-                android:text="-12%" />
-
-        </RelativeLayout>
+        </GridView>
     </RelativeLayout>
-    </ScrollView>
+    <LinearLayout
+        android:id="@+id/allInAll"
+        android:layout_margin="10dp"
+        android:layout_above="@id/nextDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_weight="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Итого"
+            android:textSize="18dp"/>
+        <TextView
+            android:id="@+id/allInAllValue"
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="10 $"
+            android:textSize="18dp"/>
+    </LinearLayout>
     <Button
         android:id="@+id/nextDay"
         android:layout_width="wrap_content"

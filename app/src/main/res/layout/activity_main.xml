@@ -8,70 +8,78 @@
 
     <include
         android:id="@+id/stats"
-        layout="@layout/stats_panel"
-        />
+        layout="@layout/stats_panel" />
+
     <include
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
         android:id="@+id/data"
         layout="@layout/date_layout"
-        ></include>
-
-    <RelativeLayout
-        android:layout_below="@id/stats"
-        android:layout_above= "@id/data"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"></include>
 
-        <ImageButton
-            android:id="@+id/toinventory"
-            android:layout_width="135dp"
-            android:layout_height="135dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp"
-            android:background="@mipmap/sklad_background" />
-        <!--- app:srcCompat="@android:drawable/ic_notification_overlay" /> -->
 
-    <ImageButton
-        android:id="@+id/tomarket"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
-        android:background="@mipmap/market_button_round"/>
-        <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/data"
+        android:layout_below="@id/stats"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/topersonal"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginRight="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_toStartOf="@+id/toinventory"
-        app:srcCompat="@mipmap/camp_foreground" />
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0">
 
-    <ImageButton
-        android:id="@+id/tofactory"
-        android:layout_width="228dp"
-        android:layout_height="155dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        app:srcCompat="@mipmap/lesopilka1_background" />
+            <ImageButton
+                android:id="@+id/tofactory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@mipmap/lesopilka1_background" />
+        </RelativeLayout>
 
-    <!--<TextView-->
-        <!--android:id="@+id/debug"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/topersonal"-->
-        <!--android:layout_toEndOf="@+id/tomarket"-->
-        <!--android:textSize="20sp"-->
-        <!--android:text="debug" />-->
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <ImageView
+                android:id="@+id/topersonal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+
+                android:background="@mipmap/camp_foreground" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <ImageButton
+                android:id="@+id/toinventory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:background="@mipmap/sklad_background" />
+            <!--- app:srcCompat="@android:drawable/ic_notification_overlay" /> -->
+            <ImageButton
+                android:id="@+id/tomarket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:background="@mipmap/market_background" />
+            <!--android:layout_marginBottom="10dp"-->
+            <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

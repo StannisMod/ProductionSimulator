@@ -50,18 +50,30 @@ class InventoryActivity : AppCompatActivity() {
         inventory_name.text = "Инвентарь"
 
         var slots = Inventory.getInventory().inv
-        val adapter = ItemAdapter(this, slots.toCollection(ArrayList()))
+        val arrayList: ArrayList<ItemStack> = ArrayList()
+        for (inv in slots) {
+            if (!inv.isEmpty()) {
+                arrayList.add(inv)
+            }
+        }
+        val adapter = ItemAdapter(this, arrayList)
 
         inventory.adapter = adapter
 
         inventory.setOnItemClickListener { adapterView, view, i, l ->
-            Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, 1)
+            if(Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, 1)){
+                startActivity(Intent(this, InventoryActivity::class.java))
+                finish()
+            }
             slots = Inventory.getInventory().inv
             adapter.notifyDataSetChanged()
         }
 
         inventory.setOnItemLongClickListener { adapterView, view, i, l ->
-            Inventory.getInventory().decrStackSize(i, 1)
+            if(Inventory.getInventory().decrStackSize(i, 1)){
+                startActivity(Intent(this, InventoryActivity::class.java))
+                finish()
+            }
             slots = Inventory.getInventory().inv
             adapter.notifyDataSetChanged()
             true

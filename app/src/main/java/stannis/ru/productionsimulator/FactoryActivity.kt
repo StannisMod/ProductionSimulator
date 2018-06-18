@@ -61,8 +61,8 @@ class FactoryActivity : AppCompatActivity() {
         factory_name.text = factory.type.getName()
 
         val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
-                "Потребление сырья: ${factory.consumption}/сек",
-                "Выпуск продукции: ${factory.productivity}/сек",
+                /*"Потребление сырья: ${factory.consumption}/сек",*/
+                "Выпуск продукции: ${factory.productivity}/5кг сырья",
                 "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}",
                 "Состояние оборудования: ${factory.machine_state}")
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data)
@@ -96,7 +96,7 @@ class FactoryActivity : AppCompatActivity() {
             else
                 Toast.makeText(this, "Ваш инвентарь заполнен", Toast.LENGTH_SHORT).show()
 
-            data.set(3, "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}")
+            data.set(2, "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}")
             adapter.notifyDataSetChanged()
         }
     }

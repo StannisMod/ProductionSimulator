@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         if (Inventory.inventories.get("buy") == null)
             Inventory.inventories.put("buy", Inventory.load(this, "buy"))
 
-
+        Factory.load(this, 0)
         if (Factory.getFactoryById(0) == null)
             Factory(true,0, EnumFactory.findById(0))
 

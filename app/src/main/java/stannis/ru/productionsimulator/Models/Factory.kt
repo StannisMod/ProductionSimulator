@@ -56,11 +56,16 @@ class Factory {
         fun load(ctx: Context, id: Int): Factory? = DatabaseFactory.getInstance(ctx).getFactory(id)
     }
 
-    fun runTick() {
-        Log.d("EndDay", "runTick!!")
-        res.decrStackSize(0, consumption)
-        production.getInventorySlotContents(0).stackSize += productivity
+    fun runTick(ctx:Context) {
+
+        val count = res.getInventorySlotContents(0).stackSize/5
+        Log.d("EndDay",  count.toString())
+        production.getInventorySlotContents(0).stackSize += productivity*count
+        res.decrStackSize(0, 5*count)
+
+
         machine_state -= Random().nextInt(10).toDouble() / 100.0
+        this.save(ctx)
     }
 
     fun save(ctx: Context) {
