@@ -16,53 +16,11 @@
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
-                                  <option name="children">
-                                    <map>
-                                      <entry key="backgroundImage">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="scalingPercent" value="53" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                      <entry key="foregroundClipArt">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="color" value="a3a631" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                      <entry key="foregroundImage">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="scalingPercent" value="32" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                    </map>
-                                  </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="6b281b" />
-                                      <entry key="backgroundImage" value="C:\Users\nadya\Desktop\toPersonal.png" />
-                                      <entry key="foregroundImage" value="C:\Users\nadya\Desktop\worker.png" />
-                                      <entry key="legacyIconShape" value="CIRCLE" />
-                                      <entry key="outputName" value="to_personal" />
-                                      <entry key="previewDensity" value="HIGH" />
-                                      <entry key="webIconShape" value="CIRCLE" />
+                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\sklad2.png" />
+                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\sklad2.png" />
+                                      <entry key="outputName" value="sklad" />
                                     </map>
                                   </option>
                                 </PersistentState>
