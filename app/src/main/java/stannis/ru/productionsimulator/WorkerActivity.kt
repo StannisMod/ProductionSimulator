@@ -1,12 +1,17 @@
 package stannis.ru.productionsimulator
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_worker.*
 import kotlinx.android.synthetic.main.date_layout.*
+import kotlinx.android.synthetic.main.staff_view.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
@@ -16,6 +21,9 @@ import stannis.ru.productionsimulator.Models.Staff
 
 
 class WorkerActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +38,7 @@ class WorkerActivity : AppCompatActivity() {
         }
         val curData = DataTime.getInstance(this)
         rep.setEnabled(false)
-        if(curData!=null){
+        if (curData != null) {
             curDate.text = curData.toString()
         }
         endDay.setOnClickListener {
@@ -48,8 +56,13 @@ class WorkerActivity : AppCompatActivity() {
             val arr = intent.getStringExtra("TAG").split(".")
             val cond = arr[1].trim() != "YourWorker"
             var worker: Staff? = null
+
+
             if (cond) {
                 worker = DatabaseFactory.getInstance(this).getWorkerFromLabor(arr[0].trim())
+                val adapter = WorkerAdapter(Array(7){i->i}.toCollection(ArrayList<Int>()), this, worker!!)
+                gridWorker.adapter = adapter
+
                 fire.visibility = View.INVISIBLE
                 hire_prom.text = "Нанять"
 
@@ -77,14 +90,20 @@ class WorkerActivity : AppCompatActivity() {
                 }
             } else {
                 worker = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
+                var al = Array(7){i->i}.toCollection(ArrayList<Int>())
+                var adapter = WorkerAdapter(al, this, worker!!)
+                gridWorker.adapter = adapter
+
                 if (worker != null) {
                     hire_prom.setOnClickListener {
                         val tmp: Staff? = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
                         if (tmp != null) {
                             tmp.getPromotion()
-                            salary.text = "${tmp.salary} $"
-
                             DatabaseFactory.getInstance(this).setStaffWithProperties(tmp)
+                            al = Array(7){i->i}.toCollection(ArrayList<Int>())
+                            adapter = WorkerAdapter(al, this, tmp)
+                            gridWorker.adapter = adapter
+
 
 
                         }
@@ -113,17 +132,62 @@ class WorkerActivity : AppCompatActivity() {
 
 
             }
-            if (worker != null) {
-                name.text = worker.name
-                age.text = worker.age.toString()
-                prof.text = worker.prof
-                nation.text = worker.nation
-                salary.text = "${worker.salary} $"
-                birth.text = "${worker.birth.first}.${worker.birth.second}"
-            }
 
 
         }
+    }
+}
+
+class WorkerAdapter : BaseAdapter {
+    var list: ArrayList<Int> = ArrayList()
+    var ctx: Context? = null
+    var st: Staff? = null
+
+    constructor(list: ArrayList<Int>, ctx: Context,st : Staff) {
+        this.list = list
+        this.ctx = ctx
+        this.st = st
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
+        var inflator = ctx!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        var itemView = inflator.inflate(R.layout.staff_view, null)
+        if (position == 0) {
+            itemView.param.text = "Имя: "
+            itemView.paramValue.text = "${st!!.name.split(" ")[0]}"
+        } else if (position == 1) {
+            itemView.param.text = "Фамилия: "
+            itemView.paramValue.text = "${st!!.name.split(" ")[1]}"
+        } else if (position == 2) {
+            itemView.param.text = "Возраст: "
+            itemView.paramValue.text = "${st!!.age}"
+        } else if (position == 3) {
+            itemView.param.text = "Специальность: "
+            itemView.paramValue.text = "${st!!.prof}"
+        } else if (position == 4) {
+            itemView.param.text = "Квалификация: "
+            itemView.paramValue.text = "${st!!.quality}"
+        } else if (position == 5) {
+            itemView.param.text = "Зарплата: "
+            itemView.paramValue.text = "${st!!.salary}$"
+        } else if (position == 6) {
+            itemView.param.text = "Дата рождения: "
+            itemView.paramValue.text = "${st!!.birth.first}.${st!!.birth.second}"
+        }
+        return itemView
+    }
+
+    override fun getItem(position: Int): Any {
+        return list.get(position)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return list.size
     }
 }
 

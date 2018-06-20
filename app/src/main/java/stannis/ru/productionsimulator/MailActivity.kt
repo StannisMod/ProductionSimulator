@@ -11,6 +11,9 @@ import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Models.Message
 
 class MailActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
 //    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {

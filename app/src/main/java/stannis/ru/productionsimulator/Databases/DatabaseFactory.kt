@@ -11,25 +11,16 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(ctx, name1, null, 25) {
+class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper(ctx, name1, null, 26) {
 
     companion object {
-        //private var instance: DatabaseFactory? = null
-        private val instanceList : ArrayList<DatabaseFactory?> = ArrayList()
+        private val instanceList: ArrayList<DatabaseFactory?> = ArrayList()
         var index = 0
 
-//        @Synchronized
-//        fun getInstance(ctx: Context): DatabaseFactory {
-//            if (instance == null) {
-//                instance = DatabaseFactory(ctx.applicationContext)
-//            }
-//            return instance!!
-//        }
-        @Synchronized
-        fun getInstance(ctx:Context): DatabaseFactory {
-            if(instanceList.size<= index){
-                for(i in 0..index)
-                instanceList.add( i, DatabaseFactory(ctx.applicationContext, "Factory${i}"))
+        fun getInstance(ctx: Context): DatabaseFactory {
+            if (instanceList.size <= index) {
+                for (i in 0..index)
+                    instanceList.add(i, DatabaseFactory(ctx.applicationContext, "Factory${i}"))
             }
             return instanceList[index]!!
         }
@@ -43,6 +34,8 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable("Factories", true,
                 "id" to INTEGER,
+                "isBought" to INTEGER,
+                "price" to INTEGER,
                 "type" to INTEGER,
                 "res" to INTEGER,
                 "res_cap" to INTEGER,
@@ -117,15 +110,16 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
     // To manage factory DB
 
     fun addFactory(ctx: Context, factory: Factory) {
-        addFactoryWithProperties(ctx, factory.id, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
+        addFactoryWithProperties(ctx, factory.id, factory.isBought, factory.price, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
                 factory.res.getInventoryStackLimit(), factory.productivity,
                 factory.production.getInventorySlotContents(0).stackSize, factory.production.getInventoryStackLimit(), factory.machine_state)
     }
 
-    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, res_cap: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx: Context, id: Int, isBought: Boolean, price: Int, type: Int, res: Int, res_cap: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+        val isBOught = if (isBought) 1 else 0
         getInstance(ctx).use {
             insert("Factories",
-                    "id" to id, "type" to type, "res" to res, "res_cap" to res_cap,
+                    "id" to id, "isBought" to isBOught, "price" to price, "type" to type, "res" to res, "res_cap" to res_cap,
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
         }
     }
@@ -148,7 +142,12 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst()
-            var i = 0
+            var i = 1
+            var isBought = cursor.getString(i).toInt() == 1
+            i++
+            var price = cursor.getString(i).toInt()
+            Log.d("WHYFACISNULLprice", price.toString())
+            i++
             type = Integer.parseInt(cursor.getString(i))
             i++
             res = Integer.parseInt(cursor.getString(i))
@@ -163,7 +162,7 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
             i++
             machine_state = cursor.getString(i).toDouble()
 
-            factory = Factory(false, id, EnumFactory.findById(type), res, res_cap, productivity, production, production_cap, machine_state)
+            factory = Factory(false, id, isBought, price, EnumFactory.findById(type), res, res_cap, productivity, production, production_cap, machine_state)
             cursor.close()
         }
         db.close()
@@ -173,14 +172,15 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
 
     fun updateFactory(factory: Factory) {
 
-        setFactoryProperties(factory.id, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
+        setFactoryProperties(factory.id, factory.isBought, factory.price, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
                 factory.res.getInventoryStackLimit(), factory.productivity,
                 factory.production.getInventorySlotContents(0).stackSize, factory.production.getInventoryStackLimit(), factory.machine_state)
     }
 
-    fun setFactoryProperties(id: Int, type: Int, res: Int, res_cap: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun setFactoryProperties(id: Int, isBought: Boolean, price: Int, type: Int, res: Int, res_cap: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+        val isBOught = if (isBought) 1 else 0
         getInstance(ctx).use {
-            update("Factories", "type" to type, "res" to res, "res_cap" to res_cap,
+            update("Factories", "isBought" to isBOught, "price" to price, "type" to type, "res" to res, "res_cap" to res_cap,
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
                     .whereArgs("id = {id}", "id" to id).exec()
         }
@@ -249,13 +249,10 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
     }
 
 
-
-
-
     //For managing inventory
 
     fun addLaborExchangeWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
-        var res:Long = 0
+        var res: Long = 0
         getInstance(ctx).use {
             res = insert("laborExchange",
                     "name" to name, "age" to age, "spec" to spec, "quality" to quality, "nationality" to nationality,
@@ -459,8 +456,8 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
         }
     }
 
-    fun removeInventory(name: String){
-        getInstance(ctx).use{
+    fun removeInventory(name: String) {
+        getInstance(ctx).use {
             delete(name)
         }
     }

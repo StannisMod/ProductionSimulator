@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.countProductivity
+import stannis.ru.productionsimulator.Functions.countRes_Cap
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Factory
 import stannis.ru.productionsimulator.Models.Inventory
@@ -45,26 +47,22 @@ class FactoryActivity : AppCompatActivity() {
         }
 
         var factory = Factory.getFactoryById(DatabaseFactory.index)//intent.getIntExtra("FACTORY_ID", 0))
+        Log.d("WHATThe", factory!!.toDetailedString())
+        countProductivity(this)
+        countRes_Cap()
 
         // if (factory == null)
           //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
 
-        if (factory == null) {
-            Log.d("FACTORY", "Factory is null!!![${intent.getIntExtra("FACTORY_ID", 0)}]")
-        }
 
-        if (factory == null) {
-            Log.d("FACTORY", "Factory is null x2!!!")
-            factory = Factory(true,0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2,  10.0)
-        }
 
-        factory_name.text = factory.type.getName()
+        factory_name.text = factory!!.type.getName()
 
-        val data = arrayOf("Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}",
-                /*"Потребление сырья: ${factory.consumption}/сек",*/
-                "Выпуск продукции: ${factory.productivity}/5кг сырья",
-                "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}",
-                "Состояние оборудования: ${factory.machine_state}")
+        val data = arrayOf("Сырьё: ${factory!!.res.getInventorySlotContents(0).stackSize}/${factory!!.res.getInventoryStackLimit()}",
+                /*"Потребление сырья: ${factory!!.consumption}/сек",*/
+                "Выпуск продукции: ${factory!!.productivity}/5кг сырья",
+                "Продукция: ${factory!!.production.getInventorySlotContents(0).stackSize}/${factory!!.production.getInventoryStackLimit()}",
+                "Состояние оборудования: ${factory!!.machine_state}")
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data)
         adapter.notifyDataSetChanged()
         stats.adapter = adapter
@@ -74,31 +72,34 @@ class FactoryActivity : AppCompatActivity() {
             for (i in 0..(inv.getInventorySize() - 1)) {
                 val item = inv.getInventorySlotContents(i)
                 //Log.d("ITEM_1", item.toString())
-                if (item.getType() == factory.type.getResType().getId()) {
+                if (item.getType() == factory!!.type.getResType().getId()) {
                     //Log.d("ITEM_2", item.toString())
-                    while (!factory.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0) {
+                    while (!factory!!.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0) {
                         //Log.d("ITEM_3", item.toString())
-                        Inventory.transferItem(inv, factory.res, i, 1)
+                        Inventory.transferItem(inv, factory!!.res, i, 1)
                     }
                 }
             }
-            data.set(0, "Сырьё: ${factory.res.getInventorySlotContents(0).stackSize}/${factory.res.getInventoryStackLimit()}")
+            data.set(0, "Сырьё: ${factory!!.res.getInventorySlotContents(0).stackSize}/${factory!!.res.getInventoryStackLimit()}")
             adapter.notifyDataSetChanged()
         }
 
         storeProd.setOnClickListener {
             val inv = Inventory.getInventory()
-            val i : Int? = inv.findFirstEqualSlot(factory.type.getResType().getId())
+            val i : Int? = inv.findFirstEqualSlot(factory!!.type.getResType().getId())
             Log.d("Store", i.toString())
             if (i != null){
-                while (!factory.production.isSlotEmpty(0) && inv.getInventorySlotContents(i).stackSize < Inventory.getInventory().getInventoryStackLimit())
-                    Inventory.transferItem(factory.production, inv, 0, 1)
+                while (!factory!!.production.isSlotEmpty(0) && inv.getInventorySlotContents(i).stackSize < Inventory.getInventory().getInventoryStackLimit())
+                    Inventory.transferItem(factory!!.production, inv, 0, 1)
             }
             else
                 Toast.makeText(this, "Ваш инвентарь заполнен", Toast.LENGTH_SHORT).show()
 
-            data.set(2, "Продукция: ${factory.production.getInventorySlotContents(0).stackSize}/${factory.production.getInventoryStackLimit()}")
+            data.set(2, "Продукция: ${factory!!.production.getInventorySlotContents(0).stackSize}/${factory!!.production.getInventoryStackLimit()}")
             adapter.notifyDataSetChanged()
         }
+    }
+    override fun onBackPressed() {
+
     }
 }

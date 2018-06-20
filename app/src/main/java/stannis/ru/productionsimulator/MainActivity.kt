@@ -4,36 +4,38 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Functions.saveAllExceptInventory
+import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.*
 
 class MainActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d("CURRENTindex", DatabaseFactory.index.toString())
+        var index = DatabaseFactory.index
 
-        if (Inventory.instance == null)
-            Inventory.instance = Inventory.load(this, Inventory.TAG)
 
-        if (Inventory.inventories.get("sell") == null)
-            Inventory.inventories.put("sell", Inventory.load(this, "sell"))
-        if (Inventory.inventories.get("buy") == null)
-            Inventory.inventories.put("buy", Inventory.load(this, "buy"))
 
         Log.d("NotNUll", "${Inventory.getInventory("buy").maxStackSize}")
-        if (Factory.getFactoryById(DatabaseFactory.index) == null)
-            Factory(true, DatabaseFactory.index, EnumFactory.findById(DatabaseFactory.index))
+        var factory = Factory.getFactoryById(index)
+        if (factory == null)
+            factory = Factory(true, index, false, EnumFactory.findById(index).price, EnumFactory.findById(index))
 
-        Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
+
 
 
         mail.setOnClickListener {
@@ -56,64 +58,70 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())
 
-        left.setOnClickListener {
-            if (DatabaseFactory.index != 0) {
-                saveAllExceptInventory(this)
-                Inventory.saveInventories(this)
-                Inventory.setNulls()
-                DatabaseFactory.index--
-                startActivity(Intent(this, MainActivity::class.java))
+
+        if (factory != null && !factory.isBought) {
+            buyFac.visibility = View.VISIBLE
+            body.visibility = View.GONE
+            buyFac.text = "Купить\n${factory.price}$"
+            buyFac.setOnClickListener {
+                if (player.money < factory.price) {
+                    Toast.makeText(this, "У вас недостаточно средств", Toast.LENGTH_SHORT).show()
+                } else {
+                    factory.isBought = true
+                    player.money -= factory.price
+                    saveAll(this)
+                    DatabaseFactory.index = factory.id
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
             }
-        }
-        right.setOnClickListener {
-            if (DatabaseFactory.index != 1) {
-                saveAllExceptInventory(this)
-                Inventory.saveInventories(this)
-                Inventory.setNulls()
-                DatabaseFactory.index++
-                startActivity(Intent(this, MainActivity::class.java))
+        } else {
+            tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())
+
+            left.setOnClickListener {
+                if (DatabaseFactory.index > 0) {
+                    DatabaseFactory.index = index
+                    DatabaseFactory.index--
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
             }
-        }
-        toinventory.setOnClickListener {
+            right.setOnClickListener {
+                if (DatabaseFactory.index < EnumFactory.getSize() - 1) {
+                    DatabaseFactory.index = index
+                    DatabaseFactory.index++
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
+            }
+            toinventory.setOnClickListener {
 
-            val intent = Intent(this, InventoryActivity::class.java)
-            startActivity(intent)
-        }
+                val intent = Intent(this, InventoryActivity::class.java)
+                startActivity(intent)
+            }
 
-        tomarket.setOnClickListener {
-            val intent = Intent(this, MarketActivity::class.java)
-            startActivity(intent)
-        }
+            tomarket.setOnClickListener {
+                val intent = Intent(this, MarketActivity::class.java)
+                startActivity(intent)
+            }
 
-        stats_panel.setOnClickListener {
-            // val intent = Intent(this, StatsActivity::class.java)
-            // startActivity(stats)
-            Inventory.getInventory().setInventorySlotContents(Inventory.getInventory().findFirstEqualSlot(Items.WOOD.getId()), ItemStack(Items.WOOD.getId(), 32, 64))
-        }
+            stats_panel.setOnClickListener {
+                // val intent = Intent(this, StatsActivity::class.java)
+                // startActivity(stats)
+                Inventory.getInventory().setInventorySlotContents(Inventory.getInventory().findFirstEqualSlot(Items.WOOD.getId()), ItemStack(Items.WOOD.getId(), 32, 64))
+            }
 
-        tofactory.setOnClickListener {
-            val intent = Intent(this, FactoryActivity::class.java)
-            intent.putExtra("FACTORY_ID", 0)
-            startActivity(intent)
-        }
-        topersonal.setOnClickListener {
-            val intent = Intent(this, StaffActivity::class.java)
-            startActivity(intent)
-        }
+            tofactory.setOnClickListener {
+                Log.d("WHATThe", DatabaseFactory.index.toString())
+                val intent = Intent(this, FactoryActivity::class.java)
+                startActivity(intent)
+            }
+            topersonal.setOnClickListener {
+                val intent = Intent(this, StaffActivity::class.java)
+                startActivity(intent)
+            }
 
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d("Shutdown thread", "Destroy!")
-        // Inventory.getInventory().save(this)
-        Inventory.saveInventories(this)
-        Player.save(this)
-        DataTime.save(this)
-        Log.d("Shutdown thread", "Kek1")
-        Factory.saveFactories(this)
-        Log.d("Shutdown thread", "Kek2")
-    }
+
 }

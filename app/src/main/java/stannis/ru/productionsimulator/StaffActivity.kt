@@ -14,6 +14,9 @@ import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Staff
 
 class StaffActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

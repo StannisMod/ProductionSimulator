@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.widget.TextView
 
 class MessageActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

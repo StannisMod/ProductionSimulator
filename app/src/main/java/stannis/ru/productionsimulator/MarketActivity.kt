@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.activity_market.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.item.view.*
@@ -18,10 +18,12 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Enums.ItemsBuy
 import stannis.ru.productionsimulator.Models.*
 
 class MarketActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -67,7 +69,7 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
         Inventory.getInventory("buy").normalize()
-        var slots =  Inventory.getInventory("buy").inv
+        var slots = Inventory.getInventory("buy").inv
 
         val arrayList: ArrayList<ItemStack> = ArrayList()
         for (inv in slots) {
@@ -78,14 +80,14 @@ class MarketActivity : AppCompatActivity() {
         val adapter = ItemAdapterBuy(this, arrayList/*slots.toCollection(ArrayList())*/)
 
         tvTab1.adapter = adapter
-        tvTab1.setOnItemClickListener{adapterView, view, i, l ->
+        tvTab1.setOnItemClickListener { adapterView, view, i, l ->
             val player = Player.getInstance(this)
             Log.d("ItemClicker", i.toString())
-            if (player!!.money > ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()) {
-                player!!.money -= ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()
+            if (player!!.money > Items.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).price) {
+                player!!.money -= Items.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).price
 
                 Log.d("ItemClicker", "Pressed")
-                if(Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)){
+                if (Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)) {
                     startActivity(Intent(this, MarketActivity::class.java))
                     finish()
                 }
@@ -98,7 +100,7 @@ class MarketActivity : AppCompatActivity() {
             }
         }
         Inventory.getInventory("sell").normalize()
-        val slots1 = Inventory.getInventory("sell").inv
+        var slots1 = Inventory.getInventory("sell").inv
 
         val arrayList1: ArrayList<ItemStack> = ArrayList()
 
@@ -110,6 +112,15 @@ class MarketActivity : AppCompatActivity() {
         val adapter1 = ItemAdapterSell(this, arrayList1/*slots.toCollection(ArrayList())*/)
 
         tvTab2.adapter = adapter1
+        tvTab2.setOnItemLongClickListener { adapterView, view, i, l ->
+            if(Inventory.transferItem(Inventory.getInventory("sell"), Inventory.getInventory(), i, 1)){
+                startActivity(Intent(this, MarketActivity::class.java))
+                finish()
+            }
+            slots1 = Inventory.getInventory("sell").inv
+            adapter.notifyDataSetChanged()
+            true
+        }
 
 
         var listview3: ListView = findViewById(R.id.tvTab3)
@@ -153,9 +164,9 @@ class ItemAdapterBuy : BaseAdapter {
         var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var itemView = inflator.inflate(R.layout.item_buy, null)
 
-        itemView.imageItemSell.setImageResource(ItemsBuy.findById(item.itemId).getItemImage())
-        itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize})"
-        itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
+        itemView.imageItemSell.setImageResource(Items.findById(item.itemId).getItemImage())
+        itemView.nameBuy.text = "${Items.findById(item.itemId).getName()} (${item.stackSize})"
+        itemView.price.text = "${Items.findById(item.itemId).price}$"
 
 
         return itemView
@@ -174,10 +185,11 @@ class ItemAdapterBuy : BaseAdapter {
     }
 
 }
+
 class ItemAdapterSell : BaseAdapter {
 
     var inv = ArrayList<ItemStack>()
-    var context : Context? = null
+    var context: Context? = null
 
     constructor(context: Context, inv: ArrayList<ItemStack>) : super() {
         this.context = context
@@ -193,10 +205,6 @@ class ItemAdapterSell : BaseAdapter {
         itemView.name.text = Items.findById(item.itemId).getName()
         if (item.getType() != 0)
             itemView.count.text = item.stackSize.toString()
-
-        itemView.setOnClickListener {
-            Toast.makeText(context!!, "Ваш товар продастся по окончанию дня (количество зависит от репутации)", Toast.LENGTH_SHORT).show()
-        }
 
         return itemView
     }

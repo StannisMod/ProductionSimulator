@@ -3,28 +3,24 @@ package stannis.ru.productionsimulator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.support.annotation.RequiresApi
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.EditText
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_end_day.*
 import kotlinx.android.synthetic.main.end_day_view.view.*
-import kotlinx.android.synthetic.main.item.view.*
-import stannis.ru.productionsimulator.Databases.DatabaseFactory
-import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
-import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Functions.saveAllExceptInventory
+import stannis.ru.productionsimulator.Functions.countReputation
+import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
 
 class EndDayActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
     val curData = DataTime.getInstance(this)
     var tmpSum = 0
     fun setStartSettings() {
@@ -67,9 +63,10 @@ class EndDayActivity : AppCompatActivity() {
         }
         nextDay.setOnClickListener {
             if (nalogValue.text.toString() != "") {
+                countReputation(this, nalogValue.text.toString().toInt())
                 Player.getInstance(this).money -= nalogValue.text.toString().toInt()
                 MoneyForDay.getIns(this).setNull()
-                saveAllExceptInventory(this)
+                saveAll(this)
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
@@ -121,6 +118,7 @@ class MoneyStatsAdapter : BaseAdapter {
     override fun getCount(): Int {
         return nums.size
     }
+
 
 }
 

@@ -3,10 +3,15 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import kotlinx.android.synthetic.main.activity_start.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.fillDb
+import stannis.ru.productionsimulator.Functions.loadAll
+import stannis.ru.productionsimulator.Models.Factory
 
 class StartActivity : AppCompatActivity() {
 
@@ -14,22 +19,25 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
         val ins = PlayerStatsDatabase.getInstance(this)
-        DatabaseFactory.index = 1
-        if(ins.getPlayerStats()==null){
+        if (ins.getPlayerStats() == null) {
             continueGame.visibility = View.GONE
         }
-        continueGame.setOnClickListener{
+        continueGame.setOnClickListener {
+            DatabaseFactory.index = 0
+            loadAll(this)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
         newGame.setOnClickListener {
-            startActivity(Intent(this, ListProductionActivity::class.java))
+            fillDb(this)
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
 
 
     }
-    override fun onBackPressed(){
+
+    override fun onBackPressed() {
 
     }
 }

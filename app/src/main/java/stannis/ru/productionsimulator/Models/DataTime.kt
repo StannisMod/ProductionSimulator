@@ -7,10 +7,8 @@ import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Functions.generateMessage
 import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Enums.ItemsBuy
-import stannis.ru.productionsimulator.Enums.Nations
-import stannis.ru.productionsimulator.Enums.Profs
-import stannis.ru.productionsimulator.Functions.saveAllExceptInventory
+import stannis.ru.productionsimulator.Functions.generateWorker
+import stannis.ru.productionsimulator.Functions.saveAll
 import java.util.*
 
 class DataTime(var currentDay: String, var currentMonth: String, var currentYear: String, var tookCreditToday: Int, var tookDepositToday: Int) {
@@ -77,24 +75,25 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         checkCreditsDeposits(ctx)
         this.tookCreditToday = 0
         this.tookDepositToday = 0
-        saveAllExceptInventory(ctx)
-        Inventory.saveInventories(ctx)
+
         for (fac in Factory.factories) {
             if (fac != null) {
                 fac.runTick(ctx)
             }
         }
         for (i in 0 until Factory.factories.size) {
-            DatabaseFactory.index = i
-            Inventory.setNulls()
-            getAllWages(ctx)
-            sellItems(ctx)
-            checkBirthDays(ctx)
-            generateBuyInv(ctx)
-            generateLabor(ctx)
-            Inventory.saveInventories(ctx)
+            if (Factory.getFactoryById(i) != null && Factory.getFactoryById(i)!!.isBought == true) {
+                DatabaseFactory.index = i
+                getAllWages(ctx)
+                sellItems(ctx)
+                checkBirthDays(ctx)
+                generateBuyInv(ctx)
+                generateLabor(ctx)
+            }
 
         }
+
+        DatabaseFactory.index = 0
         Player.getInstance(ctx).money += MoneyForDay.getIns(ctx).sellings - MoneyForDay.getIns(ctx).wages
         generateMessage(ctx)
 
@@ -115,7 +114,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     fun sellItems(ctx: Context) {
         val player = Player.getInstance(ctx)
 
-        val invent = Inventory.load(ctx, "sell")
+        val invent = Inventory.getInventory("sell")
         var tmp = 0;
         var sum = 0
         if (invent != null) {
@@ -134,14 +133,14 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                     if (count > invent.inv[i].stackSize) {
                         count = invent.inv[i].stackSize
                     }
-                    sum += count * (ItemsBuy.findById(invent.getInventorySlotContents(i).itemId).getItemPrice())
+                    sum += count * (Items.findById(invent.getInventorySlotContents(i).itemId).price)
                     invent.decrStackSize(i, count)
                 }
             }
         }
         MoneyForDay.getIns(ctx).sellings += sum
         Log.d("Sell", sum.toString())
-        Inventory.inventories.put("sell", invent)
+
 
     }
 
@@ -151,41 +150,40 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             val sz = ins.getListOfLaborExchange().size
             val p = Random().nextInt(sz + 1)
             if (p == 0) {
-                val age = 25 + Random().nextInt(30)
-                val prof = Profs.findById(Random().nextInt(299) / 50)
-                val nat = Nations.findById(Random().nextInt(410) / 80)
-                val qual = nat.getAvQuality() - (Random().nextInt(5) - 3)
-                val day = Random().nextInt(10) + 10
-                val month = Random().nextInt(8) + 1
-                val staff = Staff(PlayerStatsDatabase.getInstance(ctx).getName(), age, prof.getProff(), qual, nat.getNationality(), (qual / 12) * prof.getSalary(), Pair("$day", "0$month"))
-                Log.d("Added", "paren Added")
-                ins.addLaborExchangeWithProperties(staff)
+                generateWorker(ctx)
             }
         }
 
     }
 
     fun generateBuyInv(ctx: Context) {
-        var invent = Inventory.load(ctx, "buy")
+        var invent = Inventory.getInventory( "buy")
+        if (invent != null) {
+            val id = EnumFactory.findById(DatabaseFactory.index).res_type.itemId
 
-        for (i in 1..3) {
-            var tmp = 0;
-            for (v in invent!!.inv) {
-                if (!v.isEmpty()) {
-                    tmp++
+            invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                    .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
+
+
+            for (i in 1..3) {
+                var tmp = 0;
+                for (v in invent!!.inv) {
+                    if (!v.isEmpty()) {
+                        tmp++
+                    }
+                }
+
+                val p = Random().nextInt(tmp + 1)
+                if (p == 0) {
+                    val id = Random().nextInt(Items.getSize() - 6)+6
+
+                    invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                            .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
                 }
             }
 
-            val p = Random().nextInt(tmp + 1)
-            if (p == 0) {
-                val id = EnumFactory.findById(DatabaseFactory.index).res_type.itemId
 
-                invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
-                        .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
-            }
         }
-
-        Inventory.inventories.put("buy", invent)
     }
 
     fun checkBirthDays(ctx: Context) {

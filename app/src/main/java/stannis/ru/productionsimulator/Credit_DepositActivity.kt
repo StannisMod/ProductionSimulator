@@ -101,6 +101,9 @@ class Credit_DepositActivity : AppCompatActivity() {
 
 
     }
+    override fun onBackPressed() {
+
+    }
 
 
 }

@@ -6,21 +6,21 @@ import android.provider.ContactsContract
 import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Enums.Nations
 import stannis.ru.productionsimulator.Enums.Profs
+import stannis.ru.productionsimulator.Models.Factory
 import java.util.*
 
 fun fillDb(ctx: Context) {
-    for (i in 0..1) {
+    for (i in 0..EnumFactory.getSize()) {
         DatabaseFactory.index = i
         val ins = DatabaseFactory.getInstance(ctx)
-        Inventory.inventories.set("buy", null)
-        Inventory.inventories.set("sell", null)
-        Inventory.inventories.set("PlayerInv", null)
+        Inventory.setNulls()
         ins.removeInventory("buy")
         ins.removeInventory("PlayerInv")
         ins.removeInventory("sell")
@@ -28,12 +28,14 @@ fun fillDb(ctx: Context) {
         ins.removeAllLabor()
         ins.removeAllStaff()
     }
+    DatabaseFactory.index = 0
+    Inventory.setBegin()
     Inventory.getInventory("sell")
     Inventory.getInventory("buy")
     Inventory.getInventory()
-    Log.d("TAGGG", Inventory.inventories.toString())
-    DatabaseFactory.index = 0
-
+    Factory(true, 0,true, EnumFactory.SAWMILL.price,EnumFactory.SAWMILL)
+    Factory.saveFactories(ctx)
+    Inventory.saveInventories(ctx)
 
     val arrayNames = arrayOf(/*"Абрам", " Август", " Авдей", " Аверкий", " Адам", " Адриан", " Азарий", " Аким", " Александр", " Алексей", " Амвросий", " Амос", " Ананий", " Анатолий", " Андрей", " Андриан", " Андрон", " Аристарх", " Аркадий", " Арсен", " Арсений", " Артём", " Артемий", " Архип", " Аскольд", " Афанасий", " Афиноген", "Кирилл", " Карл", " Касим", " Кастор", " Касьян", " Каюм", " Кеша", " Кирсан", " Клим", " Кондрат", " Корней", " Корнелий", " Косьма", " Кристиан", " Кузьма",
             "Лавр", " Лаврентий", " Ладимир", " Лазарь", " Леонид", " Леонтий", " Лонгин", " Лука", " Наум", " Нестор", " Нестер", " Никандр", " Никанор", " Никита", " Никифор", " Никодим", " Никола", " Николай", " Никон", " Нил", " Нифонт",
@@ -106,5 +108,6 @@ fun fillDb(ctx: Context) {
     kek.addDataTimeWithProperties(day, month, data.get(Calendar.YEAR).toString(), 0, 0)
     kek.addMoneyForDay(0, 0)
 }
+
 
 

@@ -4,52 +4,57 @@ import android.content.ClipData
 import android.content.Context
 import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Enums.Items
 
-class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
+class Inventory(val name: String, val size: Int, val maxStackSize: Int) {
 
     companion object {
         const val TAG = "PlayerInv"
-        var instance: Inventory? = null
-        val inventories = HashMap<String, Inventory?>()
+
+        var inventories: ArrayList<HashMap<String, Inventory?>> = ArrayList()
+        fun setBegin() {
+            for (i in 0 until EnumFactory.getSize()) {
+                inventories.add(HashMap())
+            }
+        }
 
         @Synchronized
         fun getInventory(name: String = TAG): Inventory {
             Log.d("Inv", name)
-            if (instance == null && name == TAG) {
-                instance = Inventory(TAG, 16, 64)
-            } else if (name != TAG) {
-                // if (inventories.get(name) == null)
-                //     inventories.put(name, load())
-                if (inventories.get(name) == null)
-                    createInventory(name, 16, 64)
-                return inventories.get(name)!!
+
+            if (inventories[DatabaseFactory.index].get(name) == null) {
+                createInventory(name, 16, 64)
             }
-            return instance!!
+            return inventories[DatabaseFactory.index].get(name)!!
         }
 
         fun saveInventories(ctx: Context) {
-            val iterator = inventories.iterator()
+            var i = 0
+            for (hm in inventories) {
+                val iterator = hm.iterator()
+                DatabaseFactory.index = i
+                while (iterator.hasNext())
+                    iterator.next().value?.save(ctx)
+                i++
+            }
 
-            getInventory().save(ctx)
-            while (iterator.hasNext())
-                iterator.next().value?.save(ctx)
+            DatabaseFactory.index = 0
         }
 
         fun setNulls() {
-            val iterator = inventories.iterator()
-
-            instance = null
-
-            while (iterator.hasNext())
-                iterator.next().setValue(null)
+            for (hm in inventories) {
+                val iterator = hm.iterator()
+                while (iterator.hasNext())
+                    iterator.next().setValue(null)
+            }
         }
 
-        fun createInventory(name: String, size: Int, maxStackSize: Int) = inventories.put(name, Inventory(name, size, maxStackSize))
+        fun createInventory(name: String, size: Int, maxStackSize: Int) = inventories[DatabaseFactory.index].put(name, Inventory(name, size, maxStackSize))
 
         fun transferItem(from: Inventory, to: Inventory, slotIndex: Int, quantity: Int): Boolean {
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
-                return false
+                transferItem(from, to, slotIndex, from.getInventorySlotContents(slotIndex).stackSize)
 
             var i = to.findFirstEqualSlot(from.getInventorySlotContents(slotIndex).itemId)
             if (to.isSlotEmpty(i)) {
@@ -101,7 +106,7 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
     fun findFirstEqualSlot(id: Int): Int {
         for (i in 0..(size - 1))
-            if (getInventorySlotContents(i).itemId == id)
+            if (getInventorySlotContents(i).itemId == id && !getInventorySlotContents(i).isStackFull())
                 return i
 
         return findFirstEmptySlot()
@@ -150,9 +155,10 @@ class Inventory(val name : String, val size : Int, val maxStackSize : Int) {
 
 
 }
-fun Array<ItemStack>.toDetailedString():String{
-    var str : String=""
-    for(inv in this){
+
+fun Array<ItemStack>.toDetailedString(): String {
+    var str: String = ""
+    for (inv in this) {
         str = str + Items.findById(inv.itemId).name
     }
     return str

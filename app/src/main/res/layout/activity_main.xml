@@ -19,6 +19,8 @@
 
 
     <LinearLayout
+        android:id="@+id/body"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/data"
@@ -115,5 +117,12 @@
         </RelativeLayout>
 
     </LinearLayout>
+    <Button
+        android:id="@+id/buyFac"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Купить\n2300$"/>
 
 </RelativeLayout>

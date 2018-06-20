@@ -22,6 +22,9 @@ import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.Player
 
 class InventoryActivity : AppCompatActivity() {
+    override fun onBackPressed() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
