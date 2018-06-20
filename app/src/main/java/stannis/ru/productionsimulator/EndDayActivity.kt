@@ -20,25 +20,42 @@ import kotlinx.android.synthetic.main.item.view.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
+import stannis.ru.productionsimulator.Functions.saveAllExceptInventory
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
 
 class EndDayActivity : AppCompatActivity() {
-
+    val curData = DataTime.getInstance(this)
+    var tmpSum = 0
+    fun setStartSettings() {
+        number.text = curData.toString()
+        curData.nextDay(this)
+        playerNalog.text = Player.getInstance(this).nalog.toString()
+        tmpSum = MoneyForDay.getIns(this).getAll()
+        allInAllValue.text = "${tmpSum}$"
+        if (allInAllValue.text.toString()[0] == '-') {
+            allInAllValue.setTextColor(Color.RED)
+        } else {
+            allInAllValue.text = "+${allInAllValue.text}"
+            allInAllValue.setTextColor(Color.GREEN)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_end_day)
-        val ins = PlayerStatsDatabase.getInstance(this)
-        val curData = DataTime.getInstance(this)
-        number.text = curData.toString()
-        val sum = curData.nextDay(this)
-        gridView.adapter = MoneyStatsAdapter(this, arrayListOf(0, 1), sum + DataTime.getInstance(this).getAllWages(this))
+        Inventory.saveInventories(this)
+
+        setStartSettings()
+
+        gridView.adapter = MoneyStatsAdapter(this, arrayListOf(0, 1))
         nalogValue.setOnKeyListener { view, i, keyEvent ->
             if ((view as EditText).text.toString() != "") {
-                allInAllValue.text = "${sum - view.text.toString().toInt()}$"
+                allInAllValue.text = "${tmpSum - view.text.toString().toInt()}$"
             } else {
-                allInAllValue.text = "${sum}$"
+                allInAllValue.text = "${tmpSum}$"
             }
             if (allInAllValue.text.toString()[0] == '-') {
                 allInAllValue.setTextColor(Color.RED)
@@ -49,12 +66,10 @@ class EndDayActivity : AppCompatActivity() {
             false
         }
         nextDay.setOnClickListener {
-            if(nalogValue.text.toString()!="") {
-                Player.getInstance(this).money-=nalogValue.text.toString().toInt()
-                Inventory.saveInventories(this)
-                Factory.saveFactories(this)
-                Player.save(this)
-                DataTime.save(this)
+            if (nalogValue.text.toString() != "") {
+                Player.getInstance(this).money -= nalogValue.text.toString().toInt()
+                MoneyForDay.getIns(this).setNull()
+                saveAllExceptInventory(this)
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
@@ -67,27 +82,26 @@ class MoneyStatsAdapter : BaseAdapter {
 
     var nums = ArrayList<Int>()
     var context: Context? = null
-    var sum = 0
 
-    constructor(context: Context, nums: ArrayList<Int>, sum: Int) : super() {
+    constructor(context: Context, nums: ArrayList<Int>) : super() {
         this.context = context
         this.nums = nums
-        this.sum = sum
+
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val data = PlayerStatsDatabase.getInstance(context!!).getDataTime()!!
+        val mfd = MoneyForDay.getIns(context!!)
 
         var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var itemView = inflator.inflate(R.layout.end_day_view, null)
         if (position == 0) {
             itemView.namePunct.text = "Зарплаты:"
-            itemView.value.text = "-${data.getAllWages(context!!)}$"
+            itemView.value.text = "-${mfd.wages}$"
             itemView.value.setTextColor(Color.RED)
         } else {
             if (position == 1) {
                 itemView.namePunct.text = "Продажи:"
-                itemView.value.text = "+${sum}$"
+                itemView.value.text = "+${mfd.sellings}$"
                 itemView.value.setTextColor(Color.GREEN)
             } else {
 

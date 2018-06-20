@@ -9,7 +9,6 @@ import stannis.ru.productionsimulator.Models.Factory
 import android.widget.TextView
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Functions.fillDb
-import stannis.ru.productionsimulator.Functions.testFillDb
 
 class ListProductionActivity : AppCompatActivity() {
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,43 +24,62 @@
         android:layout_height="match_parent"
         android:layout_above="@id/data"
         android:layout_below="@id/stats"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <RelativeLayout
             android:id="@+id/top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0">
+            android:layout_weight="2">
 
             <ImageButton
                 android:id="@+id/tofactory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:background="@mipmap/lesopilka1_background" />
+                android:layout_centerHorizontal="true"/>
+                <!--android:background="@mipmap/lesopilka1_background" -->
+
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/middle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2">
-
-            <ImageView
-                android:id="@+id/topersonal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+            android:layout_weight="0">
+            <RelativeLayout
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                >
+            <ImageButton
+                android:id="@+id/left"
+                android:layout_alignParentLeft="true"
+                android:layout_width="30dp"
+                android:layout_height="120dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/left"
+                />
+            <ImageButton
+                android:id="@+id/right"
+                android:layout_width="30dp"
+                android:layout_height="120dp"
                 android:layout_alignParentRight="true"
-
-                android:background="@mipmap/camp_foreground" />
+                android:layout_centerVertical="true"
+                android:background="@drawable/right"/>
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2">
+            android:layout_height="30dp"
+            android:layout_weight="5">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
 
             <ImageButton
                 android:id="@+id/toinventory"
@@ -67,17 +87,32 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
+                android:layout_gravity="center"
+                android:layout_weight="3"
                 android:background="@mipmap/sklad_background" />
-            <!--- app:srcCompat="@android:drawable/ic_notification_overlay" /> -->
+            <!--- app:srcCompat="@android:drawable/ic_notification_overlay" />
+             -->
+            <ImageView
+                android:id="@+id/topersonal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:background="@mipmap/to_personal_round" />
             <ImageButton
                 android:id="@+id/tomarket"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:layout_weight="3"
                 android:background="@mipmap/market_background" />
             <!--android:layout_marginBottom="10dp"-->
             <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
+            </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>

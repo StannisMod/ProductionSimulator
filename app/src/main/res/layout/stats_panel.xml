@@ -25,33 +25,7 @@
             android:id="@+id/money"
             android:layout_width="222dp"
             android:layout_height="match_parent"
-            android:layout_weight="48" />
-
-        <ImageView
-            android:id="@+id/resView"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            app:srcCompat="@mipmap/res_foreground" />
-
-        <TextView
-            android:id="@+id/res"
-            android:layout_width="222dp"
-            android:layout_height="match_parent"
-            android:layout_weight="48" />
-
-        <ImageView
-            android:id="@+id/staffView"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            app:srcCompat="@mipmap/staff_foreground" />
-
-        <TextView
-            android:id="@+id/staff"
-            android:layout_width="222dp"
-            android:layout_height="match_parent"
-            android:layout_weight="48" />
+            android:layout_weight="52" />
 
 
         <ImageView
@@ -66,7 +40,7 @@
             style="@style/Widget.AppCompat.SeekBar"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="0"
 
             android:progress="50" />
 
@@ -85,6 +59,7 @@
             android:layout_weight="15"
             android:background="@mipmap/mail_background"
             app:srcCompat="@mipmap/mail_foreground" />
+
 
     </LinearLayout>
 

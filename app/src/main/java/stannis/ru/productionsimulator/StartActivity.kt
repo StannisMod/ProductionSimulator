@@ -14,7 +14,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
         val ins = PlayerStatsDatabase.getInstance(this)
-        DatabaseFactory.Index(1)
+        DatabaseFactory.index = 1
         if(ins.getPlayerStats()==null){
             continueGame.visibility = View.GONE
         }

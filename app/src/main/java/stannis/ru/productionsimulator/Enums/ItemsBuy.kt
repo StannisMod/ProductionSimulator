@@ -1,4 +1,4 @@
-package stannis.ru.productionsimulator.Functions
+package stannis.ru.productionsimulator.Enums
 
 import android.util.Log
 import stannis.ru.productionsimulator.R
@@ -16,7 +16,8 @@ enum class ItemsBuy(val itemId: Int, val label: String, val image: Int, val pric
     IRON(8, "Железо", R.mipmap.metal_foreground, 6),
     TRACTOR(9, "Трактор", R.mipmap.tractor_foreground, 150),
     CAMP(10, "Лагерь", R.mipmap.camp_foreground, 120),
-    OIL1(11, "Лопата", R.mipmap.oil_foreground, 8);
+    GRANITE(11, "Лопата", R.mipmap.oil_foreground, 20);
+
 
     fun getName(): String = label
 
@@ -40,6 +41,7 @@ enum class ItemsBuy(val itemId: Int, val label: String, val image: Int, val pric
                 8 -> return IRON
                 9 -> return TRACTOR
                 10 -> return CAMP
+                11->return GRANITE
                 else -> Log.e("ITEMS", "Item with ID $id requested, but not exists")
             }
             return WOOD

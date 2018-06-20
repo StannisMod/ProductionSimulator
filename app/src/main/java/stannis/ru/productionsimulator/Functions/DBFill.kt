@@ -1,6 +1,9 @@
 package stannis.ru.productionsimulator.Functions
 
+import android.content.ClipData
 import android.content.Context
+import android.provider.ContactsContract
+import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
@@ -12,24 +15,26 @@ import stannis.ru.productionsimulator.Enums.Profs
 import java.util.*
 
 fun fillDb(ctx: Context) {
-    DatabaseFactory.Index(0)
-    val ins = DatabaseFactory.getInstance(ctx)
-    ins.removeAllLabor()
-    ins.removeAllStaff()
-
-    Inventory.getInventory("buy").clear()
-    Inventory.getInventory("sell").clear()
-    Inventory.getInventory().clear()
-
-    val invent = Inventory.getInventory("buy")
-    if (invent != null) {
-        invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.SHOVEL.getId()), ItemStack(Items.SHOVEL
-                .itemId, 8, invent.getInventoryStackLimit()))
-        invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.IRON.getId()), ItemStack(Items.IRON
-                .itemId, 3, invent.getInventoryStackLimit()))
-
-        invent.save(ctx)
+    for (i in 0..1) {
+        DatabaseFactory.index = i
+        val ins = DatabaseFactory.getInstance(ctx)
+        Inventory.inventories.set("buy", null)
+        Inventory.inventories.set("sell", null)
+        Inventory.inventories.set("PlayerInv", null)
+        ins.removeInventory("buy")
+        ins.removeInventory("PlayerInv")
+        ins.removeInventory("sell")
+        ins.removeFactory(i)
+        ins.removeAllLabor()
+        ins.removeAllStaff()
     }
+    Inventory.getInventory("sell")
+    Inventory.getInventory("buy")
+    Inventory.getInventory()
+    Log.d("TAGGG", Inventory.inventories.toString())
+    DatabaseFactory.index = 0
+
+
     val arrayNames = arrayOf(/*"Абрам", " Август", " Авдей", " Аверкий", " Адам", " Адриан", " Азарий", " Аким", " Александр", " Алексей", " Амвросий", " Амос", " Ананий", " Анатолий", " Андрей", " Андриан", " Андрон", " Аристарх", " Аркадий", " Арсен", " Арсений", " Артём", " Артемий", " Архип", " Аскольд", " Афанасий", " Афиноген", "Кирилл", " Карл", " Касим", " Кастор", " Касьян", " Каюм", " Кеша", " Кирсан", " Клим", " Кондрат", " Корней", " Корнелий", " Косьма", " Кристиан", " Кузьма",
             "Лавр", " Лаврентий", " Ладимир", " Лазарь", " Леонид", " Леонтий", " Лонгин", " Лука", " Наум", " Нестор", " Нестер", " Никандр", " Никанор", " Никита", " Никифор", " Никодим", " Никола", " Николай", " Никон", " Нил", " Нифонт",
 
@@ -84,12 +89,22 @@ fun fillDb(ctx: Context) {
     kek.removeDataTime()
     kek.removePlayer()
     kek.removeAllNames()
+    kek.removeMoneyForDay()
+    kek.removeAllMessage()
+    kek.removeAllMessageReaded()
     kek.addNames(arrayNames, arraySecondNames)
-    kek.addPlayerStatsWithProperties(1200, 0,0,50,100)
-    kek.addDataTimeWithProperties("24", "04", "2014", 0,0)
+    kek.addPlayerStatsWithProperties(1200, 0, 0, 50, 10)
+    val data = java.util.Calendar.getInstance()
+    var day = data.get(Calendar.DAY_OF_MONTH).toString()
+    if (data.get(Calendar.DAY_OF_MONTH) < 10) {
+        day = "0${day}"
+    }
+    var month = (data.get(Calendar.MONTH)+1).toString()
+    if (data.get(Calendar.MONTH) < 10) {
+        month = "0${month}"
+    }
+    kek.addDataTimeWithProperties(day, month, data.get(Calendar.YEAR).toString(), 0, 0)
+    kek.addMoneyForDay(0, 0)
 }
 
-fun testFillDb(ctx: Context) {
-
-}
 

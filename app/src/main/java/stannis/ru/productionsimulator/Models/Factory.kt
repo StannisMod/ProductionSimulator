@@ -5,23 +5,25 @@ import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import java.util.*
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.round
+
 
 class Factory {
 
     val id: Int
     val type: EnumFactory
     var res: Inventory
-    var consumption: Int
+
     var productivity: Int
     var production: Inventory
     var machine_state: Double
 
-    constructor(addToList: Boolean = true, id: Int, type: EnumFactory, res: Int = 5, res_cap: Int = 10, consumption: Int = 2, productivity: Int = 1, production: Int = 2, production_cap: Int = 5, machine_state: Double = 10.0) {
+    constructor(addToList: Boolean = true, id: Int, type: EnumFactory, res: Int = 0, res_cap: Int = 10,  productivity: Int = 1, production: Int = 0, production_cap: Int = 5, machine_state: Double = 10.0) {
         this.id = id
         this.type = type
         this.res = Inventory("${id}_Res", 1, res_cap)
         this.res.setInventorySlotContents(0, ItemStack(this.type.getResType().getId(), res, res_cap))
-        this.consumption = consumption
+
         this.productivity = productivity
         this.production = Inventory("${id}_Prod", 1, production_cap)
         this.production.setInventorySlotContents(0, ItemStack(this.type.getProdType().getId(), production, production_cap))
@@ -31,7 +33,7 @@ class Factory {
     }
 
     fun toDetailedString(): String {
-        return "Factory[ID: $id, RES: $res, RES_CAPACITY: ${res.getInventoryStackLimit()}, CONS: $consumption, PROD: $productivity, PRODUCTION: $production, PROD_CAPACITY: ${production.getInventoryStackLimit()}, MASHINE_STAT: $machine_state]"
+        return "Factory[ID: $id, RES: $res, RES_CAPACITY: ${res.getInventoryStackLimit()}, PROD: $productivity, PRODUCTION: $production, PROD_CAPACITY: ${production.getInventoryStackLimit()}, MASHINE_STAT: $machine_state]"
     }
 
     companion object {
@@ -58,13 +60,20 @@ class Factory {
 
     fun runTick(ctx:Context) {
 
-        val count = res.getInventorySlotContents(0).stackSize/5
+        var count = res.getInventorySlotContents(0).stackSize/5
+        if(production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize<count*productivity){
+            count = (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize)/productivity
+        }
         Log.d("EndDay",  count.toString())
-        production.getInventorySlotContents(0).stackSize += productivity*count
+        if(production.getInventorySlotContents(0).stackSize==0){
+            production.setInventorySlotContents(0, ItemStack(this.type.getProdType().itemId, count*productivity, production.getInventorySlotContents(0).maxStackSize))
+        }else{
+            production.getInventorySlotContents(0).stackSize+=count*5
+        }
         res.decrStackSize(0, 5*count)
 
 
-        machine_state -= Random().nextInt(10).toDouble() / 100.0
+        machine_state -= round(Random().nextInt(10).toDouble() / 100.0, 2)
         this.save(ctx)
     }
 

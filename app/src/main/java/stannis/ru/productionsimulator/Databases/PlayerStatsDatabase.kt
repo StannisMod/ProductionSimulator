@@ -3,15 +3,13 @@ package stannis.ru.productionsimulator.Databases
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.*
-import stannis.ru.productionsimulator.Models.Credit_Deposit
-import stannis.ru.productionsimulator.Models.DataTime
-import stannis.ru.productionsimulator.Models.Message
-import stannis.ru.productionsimulator.Models.Player
+import stannis.ru.productionsimulator.Models.*
 import java.util.*
 
-class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "PlayerStats", null, 2) {
+class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "PlayerStats", null, 3) {
     companion object {
         var instance: PlayerStatsDatabase? = null
+        @Synchronized
         fun getInstance(ctx: Context): PlayerStatsDatabase {
             if (instance == null) {
                 instance = PlayerStatsDatabase(ctx.applicationContext)
@@ -26,6 +24,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
     val PLAYER_STATS_NAME = "PlayerStats"
     val DATA_TIME_NAME = "DataTime"
     val CREDIT_DEPOSIT_NAME = "creditDeposit"
+    val MONEY_FOR_DAY_NAME = "moneyForDay"
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable(MESSAGE_NAME, true,
                 "hash" to INTEGER,
@@ -72,6 +71,9 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
         db.createTable("Names", true,
                 "id" to INTEGER,
                 "name" to TEXT)
+        db.createTable(MONEY_FOR_DAY_NAME, true,
+                "wages" to INTEGER,
+                "sellings" to INTEGER)
 
 
     }
@@ -83,6 +85,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
         db.dropTable(PLAYER_STATS_NAME, true)
         db.dropTable(DATA_TIME_NAME, true)
         db.dropTable("Names", true)
+        db.dropTable(MONEY_FOR_DAY_NAME, true)
         onCreate(db)
 
     }
@@ -437,6 +440,52 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
         db.close()
         removeName(id)
         return name!!
+    }
+
+    fun addMoneyForDay(wages: Int, sellings: Int) {
+        getInstance(ctx).use {
+            insert(MONEY_FOR_DAY_NAME, "wages" to wages, "sellings" to sellings)
+        }
+    }
+
+    fun addMoneyForDay(mfd: MoneyForDay) {
+        addMoneyForDay(mfd.wages, mfd.sellings)
+    }
+
+    fun getMoneyForDay(): MoneyForDay? {
+        val query = "SELECT*FROM ${MONEY_FOR_DAY_NAME}"
+        val db = this.writableDatabase
+        val cursor = db.rawQuery(query, null)
+        var mfd: MoneyForDay? = null
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+            var i = 0
+            val wages = cursor.getString(i).toInt()
+            i++
+            val sellings = cursor.getString(i).toInt()
+            i++
+            mfd = MoneyForDay(wages, sellings)
+            cursor.close()
+        }
+        db.close()
+        return mfd
+
+    }
+
+    fun setMoneyForDay(wages: Int, sellings: Int) {
+        getInstance(ctx).use {
+            update(MONEY_FOR_DAY_NAME, "wages" to wages, "sellings" to sellings).exec()
+        }
+    }
+
+    fun setMoneyForDay(mfd: MoneyForDay) {
+        setMoneyForDay(mfd.wages, mfd.sellings)
+    }
+
+    fun removeMoneyForDay() {
+        getInstance(ctx).use {
+            delete(MONEY_FOR_DAY_NAME)
+        }
     }
 
 }

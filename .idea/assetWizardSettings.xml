@@ -55,11 +55,13 @@
                                   </option>
                                   <option name="values">
                                     <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="6b281b" />
                                       <entry key="backgroundImage" value="C:\Users\nadya\Desktop\toPersonal.png" />
-                                      <entry key="foregroundImage" value="C:\Users\nadya\Desktop\background.png" />
+                                      <entry key="foregroundImage" value="C:\Users\nadya\Desktop\worker.png" />
+                                      <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="outputName" value="to_personal" />
-                                      <entry key="previewDensity" value="MEDIUM" />
+                                      <entry key="previewDensity" value="HIGH" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>

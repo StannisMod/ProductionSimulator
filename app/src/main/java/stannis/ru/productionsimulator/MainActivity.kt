@@ -8,9 +8,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
-import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Enums.Items
+import stannis.ru.productionsimulator.Functions.saveAllExceptInventory
 import stannis.ru.productionsimulator.Models.Inventory
 import stannis.ru.productionsimulator.Models.ItemStack
 import stannis.ru.productionsimulator.Models.*
@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         if (Inventory.inventories.get("buy") == null)
             Inventory.inventories.put("buy", Inventory.load(this, "buy"))
 
-        Factory.load(this, 0)
-        if (Factory.getFactoryById(0) == null)
-            Factory(true,0, EnumFactory.findById(0))
+        Log.d("NotNUll", "${Inventory.getInventory("buy").maxStackSize}")
+        if (Factory.getFactoryById(DatabaseFactory.index) == null)
+            Factory(true, DatabaseFactory.index, EnumFactory.findById(DatabaseFactory.index))
 
         Log.d("Inv_main", Inventory.instance?.getInventorySlotContents(0).toString())
 
@@ -45,8 +45,6 @@ class MainActivity : AppCompatActivity() {
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
-            res.text = Factory.getFactoryById(0)!!.res!!.getInventorySlotContents(0).stackSize.toString()
-            staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
         val curData = DataTime.getInstance(this)
@@ -58,7 +56,26 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())
 
+        left.setOnClickListener {
+            if (DatabaseFactory.index != 0) {
+                saveAllExceptInventory(this)
+                Inventory.saveInventories(this)
+                Inventory.setNulls()
+                DatabaseFactory.index--
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+        }
+        right.setOnClickListener {
+            if (DatabaseFactory.index != 1) {
+                saveAllExceptInventory(this)
+                Inventory.saveInventories(this)
+                Inventory.setNulls()
+                DatabaseFactory.index++
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+        }
         toinventory.setOnClickListener {
 
             val intent = Intent(this, InventoryActivity::class.java)

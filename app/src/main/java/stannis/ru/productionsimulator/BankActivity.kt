@@ -17,14 +17,13 @@ import stannis.ru.productionsimulator.Models.Player
 
 class BankActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank)
         val player =Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
-            res.text = player.stuff.toString()
-            staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
         val curData = DataTime.getInstance(this)

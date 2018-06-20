@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Functions.ItemsBuy
+import stannis.ru.productionsimulator.Enums.ItemsBuy
 import stannis.ru.productionsimulator.Models.*
 
 class MarketActivity : AppCompatActivity() {
@@ -30,8 +31,6 @@ class MarketActivity : AppCompatActivity() {
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
-            res.text = player.stuff.toString()
-            staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
         val curData = DataTime.getInstance(this)
@@ -68,7 +67,7 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
         Inventory.getInventory("buy").normalize()
-        val slots =  Inventory.getInventory("buy").inv
+        var slots =  Inventory.getInventory("buy").inv
 
         val arrayList: ArrayList<ItemStack> = ArrayList()
         for (inv in slots) {
@@ -81,15 +80,21 @@ class MarketActivity : AppCompatActivity() {
         tvTab1.adapter = adapter
         tvTab1.setOnItemClickListener{adapterView, view, i, l ->
             val player = Player.getInstance(this)
+            Log.d("ItemClicker", i.toString())
             if (player!!.money > ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()) {
                 player!!.money -= ItemsBuy.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).getItemPrice()
 
-                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)
+                Log.d("ItemClicker", "Pressed")
+                if(Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)){
+                    startActivity(Intent(this, MarketActivity::class.java))
+                    finish()
+                }
                 Inventory.getInventory("buy").save(this)
                 Inventory.getInventory().save(this)
+                money.text = player.money.toString()
+                slots = Inventory.getInventory("buy").inv
+                adapter.notifyDataSetChanged()
 
-                val intent = Intent(this, MarketActivity::class.java)
-                ContextCompat.startActivity(this, intent, Bundle.EMPTY)
             }
         }
         Inventory.getInventory("sell").normalize()
@@ -144,26 +149,14 @@ class ItemAdapterBuy : BaseAdapter {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val ins = PlayerStatsDatabase.getInstance(context!!)
-        val item = inv.get(position)
+        var item = inv.get(position)
         var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var itemView = inflator.inflate(R.layout.item_buy, null)
 
         itemView.imageItemSell.setImageResource(ItemsBuy.findById(item.itemId).getItemImage())
         itemView.nameBuy.text = "${ItemsBuy.findById(item.itemId).getName()} (${item.stackSize})"
         itemView.price.text = "${ItemsBuy.findById(item.itemId).getItemPrice()}$"
-        itemView.buy.setOnClickListener {
-            val player = Player.getInstance(context!!)
-            if (player!!.money > ItemsBuy.findById(item.itemId).getItemPrice()) {
-                player!!.money -= ItemsBuy.findById(item.itemId).getItemPrice()
 
-                Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), position, 1)
-                Inventory.getInventory("buy").save(context!!)
-                Inventory.getInventory().save(context!!)
-
-                val intent = Intent(context!!, MarketActivity::class.java)
-                ContextCompat.startActivity(context!!, intent, Bundle.EMPTY)
-            }
-        }
 
         return itemView
     }

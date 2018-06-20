@@ -10,12 +10,14 @@ import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Functions.round
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
 import kotlin.math.roundToInt
 
 
 class Credit_DepositActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +26,6 @@ class Credit_DepositActivity : AppCompatActivity() {
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
-            res.text = player.stuff.toString()
-            staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
         val curData = DataTime.getInstance(this)
@@ -102,14 +102,6 @@ class Credit_DepositActivity : AppCompatActivity() {
 
     }
 
-    fun round(a: Double, radix: Int): Double {
-        var b = a
-        b *= Math.pow(10.0, radix.toDouble())
-        b = b.roundToInt().toDouble()
-        b /= Math.pow(10.0, radix.toDouble())
-        return b
-
-    }
 
 }
 

@@ -40,12 +40,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_weight="4"
+            android:layout_weight="1.3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Налог:"
             android:textSize="18dp"
             />
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(Ваш текущий налог: "/>
+        <TextView
+            android:id="@+id/playerNalog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="230$)"
+            />
+        </LinearLayout>
         <EditText
             android:id="@+id/nalogValue"
             android:layout_weight="2"

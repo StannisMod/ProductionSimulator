@@ -16,7 +16,7 @@ enum class Items(val itemId : Int, val label : String, val image : Int) {
     IRON(8, "Железо", R.mipmap.metal_foreground),
     TRACTOR(9, "Трактор", R.mipmap.tractor_foreground),
     CAMP(10, "Лагерь", R.mipmap.camp_foreground),
-    OIL1(11, "Лопата", R.mipmap.oil_foreground);
+    GRANITE(11, "Гранит", R.mipmap.oil_foreground);
 
     fun getName() : String = label
 
@@ -38,6 +38,7 @@ enum class Items(val itemId : Int, val label : String, val image : Int) {
                 8 -> return IRON
                 9 -> return TRACTOR
                 10 -> return CAMP
+                11->return GRANITE
                 else -> Log.e("ITEMS", "Item with ID $id requested, but not exists")
             }
             return WOOD

@@ -22,8 +22,6 @@ class StaffActivity : AppCompatActivity() {
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
-            res.text = player.stuff.toString()
-            staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
         val curData = DataTime.getInstance(this)

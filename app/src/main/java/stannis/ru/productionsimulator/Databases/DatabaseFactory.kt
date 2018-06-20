@@ -11,15 +11,13 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(ctx, name1, null, 24) {
+class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(ctx, name1, null, 25) {
 
     companion object {
         //private var instance: DatabaseFactory? = null
         private val instanceList : ArrayList<DatabaseFactory?> = ArrayList()
-        private var index = 0
-        fun Index(index : Int){
-            Companion.index = index
-        }
+        var index = 0
+
 //        @Synchronized
 //        fun getInstance(ctx: Context): DatabaseFactory {
 //            if (instance == null) {
@@ -48,7 +46,6 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
                 "type" to INTEGER,
                 "res" to INTEGER,
                 "res_cap" to INTEGER,
-                "consumption" to INTEGER,
                 "productivity" to INTEGER,
                 "production" to INTEGER,
                 "production_cap" to INTEGER,
@@ -121,14 +118,14 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
 
     fun addFactory(ctx: Context, factory: Factory) {
         addFactoryWithProperties(ctx, factory.id, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
-                factory.res.getInventoryStackLimit(), factory.consumption, factory.productivity,
+                factory.res.getInventoryStackLimit(), factory.productivity,
                 factory.production.getInventorySlotContents(0).stackSize, factory.production.getInventoryStackLimit(), factory.machine_state)
     }
 
-    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun addFactoryWithProperties(ctx: Context, id: Int, type: Int, res: Int, res_cap: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
             insert("Factories",
-                    "id" to id, "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
+                    "id" to id, "type" to type, "res" to res, "res_cap" to res_cap,
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
         }
     }
@@ -137,7 +134,7 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
         var type: Int = 0
         var res: Int = 0
         var res_cap: Int = 0
-        var consumption: Int = 0
+
         var productivity: Int = 0
         var production: Int = 0
         var production_cap: Int = 0
@@ -151,17 +148,22 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
 
         if (cursor.moveToFirst()) {
             cursor.moveToFirst()
+            var i = 0
+            type = Integer.parseInt(cursor.getString(i))
+            i++
+            res = Integer.parseInt(cursor.getString(i))
+            i++
+            res_cap = Integer.parseInt(cursor.getString(i))
+            i++
+            productivity = Integer.parseInt(cursor.getString(i))
+            i++
+            production = Integer.parseInt(cursor.getString(i))
+            i++
+            production_cap = Integer.parseInt(cursor.getString(i))
+            i++
+            machine_state = cursor.getString(i).toDouble()
 
-            type = Integer.parseInt(cursor.getString(0))
-            res = Integer.parseInt(cursor.getString(1))
-            res_cap = Integer.parseInt(cursor.getString(2))
-            consumption = Integer.parseInt(cursor.getString(3))
-            productivity = Integer.parseInt(cursor.getString(4))
-            production = Integer.parseInt(cursor.getString(5))
-            production_cap = Integer.parseInt(cursor.getString(6))
-            machine_state = cursor.getString(7).toDouble()
-
-            factory = Factory(false, id, EnumFactory.findById(type), res, res_cap, consumption, productivity, production, production_cap, machine_state)
+            factory = Factory(false, id, EnumFactory.findById(type), res, res_cap, productivity, production, production_cap, machine_state)
             cursor.close()
         }
         db.close()
@@ -172,13 +174,13 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
     fun updateFactory(factory: Factory) {
 
         setFactoryProperties(factory.id, factory.type.getFactoryType(), factory.res.getInventorySlotContents(0).stackSize,
-                factory.res.getInventoryStackLimit(), factory.consumption, factory.productivity,
+                factory.res.getInventoryStackLimit(), factory.productivity,
                 factory.production.getInventorySlotContents(0).stackSize, factory.production.getInventoryStackLimit(), factory.machine_state)
     }
 
-    fun setFactoryProperties(id: Int, type: Int, res: Int, res_cap: Int, consumption: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
+    fun setFactoryProperties(id: Int, type: Int, res: Int, res_cap: Int, productivity: Int, production: Int, production_cap: Int, machine_state: Double) {
         getInstance(ctx).use {
-            update("Factories", "type" to type, "res" to res, "res_cap" to res_cap, "consumption" to consumption,
+            update("Factories", "type" to type, "res" to res, "res_cap" to res_cap,
                     "productivity" to productivity, "production" to production, "production_cap" to production_cap, "machine_state" to machine_state)
                     .whereArgs("id = {id}", "id" to id).exec()
         }
@@ -247,11 +249,7 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
     }
 
 
-    fun removeInventory(name: String) {
-        val db = this.writableDatabase
-        db.dropTable(name, true)
-        db.close()
-    }
+
 
 
     //For managing inventory
@@ -461,6 +459,10 @@ class DatabaseFactory(val ctx: Context, name1:String) : ManagedSQLiteOpenHelper(
         }
     }
 
-
+    fun removeInventory(name: String){
+        getInstance(ctx).use{
+            delete(name)
+        }
+    }
 
 }

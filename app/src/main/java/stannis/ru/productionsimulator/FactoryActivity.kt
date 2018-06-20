@@ -26,8 +26,6 @@ class FactoryActivity : AppCompatActivity() {
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
-            res.text = player.stuff.toString()
-            staff.text = player.staff.toString()
             rep.progress = player.reputation
         }
         rep.setEnabled(false)
@@ -46,7 +44,7 @@ class FactoryActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        var factory = Factory.getFactoryById(0)//intent.getIntExtra("FACTORY_ID", 0))
+        var factory = Factory.getFactoryById(DatabaseFactory.index)//intent.getIntExtra("FACTORY_ID", 0))
 
         // if (factory == null)
           //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
@@ -57,7 +55,7 @@ class FactoryActivity : AppCompatActivity() {
 
         if (factory == null) {
             Log.d("FACTORY", "Factory is null x2!!!")
-            factory = Factory(true,0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2, 5, 10.0)
+            factory = Factory(true,0, EnumFactory.SAWMILL, 0, 10, 1, 2, 2,  10.0)
         }
 
         factory_name.text = factory.type.getName()
