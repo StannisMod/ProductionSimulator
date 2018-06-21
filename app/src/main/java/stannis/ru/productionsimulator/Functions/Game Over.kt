@@ -21,6 +21,7 @@ fun gameover(ctx: Context){
     DatabaseFactory.getInstance(ctx).removeAllLabor()
     ins.removeAllNames()
     DatabaseFactory.getInstance(ctx).removeAllStaff()
+    clearInstances()
     generateUnhappyMessage(ctx)
     var list : ArrayList<Message> = ins.getMessage()
     val intent = Intent(ctx, GameOverActivity::class.java)

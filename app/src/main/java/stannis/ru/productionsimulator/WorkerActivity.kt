@@ -59,7 +59,7 @@ class WorkerActivity : AppCompatActivity() {
 
             if (cond) {
                 worker = DatabaseFactory.getInstance(this).getWorkerFromLabor(arr[0].trim())
-                val adapter = WorkerAdapter(Array(7){i->i}.toCollection(ArrayList<Int>()), this, worker!!)
+                val adapter = WorkerAdapter(Array(8) { i -> i }.toCollection(ArrayList<Int>()), this, worker!!)
                 gridWorker.adapter = adapter
 
                 fire.visibility = View.INVISIBLE
@@ -89,7 +89,7 @@ class WorkerActivity : AppCompatActivity() {
                 }
             } else {
                 worker = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
-                var al = Array(7){i->i}.toCollection(ArrayList<Int>())
+                var al = Array(8) { i -> i }.toCollection(ArrayList<Int>())
                 var adapter = WorkerAdapter(al, this, worker!!)
                 gridWorker.adapter = adapter
 
@@ -99,10 +99,9 @@ class WorkerActivity : AppCompatActivity() {
                         if (tmp != null) {
                             tmp.getPromotion()
                             DatabaseFactory.getInstance(this).setStaffWithProperties(tmp)
-                            al = Array(7){i->i}.toCollection(ArrayList<Int>())
+                            al = Array(8) { i -> i }.toCollection(ArrayList<Int>())
                             adapter = WorkerAdapter(al, this, tmp)
                             gridWorker.adapter = adapter
-
 
 
                         }
@@ -142,7 +141,7 @@ class WorkerAdapter : BaseAdapter {
     var ctx: Context? = null
     var st: Staff? = null
 
-    constructor(list: ArrayList<Int>, ctx: Context,st : Staff) {
+    constructor(list: ArrayList<Int>, ctx: Context, st: Staff) {
         this.list = list
         this.ctx = ctx
         this.st = st
@@ -168,9 +167,13 @@ class WorkerAdapter : BaseAdapter {
             itemView.param.text = "Квалификация: "
             itemView.paramValue.text = "${st!!.quality}"
         } else if (position == 5) {
+            itemView.param.text = "Национальность: "
+            itemView.paramValue.text = "${st!!.nation}"
+
+        } else if (position == 6) {
             itemView.param.text = "Зарплата: "
             itemView.paramValue.text = "${st!!.salary}$"
-        } else if (position == 6) {
+        } else if (position == 7) {
             itemView.param.text = "Дата рождения: "
             itemView.paramValue.text = "${st!!.birth.first}.${st!!.birth.second}"
         }

@@ -8,6 +8,7 @@ import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Functions.generateMessage
 import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Functions.generateWorker
+import stannis.ru.productionsimulator.Functions.randomInRange
 import stannis.ru.productionsimulator.Functions.saveAll
 import java.util.*
 
@@ -23,6 +24,9 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
 
         fun save(ctx: Context) {
             PlayerStatsDatabase.getInstance(ctx).setDataTimeWithProperties(getInstance(ctx))
+        }
+        fun clear(){
+            instance = null
         }
     }
 
@@ -125,13 +129,13 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             }
             for (i in 0 until tmp) {
 
-                    var count = Random().nextInt((((player.reputation / 100.0) + 0.2) * invent.inv[i].stackSize).toInt() + 1)
-                    Log.d("Sell", count.toString())
-                    if (count > invent.inv[i].stackSize) {
-                        count = invent.inv[i].stackSize
-                    }
-                    sum += count * (Items.findById(invent.getInventorySlotContents(i).itemId).price)
-                    invent.decrStackSize(i, count)
+                var count = Random().nextInt((((player.reputation / 100.0) + 0.5) * invent.inv[i].stackSize).toInt() + 1) + 1
+                Log.d("Sell", count.toString())
+                if (count > invent.inv[i].stackSize) {
+                    count = invent.inv[i].stackSize
+                }
+                sum += count * (Items.generateSellPrice(invent.getInventorySlotContents(i).itemId, ctx))
+                invent.decrStackSize(i, count)
 
             }
         }
@@ -154,33 +158,48 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun generateBuyInv(ctx: Context) {
-        var invent = Inventory.getInventory( "buy")
+        var invent = Inventory.getInventory("buy")
         if (invent != null) {
+            var tmp = 0;
+            for (v in invent!!.inv) {
+                if (!v.isEmpty()) {
+                    tmp++
+                }
+            }
+            val randId = Random().nextInt(tmp+1)
+            invent.decrStackSize(randId, invent.getInventorySlotContents(randId).stackSize)
             val id = EnumFactory.findById(DatabaseFactory.index).res_type.itemId
 
             invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
-                    .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
+                    .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(5) + 10, invent.getInventoryStackLimit()))
 
+            var p = Random().nextInt(tmp + 2)
+            if (p == 0) {
+                val id = randomInRange(Items.getNumOfProdCap())
 
-            for (i in 1..3) {
-                var tmp = 0;
-                for (v in invent!!.inv) {
-                    if (!v.isEmpty()) {
-                        tmp++
-                    }
-                }
+                invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                        .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(2) + 1, invent.getInventoryStackLimit()))
+            }
+            p = Random().nextInt(tmp + 3)
+            if (p == 0) {
+                val id = randomInRange(Items.getNumOfResCap())
 
-                val p = Random().nextInt(tmp + 1)
-                if (p == 0) {
-                    val id = Random().nextInt(Items.getSize() - 6)+6
+                invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                        .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(2) + 1, invent.getInventoryStackLimit()))
 
-                    invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
-                            .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(14) + 1, invent.getInventoryStackLimit()))
-                }
+            }
+            p = Random().nextInt(tmp + 4)
+            if (p == 0) {
+                val id = Items.getNumOfRepair()
+
+                invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
+                        .itemId, invent.getInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId())).stackSize + Random().nextInt(2) + 1, invent.getInventoryStackLimit()))
+
             }
 
-
         }
+
+
     }
 
     fun checkBirthDays(ctx: Context) {

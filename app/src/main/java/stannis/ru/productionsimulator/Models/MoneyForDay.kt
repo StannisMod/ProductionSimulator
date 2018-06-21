@@ -20,6 +20,9 @@ class MoneyForDay(var wages: Int, var sellings: Int) {
         fun save(ctx: Context) {
             PlayerStatsDatabase.getInstance(ctx).setMoneyForDay(getIns(ctx))
         }
+        fun clear(){
+            instance = null
+        }
 
     }
 

@@ -5,7 +5,11 @@ import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import java.util.*
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.countProd_Cap
+import stannis.ru.productionsimulator.Functions.countProductivity
+import stannis.ru.productionsimulator.Functions.countRes_Cap
 import stannis.ru.productionsimulator.Functions.round
+import kotlin.collections.ArrayList
 
 
 class Factory {
@@ -41,8 +45,10 @@ class Factory {
     }
 
     companion object {
-        val factories = ArrayList<Factory>()
-
+        var factories = ArrayList<Factory>()
+        fun clear(){
+           factories = ArrayList()
+        }
         fun getFactoryById(id: Int): Factory? {
 
             if (id < factories.size && id >= 0) {
@@ -70,16 +76,20 @@ class Factory {
     fun runTick(ctx: Context) {
 
         var count = res.getInventorySlotContents(0).stackSize / 5
+        Log.d("RunTick", count.toString())
+        Log.d("RunTick", (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize).toString())
         if (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize < count * productivity) {
             count = (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize) / productivity
         }
-        Log.d("EndDay", count.toString())
+        Log.d("RunTick", count.toString())
+
         if (production.getInventorySlotContents(0).stackSize == 0) {
             production.setInventorySlotContents(0, ItemStack(this.type.getProdType().itemId, count * productivity, production.getInventorySlotContents(0).maxStackSize))
         } else {
             production.getInventorySlotContents(0).stackSize += count * 5
         }
         res.decrStackSize(0, 5 * count)
+        Log.d("RunTick", count.toString())
 
 
         machine_state -= round(Random().nextInt(10).toDouble() / 100.0, 2)
@@ -96,5 +106,10 @@ class Factory {
             Log.d("SizeAfter", "${factories.size}")
         }
 
+    }
+    fun countParams(ctx : Context){
+        countProductivity(ctx)
+        countProd_Cap()
+        countRes_Cap()
     }
 }

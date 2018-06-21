@@ -17,6 +17,9 @@ class Player(var money: Int, var stuff: Int, var staff: Int, var reputation: Int
         fun save(ctx: Context) {
             PlayerStatsDatabase.getInstance(ctx).setPlayerWithProperties(getInstance(ctx))
         }
+        fun clear(){
+            instance = null
+        }
     }
 
     fun countReputationChange(paid: Int) {

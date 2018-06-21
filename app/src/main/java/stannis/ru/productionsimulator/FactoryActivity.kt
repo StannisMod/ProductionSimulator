@@ -51,9 +51,7 @@ class FactoryActivity : AppCompatActivity() {
 
         var factory = Factory.getFactoryById(DatabaseFactory.index)//intent.getIntExtra("FACTORY_ID", 0))
         Log.d("WHATThe", factory!!.toDetailedString())
-        countProductivity(this)
-        countRes_Cap()
-        countProd_Cap()
+        factory.countParams(this)
 
         // if (factory == null)
         //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
@@ -74,11 +72,11 @@ class FactoryActivity : AppCompatActivity() {
             val inv = Inventory.getInventory()
             for (i in 0..(inv.getInventorySize() - 1)) {
                 val item = inv.getInventorySlotContents(i)
-                //Log.d("ITEM_1", item.toString())
+                Log.d("ITEM_1", item.toString())
                 if (item.getType() == factory!!.type.getResType().getId()) {
-                    //Log.d("ITEM_2", item.toString())
+                    Log.d("ITEM_2", item.toString())
                     while (!factory!!.res.getInventorySlotContents(0).isStackFull() && item.stackSize > 0) {
-                        //Log.d("ITEM_3", item.toString())
+                        Log.d("ITEM_3", item.toString())
                         Inventory.transferItem(inv, factory!!.res, i, 1)
                     }
                 }
