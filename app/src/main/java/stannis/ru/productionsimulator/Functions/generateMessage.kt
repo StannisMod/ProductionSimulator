@@ -49,7 +49,6 @@ fun generateMessage(ctx: Context){
     //УСЛОВИЕ: В дни, когда репутация меньше 10 с вероятностью 15% ПОСЛЕДСТВИЯ: GAME OVER
     if(player.reputation < 10 && r.nextDouble() < 0.15){
         gameover(ctx)
-        generateUnhappyMessage(ctx)
     }
 
     //УСЛОВИЕ: Верятность 5,1%-(реп)/20 ПОСЛЕДСТВИЯ: ежедневный налог увеличен на 100$

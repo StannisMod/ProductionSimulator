@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMessageActivity"
+    android:orientation="vertical"
+    tools:context=".MessageActivity">
+
+    <TextView
+        android:id="@+id/name1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Отправитель:"
+        android:textSize="24dp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/colorNameTextMessageActivity" />
+
+    <TextView
+        android:id="@+id/sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/name1"
+        android:text="TextView"
+        android:layout_marginVertical="10dp"
+        android:textSize="24dp"
+        android:textColor="@color/colorNameTextMessageActivity"/>
+
+    <TextView
+        android:id="@+id/name2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sender"
+        android:text="Тема:"
+        android:textSize="24dp"
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/colorNameTextMessageActivity"/>
+
+    <TextView
+        android:id="@+id/caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sender"
+        android:layout_toRightOf="@id/name2"
+        android:text="TextView"
+        android:textSize="24sp"
+        android:textColor="@color/colorNameTextMessageActivity"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/caption"
+        android:layout_marginVertical="25dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        android:layout_marginHorizontal="10dp"
+        android:textColor="@color/colorTextMessageActivity"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/text"
+        android:layout_marginHorizontal="15dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        android:textColor="@color/colorTextMessageActivity"/>
+
+    <Button
+        android:id="@+id/tostart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginVertical="40dp"
+        android:layout_centerHorizontal="true"
+        android:text="Бежать от пожара"
+        />
+</RelativeLayout>
