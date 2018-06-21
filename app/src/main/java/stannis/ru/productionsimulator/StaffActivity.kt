@@ -3,6 +3,7 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_workers.*
 import kotlinx.android.synthetic.main.date_layout.*
@@ -21,7 +22,8 @@ class StaffActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workers)
-        val ins = PlayerStatsDatabase.getInstance(this)
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()

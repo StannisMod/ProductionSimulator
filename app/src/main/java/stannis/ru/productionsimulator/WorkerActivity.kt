@@ -28,8 +28,7 @@ class WorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
-        val ins = PlayerStatsDatabase.getInstance(this)
-
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()

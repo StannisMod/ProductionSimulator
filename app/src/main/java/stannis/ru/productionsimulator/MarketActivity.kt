@@ -29,6 +29,8 @@ class MarketActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market)
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+
         val ins = PlayerStatsDatabase.getInstance(this)
         val player = Player.getInstance(this)
         if (player != null) {

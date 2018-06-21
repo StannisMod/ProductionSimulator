@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_factory.*
@@ -12,6 +13,7 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.countProd_Cap
 import stannis.ru.productionsimulator.Functions.countProductivity
 import stannis.ru.productionsimulator.Functions.countRes_Cap
 import stannis.ru.productionsimulator.Models.DataTime
@@ -24,7 +26,8 @@ class FactoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_factory)
-        val ins = PlayerStatsDatabase.getInstance(this)
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
@@ -32,7 +35,7 @@ class FactoryActivity : AppCompatActivity() {
         }
         rep.setEnabled(false)
         val curData = DataTime.getInstance(this)
-        if(curData!=null){
+        if (curData != null) {
             curDate.text = curData.toString()
         }
         endDay.setOnClickListener {
@@ -50,10 +53,10 @@ class FactoryActivity : AppCompatActivity() {
         Log.d("WHATThe", factory!!.toDetailedString())
         countProductivity(this)
         countRes_Cap()
+        countProd_Cap()
 
         // if (factory == null)
-          //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
-
+        //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
 
 
         factory_name.text = factory!!.type.getName()
@@ -86,19 +89,19 @@ class FactoryActivity : AppCompatActivity() {
 
         storeProd.setOnClickListener {
             val inv = Inventory.getInventory()
-            val i : Int? = inv.findFirstEqualSlot(factory!!.type.getResType().getId())
+            val i: Int? = inv.findFirstEqualSlot(factory!!.type.getResType().getId())
             Log.d("Store", i.toString())
-            if (i != null){
+            if (i != null) {
                 while (!factory!!.production.isSlotEmpty(0) && inv.getInventorySlotContents(i).stackSize < Inventory.getInventory().getInventoryStackLimit())
                     Inventory.transferItem(factory!!.production, inv, 0, 1)
-            }
-            else
+            } else
                 Toast.makeText(this, "Ваш инвентарь заполнен", Toast.LENGTH_SHORT).show()
 
             data.set(2, "Продукция: ${factory!!.production.getInventorySlotContents(0).stackSize}/${factory!!.production.getInventoryStackLimit()}")
             adapter.notifyDataSetChanged()
         }
     }
+
     override fun onBackPressed() {
 
     }

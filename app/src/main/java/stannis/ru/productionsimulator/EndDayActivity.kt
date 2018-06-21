@@ -26,7 +26,7 @@ class EndDayActivity : AppCompatActivity() {
     fun setStartSettings() {
         number.text = curData.toString()
         curData.nextDay(this)
-        playerNalog.text = Player.getInstance(this).nalog.toString()
+        playerNalog.text = "${Player.getInstance(this).nalog}$)"
         tmpSum = MoneyForDay.getIns(this).getAll()
         allInAllValue.text = "${tmpSum}$"
         if (allInAllValue.text.toString()[0] == '-') {

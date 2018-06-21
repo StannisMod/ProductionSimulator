@@ -124,10 +124,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                 }
             }
             for (i in 0 until tmp) {
-                val p = Random().nextInt(2)
 
-
-                if (p == 0) {
                     var count = Random().nextInt((((player.reputation / 100.0) + 0.2) * invent.inv[i].stackSize).toInt() + 1)
                     Log.d("Sell", count.toString())
                     if (count > invent.inv[i].stackSize) {
@@ -135,7 +132,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                     }
                     sum += count * (Items.findById(invent.getInventorySlotContents(i).itemId).price)
                     invent.decrStackSize(i, count)
-                }
+
             }
         }
         MoneyForDay.getIns(ctx).sellings += sum

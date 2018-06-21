@@ -29,6 +29,28 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="foregroundClipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="fa102a" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="foregroundClipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/alert/ic_error_black_24dp.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="foregroundImage">
                                         <value>
                                           <PersistentState>
@@ -44,9 +66,11 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundImage" value="C:\Users\nadya\Desktop\tool_kit.png" />
+                                      <entry key="backgroundColor" value="fa102a" />
+                                      <entry key="backgroundImage" value="C:\Users\nadya\Desktop\worker.png" />
+                                      <entry key="foregroundAssetType" value="CLIP_ART" />
                                       <entry key="foregroundImage" value="C:\Users\nadya\Desktop\tool_kit.png" />
-                                      <entry key="outputName" value="tool_kit" />
+                                      <entry key="outputName" value="unreaded_message" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>

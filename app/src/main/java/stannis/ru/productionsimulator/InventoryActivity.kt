@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.date_layout.*
@@ -16,10 +17,7 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
-import stannis.ru.productionsimulator.Models.DataTime
-import stannis.ru.productionsimulator.Models.Inventory
-import stannis.ru.productionsimulator.Models.ItemStack
-import stannis.ru.productionsimulator.Models.Player
+import stannis.ru.productionsimulator.Models.*
 
 class InventoryActivity : AppCompatActivity() {
     override fun onBackPressed() {
@@ -29,6 +27,8 @@ class InventoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+
         rep.setEnabled(false)
         mail.setOnClickListener {
             val intent = Intent(this, MailActivity::class.java)
@@ -41,7 +41,7 @@ class InventoryActivity : AppCompatActivity() {
             rep.progress = player.reputation
         }
         val curData = DataTime.getInstance(this)
-        if(curData!=null){
+        if (curData != null) {
             curDate.text = curData.toString()
         }
         endDay.setOnClickListener {
@@ -65,16 +65,29 @@ class InventoryActivity : AppCompatActivity() {
         inventory.adapter = adapter
 
         inventory.setOnItemClickListener { adapterView, view, i, l ->
-            if(Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, 1)){
-                startActivity(Intent(this, InventoryActivity::class.java))
-                finish()
+            if (Inventory.getInventory().getInventorySlotContents(i).itemId == Items.getNumOfRepair()) {
+                val fac = Factory.getFactoryById(DatabaseFactory.index)
+                if (fac != null) {
+                    fac.machine_state = 10.0
+                    if (Inventory.getInventory().decrStackSize(i, 1)) {
+                        startActivity(Intent(this, InventoryActivity::class.java))
+                        finish()
+                    }
+
+                    Toast.makeText(this, "Вы починили вашу фабрику", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                if (Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, 1)) {
+                    startActivity(Intent(this, InventoryActivity::class.java))
+                    finish()
+                }
             }
             slots = Inventory.getInventory().inv
             adapter.notifyDataSetChanged()
         }
 
         inventory.setOnItemLongClickListener { adapterView, view, i, l ->
-            if(Inventory.getInventory().decrStackSize(i, 1)){
+            if (Inventory.getInventory().decrStackSize(i, 1)) {
                 startActivity(Intent(this, InventoryActivity::class.java))
                 finish()
             }
@@ -88,7 +101,7 @@ class InventoryActivity : AppCompatActivity() {
 class ItemAdapter : BaseAdapter {
 
     var inv = ArrayList<ItemStack>()
-    var context : Context? = null
+    var context: Context? = null
 
     constructor(context: Context, inv: ArrayList<ItemStack>) : super() {
         this.context = context

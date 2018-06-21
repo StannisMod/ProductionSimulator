@@ -3,6 +3,7 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_credit__deposit.*
@@ -22,6 +23,8 @@ class Credit_DepositActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credit__deposit)
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+
         val ins = PlayerStatsDatabase.getInstance(this)
         val player = Player.getInstance(this)
         if (player != null) {

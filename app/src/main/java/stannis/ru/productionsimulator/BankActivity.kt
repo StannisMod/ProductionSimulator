@@ -3,6 +3,7 @@ package stannis.ru.productionsimulator
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +24,8 @@ class BankActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank)
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+
         val player =Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()

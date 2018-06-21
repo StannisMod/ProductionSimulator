@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
+import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Functions.saveAll
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
 
 
         tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())

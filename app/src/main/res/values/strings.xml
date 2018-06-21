@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Production Simulator</string>
     <string name="credit_deposit" translatable="true">kek</string>
+    <string name="placeHolderForNalog">10</string>
 </resources>

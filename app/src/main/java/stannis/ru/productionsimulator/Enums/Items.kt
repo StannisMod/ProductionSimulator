@@ -6,17 +6,17 @@ import stannis.ru.productionsimulator.R
 enum class Items(val itemId: Int, val label: String, val image: Int, val price: Int) {
 
     NULL(0, " ", R.mipmap.angel_background, 0),
-    WOOD(1, "Древесина", R.mipmap.wood_foreground, 1),
-    STONE(2, "Камень", R.mipmap.stone_foreground, 2),
-    ORE(3, "Руда", R.mipmap.ore_foreground, 4),
-    PLANKS(4, "Пиломатериалы", R.mipmap.planks_foreground, 4),
-    GRANITE(5, "Гранит", R.mipmap.granite_foreground, 8),
-    IRON(6, "Железо", R.mipmap.metal_foreground, 16),
-    SHOVEL(7, "Лопата", R.mipmap.shovel_foreground, 30),
-    PICK_AXE(8, "Кирка", R.mipmap.pickaxe_foreground, 40),
-    AXE(9, "Топор", R.mipmap.axe_foreground, 50),
+    WOOD(1, "Древесина", R.mipmap.wood_foreground, 3),
+    STONE(2, "Камень", R.mipmap.stone_foreground, 6),
+    ORE(3, "Руда", R.mipmap.ore_foreground, 12),
+    PLANKS(4, "Пиломатериалы", R.mipmap.planks_foreground, 10),
+    GRANITE(5, "Гранит", R.mipmap.granite_foreground, 20),
+    IRON(6, "Железо", R.mipmap.metal_foreground, 40),
+    SHOVEL(7, "Лопата", R.mipmap.shovel_foreground, 60),
+    PICK_AXE(8, "Кирка", R.mipmap.pickaxe_foreground, 70),
+    AXE(9, "Топор", R.mipmap.axe_foreground, 80),
     TRACTOR(10, "Трактор", R.mipmap.tractor_foreground, 150),
-    TOOL_KIT(11, "Набор инструментов", R.mipmap.tool_kit_foreground, 30);
+    TOOL_KIT(11, "Набор инструментов", R.mipmap.tool_kit_foreground, 100);
 
     fun getName(): String = label
 

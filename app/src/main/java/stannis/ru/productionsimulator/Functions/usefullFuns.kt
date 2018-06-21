@@ -6,6 +6,7 @@ import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Enums.Nations
 import stannis.ru.productionsimulator.Enums.Profs
 import stannis.ru.productionsimulator.Models.*
@@ -125,5 +126,27 @@ fun countProductivity(ctx: Context) {
 }
 
 fun countRes_Cap() {
+    val inv = Inventory.inventories[DatabaseFactory.index].get(Inventory.TAG)!!
+    val fac = Factory.getFactoryById(DatabaseFactory.index)
+    if (fac != null) {
+        fac.res.maxStackSize = EnumFactory.findById(DatabaseFactory.index).res_cap
+        for (i in 0 until inv.size) {
+            if (inv.getInventorySlotContents(i).itemId in Items.getNumOfResCap().first..Items.getNumOfResCap().second) {
+                fac.res.maxStackSize += Items.findById(inv.getInventorySlotContents(i).itemId).price / 50
+            }
+        }
+    }
+}
 
+fun countProd_Cap() {
+    val inv = Inventory.inventories[DatabaseFactory.index].get(Inventory.TAG)!!
+    val fac = Factory.getFactoryById(DatabaseFactory.index)
+    if (fac != null) {
+        fac.production.maxStackSize = EnumFactory.findById(DatabaseFactory.index).productivity_cap
+        for (i in 0 until inv.size) {
+            if (inv.getInventorySlotContents(i).itemId in Items.getNumOfProdCap().first..Items.getNumOfProdCap().second) {
+                fac.production.maxStackSize += Items.findById(inv.getInventorySlotContents(i).itemId).price / 40
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@ import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Enums.Items
 
-class Inventory(val name: String, val size: Int, val maxStackSize: Int) {
+class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
 
     companion object {
         const val TAG = "PlayerInv"
