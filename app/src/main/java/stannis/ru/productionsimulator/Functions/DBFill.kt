@@ -17,6 +17,7 @@ import stannis.ru.productionsimulator.Models.Factory
 import java.util.*
 
 fun fillDb(ctx: Context) {
+    clearInstances()
     Inventory.setBegin()
     for (i in 0 until EnumFactory.getSize()) {
         DatabaseFactory.index = i
@@ -85,7 +86,6 @@ fun fillDb(ctx: Context) {
             , "Власов"
             , "Маслов"
     )
-
     val kek = PlayerStatsDatabase.getInstance(ctx)
     kek.removeAllCredits()
     kek.removeDataTime()

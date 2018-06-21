@@ -1,6 +1,6 @@
 package stannis.ru.productionsimulator.Models
 
-class ItemStack(val itemId : Int, var stackSize : Int, val maxStackSize : Int) {
+class ItemStack(val itemId : Int, var stackSize : Int, var maxStackSize : Int) {
 
     fun getType() : Int = itemId
 

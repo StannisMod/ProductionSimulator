@@ -14,6 +14,7 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
+var GO = false
 
 fun round(a: Double, radix: Int): Double {
     var b = a
@@ -57,6 +58,13 @@ fun countReputation(ctx: Context, nalog: Int) {
         player.reputation = (10 * (dif.toDouble() / trueNalog.toDouble())).toInt()
     }
     player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueNalog.toDouble())).toInt()
+
+    if (player.reputation < 0) {
+        player.reputation = 0
+    }
+    if (player.reputation > 100) {
+        player.reputation = 100
+    }
 }
 
 fun generateWorker(ctx: Context) {
@@ -128,14 +136,17 @@ fun countProductivity(ctx: Context) {
 fun countRes_Cap() {
     val inv = Inventory.inventories[DatabaseFactory.index].get(Inventory.TAG)!!
     val fac = Factory.getFactoryById(DatabaseFactory.index)
+
     if (fac != null) {
         fac.res.maxStackSize = EnumFactory.findById(DatabaseFactory.index).res_cap
         for (i in 0 until inv.size) {
             if (inv.getInventorySlotContents(i).itemId in Items.getNumOfResCap().first..Items.getNumOfResCap().second) {
-                fac.res.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 50)*inv.getInventorySlotContents(i).stackSize
+                fac.res.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 50) * inv.getInventorySlotContents(i).stackSize
             }
         }
+        fac.res.getInventorySlotContents(0).maxStackSize = fac.res.maxStackSize
     }
+
 }
 
 fun countProd_Cap() {
@@ -145,9 +156,10 @@ fun countProd_Cap() {
         fac.production.maxStackSize = EnumFactory.findById(DatabaseFactory.index).productivity_cap
         for (i in 0 until inv.size) {
             if (inv.getInventorySlotContents(i).itemId in Items.getNumOfProdCap().first..Items.getNumOfProdCap().second) {
-                fac.production.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 40)*inv.getInventorySlotContents(i).stackSize
+                fac.production.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 40) * inv.getInventorySlotContents(i).stackSize
             }
         }
+        fac.production.getInventorySlotContents(0).maxStackSize = fac.production.maxStackSize
     }
 }
 
@@ -156,7 +168,8 @@ fun randomInRange(pair: Pair<Int, Int>): Int {
     var b = Math.max(pair.first, pair.second)
     return a + Random().nextInt(b - a + 1)
 }
-fun clearInstances(){
+
+fun clearInstances() {
     Player.clear()
     DataTime.clear()
     Factory.clear()

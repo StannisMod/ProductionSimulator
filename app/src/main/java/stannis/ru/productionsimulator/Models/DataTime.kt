@@ -9,7 +9,6 @@ import stannis.ru.productionsimulator.Functions.generateMessage
 import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Functions.generateWorker
 import stannis.ru.productionsimulator.Functions.randomInRange
-import stannis.ru.productionsimulator.Functions.saveAll
 import java.util.*
 
 class DataTime(var currentDay: String, var currentMonth: String, var currentYear: String, var tookCreditToday: Int, var tookDepositToday: Int) {
@@ -99,7 +98,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
 
         DatabaseFactory.index = 0
         Player.getInstance(ctx).money += MoneyForDay.getIns(ctx).sellings - MoneyForDay.getIns(ctx).wages
-        generateMessage(ctx)
+
 
     }
 

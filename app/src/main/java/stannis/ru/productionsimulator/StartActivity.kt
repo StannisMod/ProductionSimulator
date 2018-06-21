@@ -29,8 +29,16 @@ class StartActivity : AppCompatActivity() {
             finish()
         }
         newGame.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            if (ins.getPlayerStats() == null) {
+
+               intent.putExtra("TAG", "firstTime")
+            }else{
+                intent.putExtra("TAG", "1")
+
+            }
             fillDb(this)
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(intent)
             finish()
         }
 
