@@ -18,6 +18,7 @@ import java.util.*
 
 fun fillDb(ctx: Context) {
     clearInstances()
+    GO = false
     Inventory.setBegin()
     for (i in 0 until EnumFactory.getSize()) {
         DatabaseFactory.index = i

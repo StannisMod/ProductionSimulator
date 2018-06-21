@@ -12,7 +12,9 @@ import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Enums.EnumFactory
 
 class GameOverActivity : AppCompatActivity() {
+    override fun onBackPressed() {
 
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_over)
@@ -37,6 +39,7 @@ class GameOverActivity : AppCompatActivity() {
         tostart.setOnClickListener {
             val intent = Intent(this, StartActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
     }

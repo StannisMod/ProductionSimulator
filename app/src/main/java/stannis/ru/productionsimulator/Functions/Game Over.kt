@@ -11,19 +11,15 @@ import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.GameOverActivity
 import stannis.ru.productionsimulator.MessageActivity
 import stannis.ru.productionsimulator.Models.Message
+import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.StartActivity
 
 fun gameover(ctx: Context){
-    val ins = PlayerStatsDatabase.getInstance(ctx)
-    ins.removeAllMessageReaded()
-    ins.removeAllMessage()
-    ins.removePlayer()
-    ins.removeAllCredits()
-    DatabaseFactory.getInstance(ctx).removeAllLabor()
-    ins.removeAllNames()
-    DatabaseFactory.getInstance(ctx).removeAllStaff()
+    PlayerStatsDatabase.getInstance(ctx).removePlayer()
+    Player.clear()
+    PlayerStatsDatabase.getInstance(ctx).removeAllMessage()
     generateUnhappyMessage(ctx)
-    var list : ArrayList<Message> = ins.getMessage()
+    var list : ArrayList<Message> = PlayerStatsDatabase.getInstance(ctx).getMessage()
     val intent = Intent(ctx, GameOverActivity::class.java)
     intent.putExtra("message", list[0].toStringArray())
     Log.d("GameOver", "2")
