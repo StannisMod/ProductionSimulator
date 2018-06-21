@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         left.setOnClickListener {
             Log.d("LEFT", index.toString())
             if (DatabaseFactory.index > 0) {
+                saveAll(this)
                 DatabaseFactory.index = index
                 DatabaseFactory.index--
                 startActivity(Intent(this, MainActivity::class.java))
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         }
         right.setOnClickListener {
             if (DatabaseFactory.index < EnumFactory.getSize() - 1) {
+                saveAll(this)
                 DatabaseFactory.index = index
                 DatabaseFactory.index++
                 startActivity(Intent(this, MainActivity::class.java))
@@ -99,28 +101,26 @@ class MainActivity : AppCompatActivity() {
         } else {
 
             toinventory.setOnClickListener {
-
+                saveAll(this)
                 val intent = Intent(this, InventoryActivity::class.java)
                 startActivity(intent)
             }
 
             tomarket.setOnClickListener {
+                saveAll(this)
                 val intent = Intent(this, MarketActivity::class.java)
                 startActivity(intent)
             }
 
-            stats_panel.setOnClickListener {
-                // val intent = Intent(this, StatsActivity::class.java)
-                // startActivity(stats)
-                Inventory.getInventory().setInventorySlotContents(Inventory.getInventory().findFirstEqualSlot(Items.WOOD.getId()), ItemStack(Items.WOOD.getId(), 32, 64))
-            }
 
             tofactory.setOnClickListener {
                 Log.d("WHATThe", DatabaseFactory.index.toString())
+                saveAll(this)
                 val intent = Intent(this, FactoryActivity::class.java)
                 startActivity(intent)
             }
             topersonal.setOnClickListener {
+                saveAll(this)
                 val intent = Intent(this, StaffActivity::class.java)
                 startActivity(intent)
             }

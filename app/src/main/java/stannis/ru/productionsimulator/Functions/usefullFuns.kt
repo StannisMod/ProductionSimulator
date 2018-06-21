@@ -82,10 +82,10 @@ fun generateWorker(ctx: Context) {
         var nationality = nation.nation
         var quality = nation.quality + (Random().nextInt(6) - 3)
         var salary = prof.averSalary + (Random().nextInt(prof.averSalary / 2) - prof.averSalary / 4)
+        salary *= (quality / 10)
         if (salary == 0) {
             salary = 1
         }
-        salary *= (quality / 10)
         var birthDay = (Random().nextInt(10) + 10).toString()
         var birthMonth = "0${(Random().nextInt(10))}"
         DatabaseFactory.getInstance(ctx).addLaborExchangeWithProperties(Staff(name, age, spec, quality, nationality, salary, Pair(birthDay, birthMonth)))
@@ -132,7 +132,7 @@ fun countRes_Cap() {
         fac.res.maxStackSize = EnumFactory.findById(DatabaseFactory.index).res_cap
         for (i in 0 until inv.size) {
             if (inv.getInventorySlotContents(i).itemId in Items.getNumOfResCap().first..Items.getNumOfResCap().second) {
-                fac.res.maxStackSize += Items.findById(inv.getInventorySlotContents(i).itemId).price / 50
+                fac.res.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 50)*inv.getInventorySlotContents(i).stackSize
             }
         }
     }
@@ -145,8 +145,21 @@ fun countProd_Cap() {
         fac.production.maxStackSize = EnumFactory.findById(DatabaseFactory.index).productivity_cap
         for (i in 0 until inv.size) {
             if (inv.getInventorySlotContents(i).itemId in Items.getNumOfProdCap().first..Items.getNumOfProdCap().second) {
-                fac.production.maxStackSize += Items.findById(inv.getInventorySlotContents(i).itemId).price / 40
+                fac.production.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 40)*inv.getInventorySlotContents(i).stackSize
             }
         }
     }
+}
+
+fun randomInRange(pair: Pair<Int, Int>): Int {
+    val a = Math.min(pair.first, pair.second)
+    var b = Math.max(pair.first, pair.second)
+    return a + Random().nextInt(b - a + 1)
+}
+fun clearInstances(){
+    Player.clear()
+    DataTime.clear()
+    Factory.clear()
+    Inventory.setNulls()
+    MoneyForDay.clear()
 }

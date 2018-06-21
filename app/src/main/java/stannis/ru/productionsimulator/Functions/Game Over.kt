@@ -18,6 +18,7 @@ fun gameover(ctx: Context){
     DatabaseFactory.getInstance(ctx).removeAllLabor()
     ins.removeAllNames()
     DatabaseFactory.getInstance(ctx).removeAllStaff()
+    clearInstances()
     val intent = Intent(ctx, StartActivity::class.java)
     Toast.makeText(ctx, "Извините, но вы банктрот... Если хотите попробовать еще раз нажмите кнопку 'Новая игра'\nЕсли вы не понимаете почему, то зайдите в новую игру и прочитайте письмо.", Toast.LENGTH_LONG).show()
     generateUnhappyMessage(ctx)

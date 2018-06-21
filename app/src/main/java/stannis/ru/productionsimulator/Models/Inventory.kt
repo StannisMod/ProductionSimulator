@@ -154,6 +154,7 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
     }
 
 
+
 }
 
 fun Array<ItemStack>.toDetailedString(): String {
