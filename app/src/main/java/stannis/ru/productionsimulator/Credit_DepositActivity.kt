@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Functions.round
+import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
 import kotlin.math.roundToInt
@@ -72,21 +73,20 @@ class Credit_DepositActivity : AppCompatActivity() {
 
             }
             confirmCredit.setOnClickListener {
-                if ( inputAmountOfCredit.text.toString() != "") {
+                if (inputAmountOfCredit.text.toString() != "") {
                     if (!isCredit && inputAmountOfCredit.text.toString().toInt() > player.money) {
                         Toast.makeText(this, "Вы не вложите вложить больше денег, чем у вас сейчас есть", Toast.LENGTH_SHORT).show()
                     } else {
                         if (!isCredit) {
                             player.money -= inputAmountOfCredit.text.toString().toInt()
 
-                            curData.tookDepositToday = inputAmountOfCredit.text.toString().toInt()
+                            curData.tookDepositToday = 1
 
 
                         } else {
-                            curData.tookCreditToday = inputAmountOfCredit.text.toString().toInt()
+                            curData.tookCreditToday = 1
                             player.money += inputAmountOfCredit.text.toString().toInt()
                         }
-
 
 
                         val type = if (isCredit) 2 else 1
@@ -95,6 +95,7 @@ class Credit_DepositActivity : AppCompatActivity() {
                         Toast.makeText(this, mes, Toast.LENGTH_SHORT)
 
                         val intent = Intent(this, BankActivity::class.java)
+                        saveAll(this)
                         startActivity(intent)
                         finish()
                     }
@@ -104,6 +105,7 @@ class Credit_DepositActivity : AppCompatActivity() {
 
 
     }
+
     override fun onBackPressed() {
 
     }

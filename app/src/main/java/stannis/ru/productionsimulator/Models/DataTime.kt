@@ -76,8 +76,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             }
         }
         checkCreditsDeposits(ctx)
-        this.tookCreditToday = 0
-        this.tookDepositToday = 0
+
 
         for (fac in Factory.factories) {
             if (fac != null) {

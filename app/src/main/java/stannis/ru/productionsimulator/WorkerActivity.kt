@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Staff
@@ -80,6 +81,7 @@ class WorkerActivity : AppCompatActivity() {
 
                             DatabaseFactory.getInstance(this).addStaffWithProperties(tmp)
                             DatabaseFactory.getInstance(this).removeLaborExchange(tmp.name)
+                            saveAll(this)
                             Toast.makeText(this, "${tmp.name}, ты нанят", Toast.LENGTH_SHORT).show()
 
                             val intent = Intent(this, MarketActivity::class.java)

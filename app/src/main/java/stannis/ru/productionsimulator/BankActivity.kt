@@ -56,7 +56,7 @@ class BankActivity : AppCompatActivity() {
                     startActivity(intent1)
                     finish()
                 }else{
-                    Toast.makeText(this, "Вы не можете брать больше одного кредита в день", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Вы можете брать кредит, только раз в 20 дней", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -68,7 +68,7 @@ class BankActivity : AppCompatActivity() {
                     startActivity(intent1)
                     finish()
                 }else{
-                    Toast.makeText(this, "Вы не можете открывать более одного депозита в день", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Вы можете открывать депозит только раз в 20 день", Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -31,7 +31,7 @@ enum class Items(val itemId: Int, val label: String, val image: Int, val price: 
         fun getNumOfProdCap(): Pair<Int, Int> = Pair(7, 9)
         fun getNumOfRepair(): Int = 11
         fun generateSellPrice(id: Int, ctx: Context): Int {
-            val add = (Player.getInstance(ctx).reputation - 30) / 10
+            val add = (Player.getInstance(ctx).reputation - 42) / 10
             return findById(id).price + add
         }
 

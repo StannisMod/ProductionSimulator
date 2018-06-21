@@ -96,7 +96,7 @@ fun fillDb(ctx: Context) {
     kek.removeAllMessage()
     kek.removeAllMessageReaded()
     kek.addNames(arrayNames, arraySecondNames)
-    kek.addPlayerStatsWithProperties(400, 0, 0, 50, 5)
+    kek.addPlayerStatsWithProperties(200, 0, 0, 50, 5)
     val data = java.util.Calendar.getInstance()
     var day = data.get(Calendar.DAY_OF_MONTH).toString()
     if (data.get(Calendar.DAY_OF_MONTH) < 10) {

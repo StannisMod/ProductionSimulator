@@ -71,6 +71,19 @@ class EndDayActivity : AppCompatActivity() {
                 Player.getInstance(this).money -= nalogValue.text.toString().toInt()
                 MoneyForDay.getIns(this).setNull()
                 Log.d("GameOver", "5")
+                if(curData.tookDepositToday!=0){
+                    curData.tookDepositToday++
+                    if(curData.tookDepositToday>20){
+                        curData.tookDepositToday = 0
+                    }
+                }
+                if(curData.tookCreditToday!=0){
+                    curData.tookCreditToday++
+                    if(curData.tookCreditToday>20){
+                        curData.tookCreditToday = 0
+                    }
+                }
+
                 saveAll(this)
                 generateMessage(this)
                 Log.d("GameOver", "6")

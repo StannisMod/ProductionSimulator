@@ -43,7 +43,7 @@ class Player(var money: Int, var stuff: Int, var staff: Int, var reputation: Int
     }
 
     fun countCreditPercent(sum: Int): Double {
-        var percent = 8.0
+        var percent = 12.0
         val bigSum = Math.sqrt(sum.toDouble() / 10000.0).toInt() / 100.0
         percent -= bigSum
 

@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
 
@@ -93,6 +94,7 @@ class ResetCredit_Deposit : AppCompatActivity() {
                                 ins.setCreditDepositProperties(crDep)
                             }
                             Toast.makeText(this, "Операция прошла успешно", Toast.LENGTH_SHORT).show()
+                            saveAll(this)
 
                             val intent = Intent(this, BankActivity::class.java)
                             startActivity(intent)
