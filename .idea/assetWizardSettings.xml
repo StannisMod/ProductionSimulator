@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="60" />
+                                                <entry key="scalingPercent" value="74" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="60" />
+                                                <entry key="scalingPercent" value="74" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -44,9 +44,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\chemistrywork.png" />
-                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\chemistrywork.png" />
-                                      <entry key="outputName" value="chemistrywork" />
+                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\oilwork.png" />
+                                      <entry key="backgroundLayerName" value="glasswork_background" />
+                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\oilwork.png" />
+                                      <entry key="outputName" value="oilwork" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
