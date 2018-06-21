@@ -106,17 +106,16 @@ fun countProductivity(ctx: Context) {
                 Profs.FOREMAN.prof -> qualityFM += st.quality
             }
         }
-        qualityFM = if (qualityFM == 0) 1 else qualityFM
-        qualityMN = if (qualityMN == 0) 1 else qualityMN
-        var quality = qualityOfGW * (qualityFM) * (qualityMN)
+
+        var quality = qualityOfGW + 2 * (qualityFM) + 3 * (qualityMN)
 
         var res = fac.machine_state * quality
         if (res == 0.0) {
             fac.productivity = 0
         } else {
-            var coef = -150
+            var coef = EnumFactory.findById(DatabaseFactory.index).coef
             res = ((coef).toDouble() / res) + 5.0
-            if(res < 0.0){
+            if (res < 0.0) {
                 res = 0.0
             }
             fac.productivity = res.roundToInt()
@@ -124,6 +123,7 @@ fun countProductivity(ctx: Context) {
 
     }
 }
-fun countRes_Cap(){
+
+fun countRes_Cap() {
 
 }

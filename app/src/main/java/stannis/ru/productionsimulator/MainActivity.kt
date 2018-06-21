@@ -60,10 +60,28 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())
+        left.setOnClickListener {
+            Log.d("LEFT", index.toString())
+            if (DatabaseFactory.index > 0) {
+                DatabaseFactory.index = index
+                DatabaseFactory.index--
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+        }
+        right.setOnClickListener {
+            if (DatabaseFactory.index < EnumFactory.getSize() - 1) {
+                DatabaseFactory.index = index
+                DatabaseFactory.index++
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+        }
         if (factory != null && !factory.isBought) {
             buyFac.visibility = View.VISIBLE
-            body.visibility = View.GONE
-            buyFac.text = "Купить\n${factory.price}$"
+            navigationButtons.visibility = View.INVISIBLE
+            buyFac.text = "${EnumFactory.findById(index).factory}. Купить\n${factory.price}$"
             buyFac.setOnClickListener {
                 if (player.money < factory.price) {
                     Toast.makeText(this, "У вас недостаточно средств", Toast.LENGTH_SHORT).show()
@@ -77,22 +95,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())
 
-            left.setOnClickListener {
-                if (DatabaseFactory.index > 0) {
-                    DatabaseFactory.index = index
-                    DatabaseFactory.index--
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-            }
-            right.setOnClickListener {
-                if (DatabaseFactory.index < EnumFactory.getSize() - 1) {
-                    DatabaseFactory.index = index
-                    DatabaseFactory.index++
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-            }
             toinventory.setOnClickListener {
 
                 val intent = Intent(this, InventoryActivity::class.java)

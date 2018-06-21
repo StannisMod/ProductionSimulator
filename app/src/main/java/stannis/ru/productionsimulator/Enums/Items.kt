@@ -25,6 +25,10 @@ enum class Items(val itemId: Int, val label: String, val image: Int, val price: 
     fun getItemImage(): Int = image
 
     companion object {
+        fun getNumOfResCap(): Pair<Int, Int> = Pair(10, 10)
+        fun getNumOfProdCap(): Pair<Int, Int> = Pair(7, 9)
+        fun getNumOfRepair(): Int = 11
+
 
         fun findById(id: Int): Items {
             when (id) {

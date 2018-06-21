@@ -20,13 +20,12 @@
 
     <LinearLayout
         android:id="@+id/body"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/data"
         android:layout_below="@id/stats"
         android:orientation="vertical"
-        >
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/top"
@@ -39,8 +38,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"/>
-                <!--android:background="@mipmap/lesopilka1_background" -->
+                android:layout_centerHorizontal="true" />
+            <!--android:background="@mipmap/lesopilka1_background" -->
 
         </RelativeLayout>
 
@@ -49,80 +48,93 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0">
+
             <RelativeLayout
-                android:layout_centerVertical="true"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                >
-            <ImageButton
-                android:id="@+id/left"
-                android:layout_alignParentLeft="true"
-                android:layout_width="30dp"
-                android:layout_height="120dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/left"
-                />
-            <ImageButton
-                android:id="@+id/right"
-                android:layout_width="30dp"
-                android:layout_height="120dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/right"/>
+                android:layout_centerVertical="true">
+
+                <ImageButton
+                    android:id="@+id/left"
+                    android:layout_width="30dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/left"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+
+                <Button
+                    android:id="@+id/buyFac"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:focusedByDefault="false"
+                    android:text="Купить\n2300$"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/right"
+                    android:layout_width="30dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentRight="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/right"
+                    android:focusable="true" />
             </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/navigationButtons"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_weight="5">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true">
-
-            <ImageButton
-                android:id="@+id/toinventory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="center"
-                android:layout_weight="3"
-                android:background="@mipmap/sklad_background" />
-            <!--- app:srcCompat="@android:drawable/ic_notification_overlay" />
-             -->
-            <ImageView
-                android:id="@+id/topersonal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:layout_weight="3"
-                android:background="@mipmap/to_personal_round" />
-            <ImageButton
-                android:id="@+id/tomarket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_gravity="center"
-                android:layout_weight="3"
-                android:background="@mipmap/market_background" />
-            <!--android:layout_marginBottom="10dp"-->
-            <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
+                android:layout_centerVertical="true">
+
+                <ImageButton
+                    android:id="@+id/toinventory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:background="@mipmap/sklad_background" />
+                <!--- app:srcCompat="@android:drawable/ic_notification_overlay" />
+                 -->
+                <ImageView
+                    android:id="@+id/topersonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:background="@mipmap/to_personal_round" />
+
+                <ImageButton
+                    android:id="@+id/tomarket"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:background="@mipmap/market_background" />
+                <!--android:layout_marginBottom="10dp"-->
+                <!--- app:srcCompat="@android:drawable/ic_notification_overlay" -->
             </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>
-    <Button
-        android:id="@+id/buyFac"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Купить\n2300$"/>
 
 </RelativeLayout>
