@@ -7,11 +7,9 @@
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_round"
-
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".MarketActivity"
             android:parentActivityName=".MainActivity" />
@@ -32,11 +30,12 @@
             android:parentActivityName=".MailActivity" />
         <activity
             android:name=".WorkerActivity"
-            android:parentActivityName=".BankActivity"/>
+            android:parentActivityName=".BankActivity" />
         <activity
             android:name=".FactoryActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".InventoryActivity"
+        <activity
+            android:name=".InventoryActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ResetCredit_Deposit"
@@ -49,8 +48,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ListProductionActivity"></activity>
+        <activity android:name=".ListProductionActivity" />
+        <activity android:name=".GameOverActivity"></activity>
     </application>
 
 </manifest>
