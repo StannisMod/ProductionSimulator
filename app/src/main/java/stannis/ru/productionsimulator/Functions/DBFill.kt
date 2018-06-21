@@ -17,6 +17,7 @@ import stannis.ru.productionsimulator.Models.Factory
 import java.util.*
 
 fun fillDb(ctx: Context) {
+    Inventory.setBegin()
     for (i in 0..EnumFactory.getSize()) {
         DatabaseFactory.index = i
         val ins = DatabaseFactory.getInstance(ctx)
@@ -29,7 +30,6 @@ fun fillDb(ctx: Context) {
         ins.removeAllStaff()
     }
     DatabaseFactory.index = 0
-    Inventory.setBegin()
     Inventory.getInventory("sell")
     Inventory.getInventory("buy")
     Inventory.getInventory()

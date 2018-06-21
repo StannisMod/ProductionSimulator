@@ -16,37 +16,11 @@
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
-                                  <option name="children">
-                                    <map>
-                                      <entry key="backgroundImage">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="scalingPercent" value="0" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                      <entry key="foregroundImage">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="scalingPercent" value="80" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                    </map>
-                                  </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundImage" value="C:\Users\nadya\Desktop\tool_kit.png" />
-                                      <entry key="foregroundImage" value="C:\Users\nadya\Desktop\tool_kit.png" />
-                                      <entry key="outputName" value="tool_kit" />
+                                      <entry key="backgroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\to_personal-web.png" />
+                                      <entry key="foregroundImage" value="C:\Users\mi\Documents\GitHub\ProductionSimulator\app\src\main\to_personal-web.png" />
+                                      <entry key="outputName" value="person" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
