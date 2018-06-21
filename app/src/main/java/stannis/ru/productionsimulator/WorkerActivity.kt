@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.staff_view.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Staff
@@ -68,8 +69,8 @@ class WorkerActivity : AppCompatActivity() {
                 hire_prom.setOnClickListener {
                     val tmp = DatabaseFactory.getInstance(this).getWorkerFromLabor(arr[0].trim())
                     if (player != null && tmp != null) {
-                        if (player.money < tmp.salary) {
-                            Toast.makeText(this, "У вас недостаточно средств", Toast.LENGTH_SHORT).show()
+                        if (player.money < tmp.salary && DatabaseFactory.getInstance(this).getListOfStaff().size < EnumFactory.findById(DatabaseFactory.index).workerkLimit) {
+                            Toast.makeText(this, "У вас недостаточно средств, или на вашей фабрике недостаточно метса ", Toast.LENGTH_SHORT).show()
                         } else {
                             player.money -= tmp.salary
                             player.staff++

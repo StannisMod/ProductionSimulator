@@ -61,7 +61,7 @@ class Factory {
             var i = 0
             for (fac in factories) {
                 DatabaseFactory.index = i
-                
+
                 fac.save(ctx)
 
                 i++
