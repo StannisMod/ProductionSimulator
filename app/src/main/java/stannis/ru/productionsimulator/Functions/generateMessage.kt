@@ -45,12 +45,12 @@ fun generateMessage(ctx: Context){
 
     //УСЛОВИЕ: В дни, когда репутация меньше 10 с вероятностью 15% ПОСЛЕДСТВИЯ: GAME OVER
     if(PlayerStatsDatabase.getInstance(ctx).getPlayerStats()!!.reputation < 10 && r.nextDouble() < 0.15){
+        gameover(ctx)
         generateUnhappyMessage(ctx)
-        //gameover()
     }
 
     //УСЛОВИЕ: Верятность 5,1%-(реп)/20 ПОСЛЕДСТВИЯ: ежедневный налог увеличен на 100$
-    if(r.nextDouble() < 5.1- PlayerStatsDatabase.getInstance(ctx).getPlayerStats()!!.reputation/20){
+    if(r.nextDouble() < 0.051- PlayerStatsDatabase.getInstance(ctx).getPlayerStats()!!.reputation/2000){
         generateControlMessage(ctx)
         var player = PlayerStatsDatabase.getInstance(ctx).getPlayerStats()
         if(player != null) {
@@ -59,8 +59,8 @@ fun generateMessage(ctx: Context){
         }
     }
 
-    //УСЛОВИЕ: Если репутация меньше 10 с вероятностью 20% ПОСЛЕДСТВИЯ: Изымается 70% от текушей суммы. И репутация приравнивается 40
-    if(PlayerStatsDatabase.getInstance(ctx).getPlayerStats()!!.reputation < 10 && r.nextDouble()<0.2){
+    //УСЛОВИЕ: Если репутация меньше 10 с вероятностью 10% ПОСЛЕДСТВИЯ: Изымается 70% от текушей суммы. И репутация приравнивается 40
+    if(PlayerStatsDatabase.getInstance(ctx).getPlayerStats()!!.reputation < 10 && r.nextDouble()<0.1){
         generateFNSControlMessage(ctx)
         var player = PlayerStatsDatabase.getInstance(ctx).getPlayerStats()
         if(player != null) {
