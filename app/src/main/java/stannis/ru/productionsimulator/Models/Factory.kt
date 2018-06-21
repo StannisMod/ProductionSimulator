@@ -61,9 +61,9 @@ class Factory {
             var i = 0
             for (fac in factories) {
                 DatabaseFactory.index = i
-                Log.d("whyFacIsNullBEFORESAVE", fac.toDetailedString())
+                
                 fac.save(ctx)
-                Log.d("WhyFacIsNullSAVE", load(ctx, 0)!!.toDetailedString())
+
                 i++
             }
             DatabaseFactory.index = 0

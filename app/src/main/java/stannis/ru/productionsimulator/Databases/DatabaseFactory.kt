@@ -19,7 +19,7 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
 
         fun getInstance(ctx: Context): DatabaseFactory {
             if (instanceList.size <= index) {
-                for (i in 0..index)
+                for (i in instanceList.size..index)
                     instanceList.add(i, DatabaseFactory(ctx.applicationContext, "Factory${i}"))
             }
             return instanceList[index]!!

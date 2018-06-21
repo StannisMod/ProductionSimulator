@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if(intent.hasExtra("TAG")){
-            Log.d("Dialog",intent.getStringExtra("TAG") )
             if(intent.getStringExtra("TAG")=="firstTime"){
                 Log.d("Dialog", "Problem with builder")
                 val builder : AlertDialog.Builder  = AlertDialog.Builder(this)
@@ -103,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             if (DatabaseFactory.index > 0) {
                 DatabaseFactory.index = index
                 DatabaseFactory.index--
-                startActivity(Intent(this, MainActivity::class.java).putExtra("TAG", 0))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             if (DatabaseFactory.index < EnumFactory.getSize() - 1) {
                 DatabaseFactory.index = index
                 DatabaseFactory.index++
-                startActivity(Intent(this, MainActivity::class.java).putExtra("TAG", 0))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }
