@@ -51,12 +51,11 @@ fun generateMessage(ctx: Context){
         gameover(ctx)
     }
 
-    //УСЛОВИЕ: Верятность 5,1%-(реп)/20 ПОСЛЕДСТВИЯ: ежедневный налог увеличен на 100$
+    //УСЛОВИЕ: Верятность 5,1%-(реп)/20 ПОСЛЕДСТВИЯ: ежедневный налог увеличен на 50%
     if (r.nextDouble() < 0.051 - player.reputation / 2000) {
         var player = player
         if (player != null) {
-            player.nalog = (player.nalog + player.nalog * 0.2).toInt()
-
+            player.nalog = (player.nalog + player.nalog * 0.5).toInt()
         }
         generateControlMessage(ctx)
     }
@@ -141,7 +140,7 @@ fun generateControlMessage(ctx : Context){//УСЛОВИЕ: Верятность
     var message : Message = Message()
     message.caption = "Новый налог"
     message.sender = "Власть"
-    message.text = "Все владельцы недвижимости на территории леса, обязаны платить 0,1% от стоимости недвижимости ежедневно.\nВ Вашем случае это 100$"
+    message.text = "Все владельцы недвижимости на территории леса, обязаны платить 0,1% от стоимости недвижимости ежедневно.\nВ Вашем случае это ${(Player.getInstance(ctx).nalog * 0.5).toInt()}"
     message.date = arrayOf(DataTime.getInstance(ctx).currentDay, DataTime.getInstance(ctx).currentMonth, DataTime.getInstance(ctx).currentYear)
     PlayerStatsDatabase.getInstance(ctx).addMessageWithProperties(message)
 }
