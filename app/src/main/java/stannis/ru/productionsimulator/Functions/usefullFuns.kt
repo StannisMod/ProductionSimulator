@@ -1,7 +1,6 @@
 package stannis.ru.productionsimulator.Functions
 
 import android.content.Context
-import android.provider.ContactsContract
 import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
@@ -31,21 +30,39 @@ fun saveAll(ctx: Context) {
     DataTime.save(ctx)
     MoneyForDay.save(ctx)
     Inventory.saveInventories(ctx)
+    Worker.saveAll(ctx)
+    Credit_Deposit.saveAll(ctx)
+    DatabaseFactory.index = 0
+}
 
+fun setBeginToAll() {
+    Inventory.setBegin()
+    Worker.setBegin()
+    Credit_Deposit.setBegin()
 }
 
 fun loadAll(ctx: Context) {
+    setBeginToAll()
     for (i in 0 until EnumFactory.getSize()) {
         DatabaseFactory.index = i
         val fac = Factory.load(ctx, i)
         if (fac != null) {
             Factory.factories.add(fac)
         }
-        Inventory.inventories.add(HashMap())
+
         Inventory.inventories[i].put("buy", Inventory.load(ctx, "buy"))
         Inventory.inventories[i].put("sell", Inventory.load(ctx, "sell"))
         Inventory.inventories[i].put(Inventory.TAG, Inventory.load(ctx, Inventory.TAG))
+        val lab = DatabaseFactory.getInstance(ctx).getListOfLaborExchange()
+        for (wk in lab) {
+            wk.generate()
+        }
+        val st = DatabaseFactory.getInstance(ctx).getListOfStaff()
+        for (wk in st) {
+            wk.addToStaff()
+        }
     }
+    Credit_Deposit.loadAll(ctx)
     DatabaseFactory.index = 0
 
 }
@@ -96,7 +113,8 @@ fun generateWorker(ctx: Context) {
         }
         var birthDay = (Random().nextInt(10) + 10).toString()
         var birthMonth = "0${(Random().nextInt(10))}"
-        DatabaseFactory.getInstance(ctx).addLaborExchangeWithProperties(Staff(name, age, spec, quality, nationality, salary, Pair(birthDay, birthMonth)))
+        Worker(name, age, spec, quality, nationality, salary, Pair(birthDay, birthMonth)).generate()
+        Log.d("WORKER", Worker.getListOfLabor().toString())
     }
 
 }
@@ -175,4 +193,8 @@ fun clearInstances() {
     Factory.clear()
     Inventory.setNulls()
     MoneyForDay.clear()
+}
+
+fun isEqualDate(date1: Array<String>, date2: Array<String>): Boolean {
+    return date1[0] == date2[0] && date1[1] == date1[1] && date1[2] == date2[2]
 }

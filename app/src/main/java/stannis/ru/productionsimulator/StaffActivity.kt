@@ -8,11 +8,10 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_workers.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
-import stannis.ru.productionsimulator.Models.Staff
+import stannis.ru.productionsimulator.Models.Worker
 
 class StaffActivity : AppCompatActivity() {
     override fun onBackPressed() {
@@ -45,8 +44,8 @@ class StaffActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val dataArray = DatabaseFactory.getInstance(this).getListOfStaff()
-        val adapter = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray)
+        val dataArray = Worker.getListOfStaff()
+        val adapter = ArrayAdapter<Worker>(this, android.R.layout.simple_list_item_1, dataArray)
         listView.adapter = adapter
         listView.setOnItemClickListener { adapterView, view, i, l ->
             val extra = "${dataArray[i].name}.YourWorker"

@@ -24,13 +24,13 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
         fun save(ctx: Context) {
             PlayerStatsDatabase.getInstance(ctx).setDataTimeWithProperties(getInstance(ctx))
         }
-        fun clear(){
+
+        fun clear() {
             instance = null
         }
     }
 
     fun nextDay(ctx: Context) {
-        val ins = PlayerStatsDatabase.getInstance(ctx)
         var day = currentDay.toInt()
         if (day < 28) {
             if (day + 1 < 10) {
@@ -89,7 +89,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                 getAllWages(ctx)
                 sellItems(ctx)
                 checkBirthDays(ctx)
-                generateBuyInv(ctx)
+                generateBuyInv()
                 generateLabor(ctx)
             }
 
@@ -102,15 +102,19 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun checkCreditsDeposits(ctx: Context) {
-        val list = PlayerStatsDatabase.getInstance(ctx).getListOfCreditDeposit()
+        var list = Credit_Deposit.instance[0]
         for (crDep in list) {
             if (this.currentDay == crDep.date[0]) {
-                crDep.rise(ctx)
-//                if(crDep.type == 2){
-//                    generateCreditBankMessage(crDep, ctx)
-//                }
+                crDep.rise()
             }
         }
+        list = Credit_Deposit.instance[1]
+        for (crDep in list) {
+            if (this.currentDay == crDep.date[0]) {
+                crDep.rise()
+            }
+        }
+
     }
 
     fun sellItems(ctx: Context) {
@@ -144,18 +148,21 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun generateLabor(ctx: Context) {
-        val ins = DatabaseFactory.getInstance(ctx)
+
         for (i in 1..3) {
-            val sz = ins.getListOfLaborExchange().size
+            Log.d("WORKERi", i.toString())
+            val sz = Worker.sizeOfLabor()
+            Log.d("WORKER", sz.toString())
             val p = Random().nextInt(sz + 1)
             if (p == 0) {
                 generateWorker(ctx)
             }
+            // Log.d("WORKER", Worker.sizeOfLabor().toString())
         }
 
     }
 
-    fun generateBuyInv(ctx: Context) {
+    fun generateBuyInv() {
         var invent = Inventory.getInventory("buy")
         if (invent != null) {
             var tmp = 0;
@@ -164,7 +171,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                     tmp++
                 }
             }
-            val randId = Random().nextInt(tmp+1)
+            val randId = Random().nextInt(tmp + 1)
             invent.decrStackSize(randId, invent.getInventorySlotContents(randId).stackSize)
             val id = EnumFactory.findById(DatabaseFactory.index).res_type.itemId
 
@@ -201,14 +208,14 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun checkBirthDays(ctx: Context) {
-        val ins = DatabaseFactory.getInstance(ctx)
-        val list1 = ins.getListOfStaff()
+
+        val list1 = Worker.getListOfStaff()
         for (st in list1) {
             if (this.currentDay == st.birth.first && this.currentMonth == st.birth.second) {
                 st.birth_Day(false, ctx)
             }
         }
-        val list2 = ins.getListOfLaborExchange()
+        val list2 = Worker.getListOfLabor()
         for (st in list2) {
             if (this.currentDay == st.birth.first && this.currentMonth == st.birth.second) {
                 st.birth_Day(true, ctx)
@@ -219,7 +226,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
 
     fun getAllWages(ctx: Context) {
         var res = 0
-        val list1 = DatabaseFactory.getInstance(ctx).getListOfStaff()
+        val list1 = Worker.getListOfStaff()
         for (st in list1) {
             res += st.salary
         }

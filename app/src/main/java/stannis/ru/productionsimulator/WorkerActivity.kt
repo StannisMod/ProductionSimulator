@@ -16,10 +16,9 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
-import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
-import stannis.ru.productionsimulator.Models.Staff
+import stannis.ru.productionsimulator.Models.Worker
 
 
 class WorkerActivity : AppCompatActivity() {
@@ -56,11 +55,11 @@ class WorkerActivity : AppCompatActivity() {
         if (intent.hasExtra("TAG")) {
             val arr = intent.getStringExtra("TAG").split(".")
             val cond = arr[1].trim() != "YourWorker"
-            var worker: Staff? = null
+            var worker: Worker? = null
 
 
             if (cond) {
-                worker = DatabaseFactory.getInstance(this).getWorkerFromLabor(arr[0].trim())
+                worker = Worker.getStaff(this, "labor", arr[0].trim())
                 val adapter = WorkerAdapter(Array(8) { i -> i }.toCollection(ArrayList<Int>()), this, worker!!)
                 gridWorker.adapter = adapter
 
@@ -68,20 +67,14 @@ class WorkerActivity : AppCompatActivity() {
                 hire_prom.text = "Нанять"
 
                 hire_prom.setOnClickListener {
-                    val tmp = DatabaseFactory.getInstance(this).getWorkerFromLabor(arr[0].trim())
+                    val tmp = Worker.getStaff(this, "labor", arr[0].trim())
                     if (player != null && tmp != null) {
-                        if (player.money < tmp.salary && DatabaseFactory.getInstance(this).getListOfStaff().size < EnumFactory.findById(DatabaseFactory.index).workerkLimit) {
+                        if (player.money < tmp.salary && Worker.sizeOfStaff() < EnumFactory.findById(DatabaseFactory.index).workerkLimit) {
                             Toast.makeText(this, "У вас недостаточно средств, или на вашей фабрике недостаточно метса ", Toast.LENGTH_SHORT).show()
                         } else {
                             player.money -= tmp.salary
                             player.staff++
-
-
-                            DatabaseFactory.getInstance(this).removeLaborExchange(arr[0].trim())
-
-                            DatabaseFactory.getInstance(this).addStaffWithProperties(tmp)
-                            DatabaseFactory.getInstance(this).removeLaborExchange(tmp.name)
-                            saveAll(this)
+                            tmp.hire()
                             Toast.makeText(this, "${tmp.name}, ты нанят", Toast.LENGTH_SHORT).show()
 
                             val intent = Intent(this, MarketActivity::class.java)
@@ -91,17 +84,16 @@ class WorkerActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                worker = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
+                worker = Worker.getStaff(this, "staff", arr[0].trim())
                 var al = Array(8) { i -> i }.toCollection(ArrayList<Int>())
                 var adapter = WorkerAdapter(al, this, worker!!)
                 gridWorker.adapter = adapter
 
                 if (worker != null) {
                     hire_prom.setOnClickListener {
-                        val tmp: Staff? = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
+                        val tmp: Worker? = Worker.getStaff(this, "staff", arr[0].trim())
                         if (tmp != null) {
                             tmp.getPromotion()
-                            DatabaseFactory.getInstance(this).setStaffWithProperties(tmp)
                             al = Array(8) { i -> i }.toCollection(ArrayList<Int>())
                             adapter = WorkerAdapter(al, this, tmp)
                             gridWorker.adapter = adapter
@@ -110,16 +102,16 @@ class WorkerActivity : AppCompatActivity() {
                         }
                     }
                     fire.setOnClickListener {
-                        val tmp: Staff? = DatabaseFactory.getInstance(this).getWorkerFromStaff(arr[0].trim())
+                        val tmp: Worker? = Worker.getStaff(this, "staff", arr[0].trim())
                         if (tmp != null && player != null) {
                             if (tmp.salary > player.money) {
                                 Toast.makeText(this, "У вас недостаточно средств, необходимо выплатить компенсацию работнику", Toast.LENGTH_SHORT).show()
                             } else {
-                                DatabaseFactory.getInstance(this).removeStaff(tmp.name)
+
 
                                 player.staff--;
                                 player.money -= tmp.salary
-
+                                tmp.fire()
 
                                 Toast.makeText(this, "${tmp.name}, ты уволен", Toast.LENGTH_SHORT).show()
 
@@ -142,9 +134,9 @@ class WorkerActivity : AppCompatActivity() {
 class WorkerAdapter : BaseAdapter {
     var list: ArrayList<Int> = ArrayList()
     var ctx: Context? = null
-    var st: Staff? = null
+    var st: Worker? = null
 
-    constructor(list: ArrayList<Int>, ctx: Context, st: Staff) {
+    constructor(list: ArrayList<Int>, ctx: Context, st: Worker) {
         this.list = list
         this.ctx = ctx
         this.st = st

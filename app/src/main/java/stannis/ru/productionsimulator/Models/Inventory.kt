@@ -28,6 +28,11 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
             }
             return inventories[DatabaseFactory.index].get(name)!!
         }
+        fun getAllInventories(){
+            getInventory()
+            getInventory("buy")
+            getInventory("sell")
+        }
 
         fun saveInventories(ctx: Context) {
             var i = 0

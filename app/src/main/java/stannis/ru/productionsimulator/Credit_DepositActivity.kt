@@ -13,6 +13,7 @@ import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Functions.round
 import stannis.ru.productionsimulator.Functions.saveAll
+import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Models.DataTime
 import stannis.ru.productionsimulator.Models.Player
 import kotlin.math.roundToInt
@@ -26,7 +27,7 @@ class Credit_DepositActivity : AppCompatActivity() {
         setContentView(R.layout.activity_credit__deposit)
         messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
 
-        val ins = PlayerStatsDatabase.getInstance(this)
+
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
@@ -89,13 +90,13 @@ class Credit_DepositActivity : AppCompatActivity() {
                         }
 
 
-                        val type = if (isCredit) 2 else 1
-                        ins.addCrDepWithProperties(type, inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), curData.currentDay, curData.currentMonth, curData.currentYear)
+                        val type = if (isCredit) 0 else 1
+                        Credit_Deposit(inputAmountOfCredit.text.toString().toInt(), countedPercent.text.toString().split("%")[0].toDouble(), arrayOf(curData.currentDay, curData.currentMonth, curData.currentYear), type).add()
                         val mes = if (isCredit) "Кредит взят" else "Депозит открыт"
                         Toast.makeText(this, mes, Toast.LENGTH_SHORT)
 
                         val intent = Intent(this, BankActivity::class.java)
-                        saveAll(this)
+
                         startActivity(intent)
                         finish()
                     }

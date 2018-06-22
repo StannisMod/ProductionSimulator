@@ -72,7 +72,7 @@ class BankActivity : AppCompatActivity() {
                 }
             }
         }
-        val dataArray = PlayerStatsDatabase.getInstance(this).getListOfCreditDeposit()
+        val dataArray = Credit_Deposit.getListOfCredit_Deposit()
         val adapter= ArrayAdapter<Credit_Deposit>(this, android.R.layout.simple_list_item_1, dataArray)
         bankListView.adapter = adapter
         bankListView.setOnItemClickListener { adapterView, view, i, l ->

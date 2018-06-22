@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                     factory.isBought = true
                     player.money -= factory.price
                     DatabaseFactory.index = factory.id
+                    Inventory.getAllInventories()
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }

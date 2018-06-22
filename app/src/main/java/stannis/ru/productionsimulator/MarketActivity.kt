@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.activity_market.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.item.view.*
@@ -126,8 +125,8 @@ class MarketActivity : AppCompatActivity() {
 
 
         var listview3: ListView = findViewById(R.id.tvTab3)
-        val dataArray3 = DatabaseFactory.getInstance(this).getListOfLaborExchange()
-        val adapter3 = ArrayAdapter<Staff>(this, android.R.layout.simple_list_item_1, dataArray3)
+        val dataArray3 = Worker.getListOfLabor()
+        val adapter3 = ArrayAdapter<Worker>(this, android.R.layout.simple_list_item_1, dataArray3)
 
         listview3.adapter = adapter3
         listview3.setOnItemClickListener { adapterView, view, i, l ->

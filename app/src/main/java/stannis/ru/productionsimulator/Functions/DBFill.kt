@@ -19,7 +19,7 @@ import java.util.*
 fun fillDb(ctx: Context) {
     clearInstances()
     GO = false
-    Inventory.setBegin()
+    setBeginToAll()
     for (i in 0 until EnumFactory.getSize()) {
         DatabaseFactory.index = i
         val ins = DatabaseFactory.getInstance(ctx)
@@ -96,7 +96,7 @@ fun fillDb(ctx: Context) {
     kek.removeAllMessage()
     kek.removeAllMessageReaded()
     kek.addNames(arrayNames, arraySecondNames)
-    kek.addPlayerStatsWithProperties(200, 0, 0, 50, 5)
+    kek.addPlayerStatsWithProperties(1000000, 0, 0, 50, 5)
     val data = java.util.Calendar.getInstance()
     var day = data.get(Calendar.DAY_OF_MONTH).toString()
     if (data.get(Calendar.DAY_OF_MONTH) < 10) {
