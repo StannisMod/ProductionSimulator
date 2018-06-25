@@ -15,6 +15,7 @@ import stannis.ru.productionsimulator.Functions.round
 import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 import kotlin.math.roundToInt
 
@@ -25,7 +26,7 @@ class Credit_DepositActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_credit__deposit)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
 
         val player = Player.getInstance(this)

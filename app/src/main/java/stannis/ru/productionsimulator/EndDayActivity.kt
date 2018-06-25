@@ -30,7 +30,7 @@ class EndDayActivity : AppCompatActivity() {
     fun setStartSettings() {
         number.text = curData.toString()
         curData.nextDay(this)
-        playerNalog.text = "${Player.getInstance(this).nalog}$)"
+        playerNalog.text = "${Player.getInstance(this).tax}$)"
         tmpSum = MoneyForDay.getIns(this).getAll()
         allInAllValue.text = "${tmpSum}$"
         if (allInAllValue.text.toString()[0] == '-') {

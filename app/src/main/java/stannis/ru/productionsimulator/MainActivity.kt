@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
 
         tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())

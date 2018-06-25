@@ -17,6 +17,7 @@ import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Worker
 
@@ -29,7 +30,7 @@ class WorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
