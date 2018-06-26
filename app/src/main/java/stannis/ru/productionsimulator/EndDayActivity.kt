@@ -76,6 +76,9 @@ class EndDayActivity : AppCompatActivity() {
                 MoneyForDay.getIns(this).setNull()
                 countReputation(this, tax)
                 player.money -= tax
+                if (player.money == 0) {
+                    player.reputation -= player.reputation * 0.3.toInt()
+                }
                 if (curData.tookDepositToday != 0) {
                     curData.tookDepositToday++
                     if (curData.tookDepositToday > 20) {

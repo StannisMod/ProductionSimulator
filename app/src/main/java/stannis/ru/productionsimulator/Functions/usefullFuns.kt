@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 var GO = false
-var isPromotioned: ArrayList<Boolean> = ArrayList()
+var isPromotioned: Array<Boolean> = emptyArray()
 var senderWorker : String = ""
 
 fun round(a: Double, radix: Int): Double {
@@ -320,7 +320,7 @@ fun generateRandomIndexOfFactory(): Int {
 
 }
 
-fun ArrayList<Boolean>.isTrue():Boolean{
+fun Array<Boolean>.isTrue():Boolean{
     var res = true
     for(kek in this){
         res = res&&kek

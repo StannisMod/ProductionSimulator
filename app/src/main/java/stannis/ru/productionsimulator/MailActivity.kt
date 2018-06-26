@@ -46,12 +46,8 @@ class MailActivity : AppCompatActivity() {
         var ctx = this
         var x = 0.toFloat()
         var stX = listview.x
-        var startX = 0.toFloat()
         var position: Int? = null
-        var display = windowManager.defaultDisplay
-        var size = Point()
-        display.getSize(size)
-
+        var t = 0L
         class TOUCH() : View.OnTouchListener {
             override fun onTouch(p0: View?, motionEvent: MotionEvent?): Boolean {
                 if (motionEvent != null) {
@@ -63,7 +59,7 @@ class MailActivity : AppCompatActivity() {
 
                     if (tp == MotionEvent.ACTION_DOWN) {
                         x = motionEvent.x
-                        startX = x
+                        t = System.currentTimeMillis()
                     } else if (tp == MotionEvent.ACTION_MOVE) {
                         if (position != null) {
                             if (listview.getChildAt(position!!) != null) {
@@ -74,7 +70,10 @@ class MailActivity : AppCompatActivity() {
                     } else if (tp == MotionEvent.ACTION_UP) {
                         if (position != null) {
                             if (listview.getChildAt(position!!) != null) {
-                                if (motionEvent.x - startX > 40.0) {
+                                val diffX = (listview.getChildAt(position!!).x - stX)
+                                val diffT = (System.currentTimeMillis() - t)
+                                Log.d("AVERAGEvelocity",(diffX*1000/diffT).toString() )
+                                if (diffX*1000/diffT>2500) {
                                     dataArray[position!!].remove()
                                     dataArray = Message.messages
                                     listview.adapter = MessageAdapter(ctx, dataArray)

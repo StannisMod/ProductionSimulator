@@ -116,7 +116,7 @@ class Message(var caption: String = "Отдайте деньги!", var text: St
     override fun toString(): String = toCaption()
     fun dateToString(): String = "${date[0]}.${date[1]}.${date[2]}"
 
-    fun isEqual(mes: Message): Boolean = this.hashCode() == mes.hashCode()
+    fun isEqual(mes: Message): Boolean = this.hashCode() == mes.hashCode() && this.date[0] == mes.date[0] && this.date[1] == mes.date[1]
 
 
     fun save(ctx: Context) {

@@ -97,10 +97,7 @@ class WorkerActivity : AppCompatActivity() {
                         if (tmp != null) {
                             tmp.getPromotion()
                             if (!isPromotioned.isEmpty()) {
-                                if (arr[2].toInt() > isPromotioned.size) {
-                                    while(isPromotioned.size<=arr[2].toInt()){
-                                        isPromotioned.add(false)
-                                    }
+                                if (arr[2].toInt() < isPromotioned.size) {
                                     isPromotioned[arr[2].toInt()] = true
                                 }
                             }

@@ -123,18 +123,16 @@ class Worker(var name: String, var age: Int, var prof: String, var quality: Int,
     fun toDetailedString(): String = "${name},${age},${prof},${nation},${salary},${birth.first},${birth.second}"
 
     fun getPromotion() {
+        var tmp = salary
         salary += (0.2 * salary.toDouble()).roundToInt()
+        if(tmp == salary){
+            salary*=2
+        }
     }
 
 
-    fun birth_Day(toLabor: Boolean, ctx: Context) {
+    fun birth_Day() {
         age++
-        val ins = DatabaseFactory.getInstance(ctx)
-        if (toLabor) {
-            ins.setLaborExchangeWithProperties(this)
-        } else {
-            ins.setStaffWithProperties(this)
-        }
     }
 
     fun save(ctx: Context, secondIndex: Int) {
