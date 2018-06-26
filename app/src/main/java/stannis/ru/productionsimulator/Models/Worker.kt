@@ -16,6 +16,23 @@ class Worker(var name: String, var age: Int, var prof: String, var quality: Int,
         }
 
         var instance: ArrayList<Array<HashMap<String, Worker>>> = ArrayList()
+        fun getWorkerFromStaffById(firstIndex: Int, id: Int): Worker? {
+            Log.d("IIIIFirstIndex", firstIndex.toString())
+            var hm = instance[firstIndex][1]
+            val iterator = hm.iterator()
+            var i = 0
+            Log.d("IIII", id.toString())
+            while (iterator.hasNext()) {
+                if (i == id) {
+                    return iterator.next().value
+                }
+                iterator.next()
+                Log.d("IIIIii", i.toString())
+                i++
+            }
+            return null
+        }
+
         fun getStaff(ctx: Context, type: String, name: String): Worker {
             var index = DatabaseFactory.index
             var secondIndex = if (type == "labor") 0 else 1
@@ -69,8 +86,8 @@ class Worker(var name: String, var age: Int, var prof: String, var quality: Int,
             while (iterator.hasNext()) {
                 iterator.next()
                 size++
-                Log.d("WORKERsize", size.toString())
             }
+            Log.d("WORKERsize", size.toString())
             return size
         }
 

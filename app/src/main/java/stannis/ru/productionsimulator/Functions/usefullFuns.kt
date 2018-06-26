@@ -10,9 +10,12 @@ import stannis.ru.productionsimulator.Enums.Nations
 import stannis.ru.productionsimulator.Enums.Profs
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 var GO = false
+var isPromotioned: ArrayList<Boolean> = ArrayList()
+var senderWorker : String = ""
 
 fun round(a: Double, radix: Int): Double {
     var b = a
@@ -222,8 +225,8 @@ fun fillDb(ctx: Context) {
     Inventory.getInventory("buy")
     Inventory.getInventory()
     Factory(true, 0, true, EnumFactory.SAWMILL.price, EnumFactory.SAWMILL)
-    Factory.saveFactories(ctx)
     Inventory.saveInventories(ctx)
+    Log.d("FACTORY", Factory.factories.toString())
 
     val arrayNames = arrayOf(/*"Абрам", " Август", " Авдей", " Аверкий", " Адам", " Адриан", " Азарий", " Аким", " Александр", " Алексей", " Амвросий", " Амос", " Ананий", " Анатолий", " Андрей", " Андриан", " Андрон", " Аристарх", " Аркадий", " Арсен", " Арсений", " Артём", " Артемий", " Архип", " Аскольд", " Афанасий", " Афиноген", "Кирилл", " Карл", " Касим", " Кастор", " Касьян", " Каюм", " Кеша", " Кирсан", " Клим", " Кондрат", " Корней", " Корнелий", " Косьма", " Кристиан", " Кузьма",
             "Лавр", " Лаврентий", " Ладимир", " Лазарь", " Леонид", " Леонтий", " Лонгин", " Лука", " Наум", " Нестор", " Нестер", " Никандр", " Никанор", " Никита", " Никифор", " Никодим", " Никола", " Николай", " Никон", " Нил", " Нифонт",
@@ -296,7 +299,32 @@ fun fillDb(ctx: Context) {
     kek.addMoneyForDay(0, 0)
 
     loadAll(ctx)
+    Log.d("FACTORY", Factory.factories.toString())
 }
 
+fun generateRandomIndexOfFactory(): Int {
+    var index = 0
+    var i = 0
+    for (fac in Factory.factories) {
+        DatabaseFactory.index = i
+        i++
+        if (Worker.sizeOfStaff()>0) {
+            index++
+        } else {
+            break
+        }
+    }
+    DatabaseFactory.index = 0
+    Log.d("IIIIRandom index", index.toString())
+    return Random().nextInt(index)
 
+}
+
+fun ArrayList<Boolean>.isTrue():Boolean{
+    var res = true
+    for(kek in this){
+        res = res&&kek
+    }
+    return res
+}
 

@@ -30,7 +30,6 @@ class MarketActivity : AppCompatActivity() {
         setContentView(R.layout.activity_market)
         messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
-        val ins = PlayerStatsDatabase.getInstance(this)
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
@@ -69,8 +68,8 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setIndicator("Биржа труда")
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
-        Inventory.getInventory("buy").normalize()
-        var slots = Inventory.getInventory("buy").inv
+        Inventory.getInventory(Inventory.BUY_NAME).normalize()
+        var slots = Inventory.getInventory(Inventory.BUY_NAME).inv
 
         val arrayList: ArrayList<ItemStack> = ArrayList()
         for (inv in slots) {
@@ -84,24 +83,45 @@ class MarketActivity : AppCompatActivity() {
         tvTab1.setOnItemClickListener { adapterView, view, i, l ->
             val player = Player.getInstance(this)
             Log.d("ItemClicker", i.toString())
-            if (player!!.money > Items.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).price) {
-                player!!.money -= Items.findById(Inventory.getInventory("buy").getInventorySlotContents(i).itemId).price
+            if (player!!.money > Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId).price) {
+                player!!.money -= Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId).price
 
                 Log.d("ItemClicker", "Pressed")
-                if (Inventory.transferItem(Inventory.getInventory("buy"), Inventory.getInventory(), i, 1)) {
+                if (Inventory.transferItem(Inventory.getInventory(Inventory.BUY_NAME), Inventory.getInventory(), i, 1)) {
                     startActivity(Intent(this, MarketActivity::class.java))
                     finish()
                 }
-                Inventory.getInventory("buy").save(this)
-                Inventory.getInventory().save(this)
+
                 money.text = player.money.toString()
-                slots = Inventory.getInventory("buy").inv
+                slots = Inventory.getInventory(Inventory.BUY_NAME).inv
                 adapter.notifyDataSetChanged()
 
             }
         }
-        Inventory.getInventory("sell").normalize()
-        var slots1 = Inventory.getInventory("sell").inv
+        tvTab1.setOnItemLongClickListener { adapterView, view, i, l ->
+            val item = Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId)
+            var sz = Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).stackSize
+            if (player.money / item.price > 10) {
+                if (sz > 10) {
+                    sz = 10
+                }
+            } else {
+                sz = player.money / item.price
+            }
+            player.money -= sz * item.price
+            if (Inventory.transferItem(Inventory.getInventory(Inventory.BUY_NAME), Inventory.getInventory(), i, sz)) {
+                startActivity(Intent(this, MarketActivity::class.java))
+                finish()
+
+            } else {
+                money.text = player.money.toString()
+                slots = Inventory.getInventory(Inventory.BUY_NAME).inv
+                adapter.notifyDataSetChanged()
+            }
+            true
+        }
+        Inventory.getInventory(Inventory.SELL_NAME).normalize()
+        var slots1 = Inventory.getInventory(Inventory.SELL_NAME).inv
 
         val arrayList1: ArrayList<ItemStack> = ArrayList()
 
@@ -114,11 +134,11 @@ class MarketActivity : AppCompatActivity() {
 
         tvTab2.adapter = adapter1
         tvTab2.setOnItemLongClickListener { adapterView, view, i, l ->
-            if(Inventory.transferItem(Inventory.getInventory("sell"), Inventory.getInventory(), i, 1)){
+            if (Inventory.transferItem(Inventory.getInventory(Inventory.SELL_NAME), Inventory.getInventory(), i, 1)) {
                 startActivity(Intent(this, MarketActivity::class.java))
                 finish()
             }
-            slots1 = Inventory.getInventory("sell").inv
+            slots1 = Inventory.getInventory(Inventory.SELL_NAME).inv
             adapter.notifyDataSetChanged()
             true
         }

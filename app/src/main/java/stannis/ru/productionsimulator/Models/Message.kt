@@ -7,12 +7,12 @@ import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 class Message(var caption: String = "Отдайте деньги!", var text: String = "Здраствуйте, Кирилл Юрьевич.\nВаша задолженность банку составляет 5000$. Просим Вас до 31.12.2018 выплатить задолженность, иначе нам придется заблокировать ваш счет и забрать вашу лесопилку.\nС любовью банк!", var sender: String = "Банк", var date: Array<String> = arrayOf("19", "12", "2001"), var readed: String = "0") : Comparable<Message> {
     override fun compareTo(other: Message): Int {
         if (this.date[2] != other.date[2]) {
-            return this.date[2].toInt() - other.date[2].toInt()
+            return -(this.date[2].toInt() - other.date[2].toInt())
         }
         if (this.date[1] != other.date[1]) {
-            return this.date[1].toInt() - other.date[1].toInt()
+            return -(this.date[1].toInt() - other.date[1].toInt())
         }
-        return this.date[0].toInt() - other.date[0].toInt()
+        return -(this.date[0].toInt() - other.date[0].toInt())
     }
 
     companion object {

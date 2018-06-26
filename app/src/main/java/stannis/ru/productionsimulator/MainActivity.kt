@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("NotNUll", "${Inventory.getInventory("buy").maxStackSize}")
         var factory = Factory.getFactoryById(index)
+        Log.d("FACTORY", factory.toString())
         if (factory == null)
             factory = Factory(true, index, false, EnumFactory.findById(index).price, EnumFactory.findById(index))
 

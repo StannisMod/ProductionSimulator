@@ -49,7 +49,7 @@ class StaffActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<Worker>(this, android.R.layout.simple_list_item_1, dataArray)
         listView.adapter = adapter
         listView.setOnItemClickListener { adapterView, view, i, l ->
-            val extra = "${dataArray[i].name}.YourWorker"
+            val extra = "${dataArray[i].name}.YourWorker.$i"
             val intent = Intent(this, WorkerActivity::class.java)
             intent.putExtra("TAG", extra)
             startActivity(intent)

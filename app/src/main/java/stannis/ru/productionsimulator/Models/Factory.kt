@@ -24,7 +24,7 @@ class Factory {
     var production: Inventory
     var machine_state: Double
 
-    constructor(addToList: Boolean = true, id: Int, isBought: Boolean, price: Int, type: EnumFactory, res: Int = 0, res_cap: Int = type.res_cap, productivity: Int = 0, production: Int = 0, production_cap: Int = type.productivity_cap, machine_state: Double = 10.0) {
+    constructor(addToList: Boolean = true, id: Int, isBought: Boolean = false, price: Int, type: EnumFactory, res: Int = 0, res_cap: Int = type.res_cap, productivity: Int = 0, production: Int = 0, production_cap: Int = type.productivity_cap, machine_state: Double = 10.0) {
         this.id = id
         this.isBought = isBought
         this.price = price

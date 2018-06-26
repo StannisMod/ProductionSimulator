@@ -13,6 +13,7 @@ import android.widget.BaseAdapter
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_end_day.*
 import kotlinx.android.synthetic.main.end_day_view.view.*
+import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Functions.GO
 import stannis.ru.productionsimulator.Functions.countReputation
 import stannis.ru.productionsimulator.Functions.generateMessage
@@ -67,19 +68,23 @@ class EndDayActivity : AppCompatActivity() {
         }
         nextDay.setOnClickListener {
             if (nalogValue.text.toString() != "") {
-                countReputation(this, nalogValue.text.toString().toInt())
-                Player.getInstance(this).money -= nalogValue.text.toString().toInt()
+                var tax = nalogValue.text.toString().toInt()
+                val player = Player.getInstance(this)
+                if (player.money <= tax) {
+                    tax = player.money
+                }
                 MoneyForDay.getIns(this).setNull()
-                Log.d("GameOver", "5")
-                if(curData.tookDepositToday!=0){
+                countReputation(this, tax)
+                player.money -= tax
+                if (curData.tookDepositToday != 0) {
                     curData.tookDepositToday++
-                    if(curData.tookDepositToday>20){
+                    if (curData.tookDepositToday > 20) {
                         curData.tookDepositToday = 0
                     }
                 }
-                if(curData.tookCreditToday!=0){
+                if (curData.tookCreditToday != 0) {
                     curData.tookCreditToday++
-                    if(curData.tookCreditToday>20){
+                    if (curData.tookCreditToday > 20) {
                         curData.tookCreditToday = 0
                     }
                 }
