@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Worker
 
@@ -21,7 +22,7 @@ class StaffActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workers)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
         val player = Player.getInstance(this)
         if (player != null) {
@@ -48,7 +49,7 @@ class StaffActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<Worker>(this, android.R.layout.simple_list_item_1, dataArray)
         listView.adapter = adapter
         listView.setOnItemClickListener { adapterView, view, i, l ->
-            val extra = "${dataArray[i].name}.YourWorker"
+            val extra = "${dataArray[i].name}.YourWorker.$i"
             val intent = Intent(this, WorkerActivity::class.java)
             intent.putExtra("TAG", extra)
             startActivity(intent)

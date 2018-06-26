@@ -88,7 +88,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                 DatabaseFactory.index = i
                 getAllWages(ctx)
                 sellItems(ctx)
-                checkBirthDays(ctx)
+                checkBirthDays()
                 generateBuyInv()
                 generateLabor(ctx)
             }
@@ -207,18 +207,18 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
 
     }
 
-    fun checkBirthDays(ctx: Context) {
+    fun checkBirthDays() {
 
         val list1 = Worker.getListOfStaff()
         for (st in list1) {
             if (this.currentDay == st.birth.first && this.currentMonth == st.birth.second) {
-                st.birth_Day(false, ctx)
+                st.birth_Day()
             }
         }
         val list2 = Worker.getListOfLabor()
         for (st in list2) {
             if (this.currentDay == st.birth.first && this.currentMonth == st.birth.second) {
-                st.birth_Day(true, ctx)
+                st.birth_Day()
             }
         }
 

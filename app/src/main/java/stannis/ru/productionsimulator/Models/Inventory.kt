@@ -11,6 +11,8 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
 
     companion object {
         const val TAG = "PlayerInv"
+        const val BUY_NAME = "buy"
+        const val SELL_NAME = "sell"
 
         var inventories: ArrayList<HashMap<String, Inventory?>> = ArrayList()
         fun setBegin() {
@@ -30,8 +32,8 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
         }
         fun getAllInventories(){
             getInventory()
-            getInventory("buy")
-            getInventory("sell")
+            getInventory(BUY_NAME)
+            getInventory(SELL_NAME)
         }
 
         fun saveInventories(ctx: Context) {

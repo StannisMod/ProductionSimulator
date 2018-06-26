@@ -27,10 +27,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if(intent.hasExtra("TAG")){
-            if(intent.getStringExtra("TAG")=="firstTime"){
+        if (intent.hasExtra("TAG")) {
+            if (intent.getStringExtra("TAG") == "firstTime") {
                 Log.d("Dialog", "Problem with builder")
-                val builder : AlertDialog.Builder  = AlertDialog.Builder(this)
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this)
                 builder.setTitle("Здравствуйте")
                 builder.setMessage("Здравствуйте. Вы владелец производства.\n" +
                         "\n" +
@@ -44,13 +44,13 @@ class MainActivity : AppCompatActivity() {
                         "Производство - место, куда можно попасть нажав на домик в главном окне, где производится и выгружается на рынок продукция, хранится состояние оборудования и место, где можно пополнить сырьём производство.\n" +
                         "Ваши рабочие - место, где можно посмотреть ваших рабочих, повысить им зарплату и уволить\n" +
                         "Почта - место, куда стоит заглядывать, после перехода на каждый следующий день. Там появляется информация о повышении налогов, напоминание о выплачивании кредита и многое другое. Повышение налогов зависит от вашей репутации.")
-                builder.setPositiveButton("YES"){dialog, which ->
+                builder.setPositiveButton("YES") { dialog, which ->
                     Toast.makeText(this, "Приятной игры!", Toast.LENGTH_SHORT).show()
                 }
-                builder.setNegativeButton("NO"){dialog, which ->
+                builder.setNegativeButton("NO") { dialog, which ->
                     Toast.makeText(this, "Приятной игры!", Toast.LENGTH_SHORT).show()
                 }
-                builder.setNeutralButton("CANCEL"){dialog, which ->
+                builder.setNeutralButton("CANCEL") { dialog, which ->
                     Toast.makeText(this, "Приятной игры!", Toast.LENGTH_SHORT).show()
                 }
                 val dialog = builder.create()
@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("NotNUll", "${Inventory.getInventory("buy").maxStackSize}")
         var factory = Factory.getFactoryById(index)
+        Log.d("FACTORY", factory.toString())
         if (factory == null)
             factory = Factory(true, index, false, EnumFactory.findById(index).price, EnumFactory.findById(index))
 
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
 
         tofactory.setBackgroundResource(EnumFactory.findById(DatabaseFactory.index).getImg())
@@ -124,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     factory.isBought = true
                     player.money -= factory.price
+                    player.tax += (0.2 * factory.price).toInt()
                     DatabaseFactory.index = factory.id
                     Inventory.getAllInventories()
                     startActivity(Intent(this, MainActivity::class.java))

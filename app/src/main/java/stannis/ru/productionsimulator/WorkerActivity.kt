@@ -16,7 +16,9 @@ import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.EnumFactory
+import stannis.ru.productionsimulator.Functions.isPromotioned
 import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.Models.Worker
 
@@ -29,7 +31,7 @@ class WorkerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
         val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
@@ -94,6 +96,11 @@ class WorkerActivity : AppCompatActivity() {
                         val tmp: Worker? = Worker.getStaff(this, "staff", arr[0].trim())
                         if (tmp != null) {
                             tmp.getPromotion()
+                            if (!isPromotioned.isEmpty()) {
+                                if (arr[2].toInt() < isPromotioned.size) {
+                                    isPromotioned[arr[2].toInt()] = true
+                                }
+                            }
                             al = Array(8) { i -> i }.toCollection(ArrayList<Int>())
                             adapter = WorkerAdapter(al, this, tmp)
                             gridWorker.adapter = adapter

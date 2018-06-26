@@ -42,7 +42,7 @@
                 android:layout_centerHorizontal="true" />
             <!--android:background="@mipmap/lesopilka1_background" -->
 
-
+            
             <ImageButton
                 android:id="@+id/left"
                 android:layout_width="30dp"
