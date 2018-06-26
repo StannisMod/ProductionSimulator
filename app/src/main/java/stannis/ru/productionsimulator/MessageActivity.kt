@@ -16,7 +16,7 @@ class MessageActivity : AppCompatActivity() {
 
 
         if (intent.hasExtra("message")) {
-            val message = stannis.ru.productionsimulator.Models.Message.getMessageReaded(intent.getIntExtra("message", 0))
+            val message = stannis.ru.productionsimulator.Models.Message.messages[intent.getIntExtra("message", 0)]
 
             var date: TextView = findViewById(R.id.date)
             date.setText(message.dateToString())

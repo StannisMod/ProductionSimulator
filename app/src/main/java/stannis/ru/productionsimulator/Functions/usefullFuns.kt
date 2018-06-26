@@ -69,14 +69,14 @@ fun loadAll(ctx: Context) {
 
 }
 
-fun countReputation(ctx: Context, nalog: Int) {
+fun countReputation(ctx: Context, tax: Int) {
     val player = Player.getInstance(ctx)
-    val trueNalog = player.tax
-    val dif = nalog - trueNalog
-    if (player.reputation == 0) {
-        player.reputation = (10 * (dif.toDouble() / trueNalog.toDouble())).toInt()
+    val trueTax = player.tax
+    val dif = tax - trueTax
+    if (player.reputation < 10) {
+        player.reputation = (10 * (dif.toDouble() / trueTax.toDouble())).toInt()
     }
-    player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueNalog.toDouble())).toInt()
+    player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueTax.toDouble())).toInt()
 
     if (player.reputation < 0) {
         player.reputation = 0
@@ -282,10 +282,6 @@ fun fillDb(ctx: Context) {
     kek.removeAllMessage()
     kek.removeAllMessageReaded()
     kek.addNames(arrayNames, arraySecondNames)
-    kek.addMessageWithProperties(Message())
-    kek.addMessageWithProperties(Message())
-    kek.addMessageWithProperties(Message())
-    kek.addMessageWithProperties(Message())
     kek.addPlayerStatsWithProperties(200, 0, 0, 50, 5)
     val data = java.util.Calendar.getInstance()
     var day = data.get(Calendar.DAY_OF_MONTH).toString()

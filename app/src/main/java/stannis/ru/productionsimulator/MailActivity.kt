@@ -52,11 +52,12 @@ class MailActivity : AppCompatActivity() {
         var size = Point()
         display.getSize(size)
 
-        listview.setOnTouchListener(object : View.OnTouchListener {
+        class TOUCH() : View.OnTouchListener {
             override fun onTouch(p0: View?, motionEvent: MotionEvent?): Boolean {
                 if (motionEvent != null) {
                     if (position == null) {
-                        position = (motionEvent.y.toInt() - 45)/70
+                        position = motionEvent.y.toInt() / 200
+
                     }
                     var tp = motionEvent.action
 
@@ -88,8 +89,8 @@ class MailActivity : AppCompatActivity() {
                 return p0?.onTouchEvent(motionEvent) ?: true
             }
 
-
-        })
+        }
+        listview.setOnTouchListener(TOUCH())
     }
 
 }
@@ -107,6 +108,7 @@ class MessageAdapter(var ctx: Context, var list: ArrayList<Message>) : BaseAdapt
         itemView.date.text = mes.dateToString()
         itemView.caption.text = mes.caption
         val cond = mes.isRead()
+        Log.d("TOUCH_COND", cond.toString())
         itemView.body.setBackgroundColor(if (cond) Color.rgb(255, 255, 255) else Color.rgb(230, 200, 200))
 
 
