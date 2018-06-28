@@ -6,7 +6,7 @@ import org.jetbrains.anko.db.*
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
 
-class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "PlayerStats", null, 3) {
+class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "PlayerStats", null, 4) {
     companion object {
         var instance: PlayerStatsDatabase? = null
         @Synchronized
@@ -43,15 +43,14 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
                 "text" to TEXT,
                 "day" to TEXT,
                 "month" to TEXT,
-                "year" to TEXT,
-                "readed" to TEXT
+                "year" to TEXT
         )
         db.createTable(PLAYER_STATS_NAME, true,
                 "money" to INTEGER,//Весь Integer
                 "stuff" to INTEGER,//>=0
                 "staff" to INTEGER,//>=0
                 "reputation" to INTEGER,
-                "nalog" to INTEGER)//-100<= =>100
+                "tax" to INTEGER)//-100<= =>100
         db.createTable(DATA_TIME_NAME, true,
                 "currentDay" to TEXT,
                 "currentMonth" to TEXT,
@@ -106,33 +105,20 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
 
         PlayerStatsDatabase.getInstance(ctx).use {
             insert(MESSAGE_NAME,
-                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0], "month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0], "month" to message.date[1], "year" to message.date[2])
         }
     }
 
-    fun removeMessage(hash: Int): Int {
-        var result: Int = 0
-        PlayerStatsDatabase.getInstance(ctx).use {
-            result = delete(MESSAGE_NAME, "hash = {hash}", "hash" to hash)
-        }
-        return result
-    }
 
     fun addMessageReadedWithProperties(message: Message) {
 
         PlayerStatsDatabase.getInstance(ctx).use {
             insert(MESSAGE_READED_NAME,
-                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0], "month" to message.date[1], "year" to message.date[2], "readed" to message.readed)
+                    "hash" to message.hashCode(), "caption" to message.caption, "sender" to message.sender, "text" to message.text, "day" to message.date[0], "month" to message.date[1], "year" to message.date[2])
         }
     }
 
-    fun removeMessageReaded(hash: Int): Int {
-        var result: Int = 0
-        PlayerStatsDatabase.getInstance(ctx).use {
-            result = delete(MESSAGE_READED_NAME, "hash = {hash}", "hash" to hash)
-        }
-        return result
-    }
+
 
     fun getMessage(): ArrayList<Message> {
         val query = "SELECT * FROM ${MESSAGE_NAME}"
@@ -158,8 +144,8 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
                 i++
                 val year = cursor.getString(i).toString()
                 i++
-                val readed = cursor.getString(i).toString()
-                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender, readed = readed))
+
+                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender))
             } while (cursor.moveToNext())
             cursor.close()
         }
@@ -192,7 +178,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
                 val year = cursor.getString(i).toString()
                 i++
                 val readed = cursor.getString(i).toString()
-                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender, readed = readed))
+                list.add(Message(caption = caption, text = text, date = arrayOf(day, month, year), sender = sender))
             } while (cursor.moveToNext())
             cursor.close()
         }
@@ -296,7 +282,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
 
     fun addPlayerStatsWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int, nalog: Int) {
         PlayerStatsDatabase.getInstance(ctx).use {
-            insert(PLAYER_STATS_NAME, "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "nalog" to nalog)
+            insert(PLAYER_STATS_NAME, "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "tax" to nalog)
         }
     }
 
@@ -328,12 +314,12 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
 
     fun setPlayerWithProperties(money: Int, stuff: Int, staff: Int, reputation: Int, nalog: Int) {
         PlayerStatsDatabase.getInstance(ctx).use {
-            update(PLAYER_STATS_NAME, "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "nalog" to nalog).exec()
+            update(PLAYER_STATS_NAME, "money" to money, "stuff" to stuff, "staff" to staff, "reputation" to reputation, "tax" to nalog).exec()
         }
     }
 
     fun setPlayerWithProperties(player: Player) {
-        setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation, player.nalog)
+        setPlayerWithProperties(player.money, player.stuff, player.staff, player.reputation, player.tax)
     }
 
     fun removePlayer(): Int {

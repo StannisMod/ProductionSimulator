@@ -16,17 +16,14 @@ import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Functions.countProd_Cap
 import stannis.ru.productionsimulator.Functions.countProductivity
 import stannis.ru.productionsimulator.Functions.countRes_Cap
-import stannis.ru.productionsimulator.Models.DataTime
-import stannis.ru.productionsimulator.Models.Factory
-import stannis.ru.productionsimulator.Models.Inventory
-import stannis.ru.productionsimulator.Models.Player
+import stannis.ru.productionsimulator.Models.*
 
 class FactoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_factory)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
         val player = Player.getInstance(this)
         if (player != null) {

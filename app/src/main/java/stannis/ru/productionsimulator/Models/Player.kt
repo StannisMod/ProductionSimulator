@@ -1,10 +1,9 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
-import android.net.wifi.p2p.WifiP2pManager
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 
-class Player(var money: Int, var stuff: Int, var staff: Int, var reputation: Int, var nalog: Int) {
+class Player(var money: Int, var stuff: Int, var staff: Int, var reputation: Int, var tax: Int) {
     companion object {
         var instance: Player? = null
         fun getInstance(ctx: Context): Player {
@@ -23,8 +22,8 @@ class Player(var money: Int, var stuff: Int, var staff: Int, var reputation: Int
     }
 
     fun countReputationChange(paid: Int) {
-        val diff = paid - nalog
-        var per = diff.toDouble() / nalog.toDouble()
+        val diff = paid - tax
+        var per = diff.toDouble() / tax.toDouble()
         val coef = 2.3
         if (per < 0) {
             val tmp = reputation.toDouble() * ((coef / 2.0) * (1.0 + per))

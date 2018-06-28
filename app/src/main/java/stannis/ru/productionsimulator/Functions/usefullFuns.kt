@@ -1,7 +1,6 @@
 package stannis.ru.productionsimulator.Functions
 
 import android.content.Context
-import android.provider.ContactsContract
 import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
@@ -11,10 +10,12 @@ import stannis.ru.productionsimulator.Enums.Nations
 import stannis.ru.productionsimulator.Enums.Profs
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
-import kotlin.collections.HashMap
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 var GO = false
+var isPromotioned: Array<Boolean> = emptyArray()
+var senderWorker : String = ""
 
 fun round(a: Double, radix: Int): Double {
     var b = a
@@ -31,33 +32,54 @@ fun saveAll(ctx: Context) {
     DataTime.save(ctx)
     MoneyForDay.save(ctx)
     Inventory.saveInventories(ctx)
+    Worker.saveAll(ctx)
+    Credit_Deposit.saveAll(ctx)
+    Message.saveAll(ctx)
+    DatabaseFactory.index = 0
+}
 
+fun setBeginToAll() {
+    Inventory.setBegin()
+    Worker.setBegin()
+    Credit_Deposit.setBegin()
+    Message.setBegin()
 }
 
 fun loadAll(ctx: Context) {
+    setBeginToAll()
     for (i in 0 until EnumFactory.getSize()) {
         DatabaseFactory.index = i
         val fac = Factory.load(ctx, i)
         if (fac != null) {
             Factory.factories.add(fac)
         }
-        Inventory.inventories.add(HashMap())
+
         Inventory.inventories[i].put("buy", Inventory.load(ctx, "buy"))
         Inventory.inventories[i].put("sell", Inventory.load(ctx, "sell"))
         Inventory.inventories[i].put(Inventory.TAG, Inventory.load(ctx, Inventory.TAG))
+        val lab = DatabaseFactory.getInstance(ctx).getListOfLaborExchange()
+        for (wk in lab) {
+            wk.generate()
+        }
+        val st = DatabaseFactory.getInstance(ctx).getListOfStaff()
+        for (wk in st) {
+            wk.addToStaff()
+        }
     }
+    Message.loadAll(ctx)
+    Credit_Deposit.loadAll(ctx)
     DatabaseFactory.index = 0
 
 }
 
-fun countReputation(ctx: Context, nalog: Int) {
+fun countReputation(ctx: Context, tax: Int) {
     val player = Player.getInstance(ctx)
-    val trueNalog = player.nalog
-    val dif = nalog - trueNalog
-    if (player.reputation == 0) {
-        player.reputation = (10 * (dif.toDouble() / trueNalog.toDouble())).toInt()
+    val trueTax = player.tax
+    val dif = tax - trueTax
+    if (player.reputation < 10) {
+        player.reputation = (10 * (dif.toDouble() / trueTax.toDouble())).toInt()
     }
-    player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueNalog.toDouble())).toInt()
+    player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueTax.toDouble())).toInt()
 
     if (player.reputation < 0) {
         player.reputation = 0
@@ -96,7 +118,8 @@ fun generateWorker(ctx: Context) {
         }
         var birthDay = (Random().nextInt(10) + 10).toString()
         var birthMonth = "0${(Random().nextInt(10))}"
-        DatabaseFactory.getInstance(ctx).addLaborExchangeWithProperties(Staff(name, age, spec, quality, nationality, salary, Pair(birthDay, birthMonth)))
+        Worker(name, age, spec, quality, nationality, salary, Pair(birthDay, birthMonth)).generate()
+        Log.d("WORKER", Worker.getListOfLabor().toString())
     }
 
 }
@@ -175,4 +198,133 @@ fun clearInstances() {
     Factory.clear()
     Inventory.setNulls()
     MoneyForDay.clear()
+    Message.clear()
 }
+
+fun isEqualDate(date1: Array<String>, date2: Array<String>): Boolean {
+    return date1[0] == date2[0] && date1[1] == date1[1] && date1[2] == date2[2]
+}
+
+fun fillDb(ctx: Context) {
+    clearInstances()
+    GO = false
+    setBeginToAll()
+    for (i in 0 until EnumFactory.getSize()) {
+        DatabaseFactory.index = i
+        val ins = DatabaseFactory.getInstance(ctx)
+        Inventory.setNulls()
+        ins.removeInventory("buy")
+        ins.removeInventory("PlayerInv")
+        ins.removeInventory("sell")
+        ins.removeFactory(i)
+        ins.removeAllLabor()
+        ins.removeAllStaff()
+    }
+    DatabaseFactory.index = 0
+    Inventory.getInventory("sell")
+    Inventory.getInventory("buy")
+    Inventory.getInventory()
+    Factory(true, 0, true, EnumFactory.SAWMILL.price, EnumFactory.SAWMILL)
+    Inventory.saveInventories(ctx)
+    Log.d("FACTORY", Factory.factories.toString())
+
+    val arrayNames = arrayOf(/*"Абрам", " Август", " Авдей", " Аверкий", " Адам", " Адриан", " Азарий", " Аким", " Александр", " Алексей", " Амвросий", " Амос", " Ананий", " Анатолий", " Андрей", " Андриан", " Андрон", " Аристарх", " Аркадий", " Арсен", " Арсений", " Артём", " Артемий", " Архип", " Аскольд", " Афанасий", " Афиноген", "Кирилл", " Карл", " Касим", " Кастор", " Касьян", " Каюм", " Кеша", " Кирсан", " Клим", " Кондрат", " Корней", " Корнелий", " Косьма", " Кристиан", " Кузьма",
+            "Лавр", " Лаврентий", " Ладимир", " Лазарь", " Леонид", " Леонтий", " Лонгин", " Лука", " Наум", " Нестор", " Нестер", " Никандр", " Никанор", " Никита", " Никифор", " Никодим", " Никола", " Николай", " Никон", " Нил", " Нифонт",
+
+            "Олег", " Оскар", " Остап", " Остромир",
+
+            "Павел", " Панкрат", " Парфений", " Пахом", " Петр", " Пимен", " Платон", " Поликарп", " Порфирий", " Потап", " Пров", " Прокл", " Прокоп", " Прокопий", " Прокофий", " Прохор",
+
+            "Радим", " Радислав", " Радован", " Ратибор", " Ратмир", " Рафаил", " Родион", " Роман", " Ростислав", " Руслан", " Рюрик",
+
+            "Стас", " Савва", " Савелий", " Спартак", " Степан",*/
+
+            " Тарас", " Твердислав", " Творимир", " Терентий", " Тимофей", " Тимур", " Тит", " Тихон", " Трифон", " Трофим")
+    val arraySecondNames = arrayOf(/*"Смирнов", "Иванов", " Кузнецов", " Соколов", " Попов", " Лебедев", " Козлов", " Новиков ", "Морозов ", "Петров ", "Волков ", "Соловьёв ", "Васильев ", "Зайцев ", "Павлов ", "Семёнов ", "Голубев", ""
+            , "Виноградов", "Богданов"
+            , "Воробьёв"
+            , "Фёдоров"
+            , "Михайлов"
+            , "Беляев"
+            , "Тарасов"
+            , "Белов"
+            , "Комаров"
+            , "Орлов"
+
+            , "Веселов"
+            , "Филиппов"
+            , "Марков"
+            , "Большаков"
+            , "Суханов"
+            , "Миронов"
+            , "Ширяев"
+            , "Александров"
+            , "Коновалов"
+            , "Шестаков"
+            , "Казаков"
+            , "Ефимов"
+            , "Денисов"
+            , "Громов"
+            , "Фомин"
+            , "Давыдов"
+            , "Мельников"
+            , */"Щербаков"
+            , "Блинов"
+            , "Колесников"
+            , "Карпов"
+            , "Афанасьев"
+            , "Власов"
+            , "Маслов"
+    )
+    val kek = PlayerStatsDatabase.getInstance(ctx)
+    kek.removeAllCredits()
+    kek.removeDataTime()
+    kek.removePlayer()
+    kek.removeAllNames()
+    kek.removeMoneyForDay()
+    kek.removeAllMessage()
+    kek.removeAllMessageReaded()
+    kek.addNames(arrayNames, arraySecondNames)
+    kek.addPlayerStatsWithProperties(200, 0, 0, 50, 5)
+    val data = java.util.Calendar.getInstance()
+    var day = data.get(Calendar.DAY_OF_MONTH).toString()
+    if (data.get(Calendar.DAY_OF_MONTH) < 10) {
+        day = "0${day}"
+    }
+    var month = (data.get(Calendar.MONTH) + 1).toString()
+    if (data.get(Calendar.MONTH) < 10) {
+        month = "0${month}"
+    }
+    kek.addDataTimeWithProperties(day, month, data.get(Calendar.YEAR).toString(), 0, 0)
+    kek.addMoneyForDay(0, 0)
+
+    loadAll(ctx)
+    Log.d("FACTORY", Factory.factories.toString())
+}
+
+fun generateRandomIndexOfFactory(): Int {
+    var index = 0
+    var i = 0
+    for (fac in Factory.factories) {
+        DatabaseFactory.index = i
+        i++
+        if (Worker.sizeOfStaff()>0) {
+            index++
+        } else {
+            break
+        }
+    }
+    DatabaseFactory.index = 0
+    Log.d("IIIIRandom index", index.toString())
+    return Random().nextInt(index)
+
+}
+
+fun Array<Boolean>.isTrue():Boolean{
+    var res = true
+    for(kek in this){
+        res = res&&kek
+    }
+    return res
+}
+

@@ -14,6 +14,7 @@ import stannis.ru.productionsimulator.Models.Credit_Deposit
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 
 class BankActivity : AppCompatActivity() {
@@ -24,7 +25,7 @@ class BankActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
         val player =Player.getInstance(this)
         if (player != null) {
@@ -72,7 +73,7 @@ class BankActivity : AppCompatActivity() {
                 }
             }
         }
-        val dataArray = PlayerStatsDatabase.getInstance(this).getListOfCreditDeposit()
+        val dataArray = Credit_Deposit.getListOfCredit_Deposit()
         val adapter= ArrayAdapter<Credit_Deposit>(this, android.R.layout.simple_list_item_1, dataArray)
         bankListView.adapter = adapter
         bankListView.setOnItemClickListener { adapterView, view, i, l ->

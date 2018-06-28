@@ -19,7 +19,7 @@ fun gameover(ctx: Context){
     Player.clear()
     PlayerStatsDatabase.getInstance(ctx).removeAllMessage()
     generateUnhappyMessage(ctx)
-    var list : ArrayList<Message> = PlayerStatsDatabase.getInstance(ctx).getMessage()
+    var list : ArrayList<Message> = Message.getMessages(ctx)
     val intent = Intent(ctx, GameOverActivity::class.java)
     intent.putExtra("message", list[0].toStringArray())
     Log.d("GameOver", "2")

@@ -9,7 +9,7 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:text="Потча"
         android:layout_marginHorizontal="40dp"
         android:textSize="36sp"
@@ -20,9 +20,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></ListView>
 
-    <ListView
-        android:id="@+id/listView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/listView"></ListView>
 </LinearLayout>

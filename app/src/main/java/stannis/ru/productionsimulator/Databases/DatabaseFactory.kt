@@ -7,7 +7,6 @@ import org.jetbrains.anko.db.*
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Models.*
 
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -261,16 +260,16 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
         Log.d("Added", "from Db  ${res}")
     }
 
-    fun addLaborExchangeWithProperties(staff: Staff) {
-        addLaborExchangeWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
+    fun addLaborExchangeWithProperties(worker: Worker) {
+        addLaborExchangeWithProperties(worker.name, worker.age, worker.prof, worker.quality, worker.nation, worker.salary, worker.birth.first, worker.birth.second)
     }
 
-    fun getListOfLaborExchange(): List<Staff> {
+    fun getListOfLaborExchange(): List<Worker> {
         val query = "SELECT * FROM laborExchange"
         val db = this.writableDatabase
 
         val cursor = db.rawQuery(query, null)
-        var list: ArrayList<Staff> = ArrayList()
+        var list: ArrayList<Worker> = ArrayList()
         if (cursor.moveToFirst()) {
             do {
                 var i = 0;
@@ -290,7 +289,7 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
                 i++
                 val monthOfBirth = cursor.getString(i)
                 i++
-                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
+                list.add(Worker(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
             } while (cursor.moveToNext())
             cursor.close()
         }
@@ -298,10 +297,10 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
         return list
     }
 
-    fun getWorkerFromLabor(name: String): Staff? {
+    fun getWorkerFromLabor(name: String): Worker? {
         val query = "SELECT * FROM laborExchange WHERE name = \"$name\""
         val db = this.writableDatabase
-        var worker: Staff? = null
+        var worker: Worker? = null
         val cursor = db.rawQuery(query, null)
         if (cursor.moveToFirst()) {
             cursor.moveToFirst()
@@ -321,7 +320,7 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
             val dayOfBirth = cursor.getString(i)
             i++
             val monthOfBirth = cursor.getString(i)
-            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
+            worker = Worker(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
             cursor.close()
         }
         db.close()
@@ -336,16 +335,16 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
         }
     }
 
-    fun addStaffWithProperties(staff: Staff) {
-        addStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
+    fun addStaffWithProperties(worker: Worker) {
+        addStaffWithProperties(worker.name, worker.age, worker.prof, worker.quality, worker.nation, worker.salary, worker.birth.first, worker.birth.second)
     }
 
-    fun getListOfStaff(): List<Staff> {
+    fun getListOfStaff(): List<Worker> {
         val query = "SELECT * FROM staff"
         val db = this.writableDatabase
 
         val cursor = db.rawQuery(query, null)
-        var list: ArrayList<Staff> = ArrayList()
+        var list: ArrayList<Worker> = ArrayList()
         if (cursor.moveToFirst()) {
             do {
                 var i = 0
@@ -365,7 +364,7 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
                 i++
                 val monthOfBirth = cursor.getString(i)
                 i++
-                list.add(Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
+                list.add(Worker(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth)))
             } while (cursor.moveToNext())
             cursor.close()
         }
@@ -374,10 +373,10 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
     }
 
 
-    fun getWorkerFromStaff(name: String): Staff? {
+    fun getWorkerFromStaff(name: String): Worker? {
         val query = "SELECT * FROM staff WHERE name = \"$name\""
         val db = this.writableDatabase
-        var worker: Staff? = null
+        var worker: Worker? = null
         val cursor = db.rawQuery(query, null)
         if (cursor.moveToFirst()) {
             cursor.moveToFirst()
@@ -397,7 +396,7 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
             val dayOfBirth = cursor.getString(i)
             i++
             val monthOfBirth = cursor.getString(i)
-            worker = Staff(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
+            worker = Worker(name, age, spec, quality, nationality, salary, Pair(dayOfBirth, monthOfBirth))
             cursor.close()
         }
         db.close()
@@ -420,8 +419,8 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
         }
     }
 
-    fun setLaborExchangeWithProperties(staff: Staff) {
-        setLaborExchangeWithProperties(staff.name, staff.age, staff.nation, staff.quality, staff.prof, staff.salary, staff.birth.first, staff.birth.second)
+    fun setLaborExchangeWithProperties(worker: Worker) {
+        setLaborExchangeWithProperties(worker.name, worker.age, worker.nation, worker.quality, worker.prof, worker.salary, worker.birth.first, worker.birth.second)
     }
 
     fun setStaffWithProperties(name: String, age: Int, spec: String, quality: Int, nationality: String, salary: Int, dayOfBirth: String, monthOfBirth: String) {
@@ -432,8 +431,8 @@ class DatabaseFactory(val ctx: Context, name1: String) : ManagedSQLiteOpenHelper
         }
     }
 
-    fun setStaffWithProperties(staff: Staff) {
-        setStaffWithProperties(staff.name, staff.age, staff.prof, staff.quality, staff.nation, staff.salary, staff.birth.first, staff.birth.second)
+    fun setStaffWithProperties(worker: Worker) {
+        setStaffWithProperties(worker.name, worker.age, worker.prof, worker.quality, worker.nation, worker.salary, worker.birth.first, worker.birth.second)
     }
 
     fun removeLaborExchange(name: String): Int {

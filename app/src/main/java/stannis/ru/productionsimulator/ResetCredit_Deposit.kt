@@ -9,10 +9,9 @@ import kotlinx.android.synthetic.main.activity_reset_credit__deposit.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.stats_panel.*
 import stannis.ru.productionsimulator.Models.Credit_Deposit
-import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
-import stannis.ru.productionsimulator.Functions.saveAll
 import stannis.ru.productionsimulator.Models.DataTime
+import stannis.ru.productionsimulator.Models.Message
 import stannis.ru.productionsimulator.Models.Player
 
 
@@ -24,17 +23,17 @@ class ResetCredit_Deposit : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_credit__deposit)
-        messageUnRead.visibility = if (PlayerStatsDatabase.getInstance(this).getMessage().size > 0) View.VISIBLE else View.INVISIBLE
+        messageUnRead.visibility = if (Message.sizeOfUnRead() > 0) View.VISIBLE else View.INVISIBLE
 
         val ins = PlayerStatsDatabase.getInstance(this)
-        val player =Player.getInstance(this)
+        val player = Player.getInstance(this)
         if (player != null) {
             money.text = player.money.toString()
             rep.progress = player.reputation
         }
         rep.setEnabled(false)
         val curData = DataTime.getInstance(this)
-        if(curData!=null){
+        if (curData != null) {
             curDate.text = curData.toString()
         }
         endDay.setOnClickListener {
@@ -66,35 +65,33 @@ class ResetCredit_Deposit : AppCompatActivity() {
                 dataStatic.text = "Дата открытия депозита:"
                 amountTakeGet.text = "Сколько Вы хотите взять:"
             } else {
-                type = 2
+                type = 0
             }
             val ar = date.split(".")
-            crDep = Credit_Deposit(amount.toInt(), percent.toDouble(), arrayOf(ar[0], ar[1], ar[2]), type)
+            crDep = Credit_Deposit.getCr_Dep(date.split(".").toTypedArray(), type)
         }
         confirm.setOnClickListener {
             if (resetAmount.text.toString() != "") {
                 if (crDep != null) {
 
                     val cond = crDep.takeDep_payOff(resetAmount.text.toString().toInt())
-                    if (player != null&&curData!=null) {
+                    if (player != null && curData != null) {
                         if (!condition && resetAmount.text.toString().toInt() > player.money) {
                             Toast.makeText(this, "Вы не можете внести больше денег, чем Вы сейчас имеете(", Toast.LENGTH_SHORT)
                         } else {
-                            if(condition){
-                                player.money+=resetAmount.text.toString().toInt()
-                            }else{
-                                player.money-=resetAmount.text.toString().toInt()
+                            if (condition) {
+                                player.money += resetAmount.text.toString().toInt()
+                            } else {
+                                player.money -= resetAmount.text.toString().toInt()
                             }
 
 
 
                             if (cond) {
-                                ins.removeCreditDeposit(crDep.type, crDep.date[0], crDep.date[1], crDep.date[2])
-                            } else {
-                                ins.setCreditDepositProperties(crDep)
+                                crDep.remove()
                             }
                             Toast.makeText(this, "Операция прошла успешно", Toast.LENGTH_SHORT).show()
-                            saveAll(this)
+
 
                             val intent = Intent(this, BankActivity::class.java)
                             startActivity(intent)
