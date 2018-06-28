@@ -30,7 +30,8 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
             }
             return inventories[DatabaseFactory.index].get(name)!!
         }
-        fun getAllInventories(){
+
+        fun getAllInventories() {
             getInventory()
             getInventory(BUY_NAME)
             getInventory(SELL_NAME)
@@ -60,6 +61,11 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
         fun createInventory(name: String, size: Int, maxStackSize: Int) = inventories[DatabaseFactory.index].put(name, Inventory(name, size, maxStackSize))
 
         fun transferItem(from: Inventory, to: Inventory, slotIndex: Int, quantity: Int): Boolean {
+            if (quantity > 1) {
+                for (i in 0 until quantity) {
+                    transferItem(from, to, slotIndex, 1)
+                }
+            }
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
                 transferItem(from, to, slotIndex, from.getInventorySlotContents(slotIndex).stackSize)
 
@@ -159,7 +165,6 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
         for (i in 0..(getInventorySize() - 1))
             setSlotEmpty(i)
     }
-
 
 
 }

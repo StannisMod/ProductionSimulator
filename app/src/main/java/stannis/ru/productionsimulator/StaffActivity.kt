@@ -16,7 +16,7 @@ import stannis.ru.productionsimulator.Models.Worker
 
 class StaffActivity : AppCompatActivity() {
     override fun onBackPressed() {
-
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

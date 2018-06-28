@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
 
 var GO = false
 var isPromotioned: Array<Boolean> = emptyArray()
-var senderWorker : String = ""
+var senderWorker: String = ""
 
 fun round(a: Double, radix: Int): Double {
     var b = a
@@ -78,9 +78,9 @@ fun countReputation(ctx: Context, tax: Int) {
     val dif = tax - trueTax
     if (player.reputation < 10) {
         player.reputation = (10 * (dif.toDouble() / trueTax.toDouble())).toInt()
+    } else {
+        player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueTax.toDouble())).toInt()
     }
-    player.reputation = player.reputation + (player.reputation.toDouble() * (dif.toDouble() / trueTax.toDouble())).toInt()
-
     if (player.reputation < 0) {
         player.reputation = 0
     }
@@ -220,11 +220,13 @@ fun fillDb(ctx: Context) {
         ins.removeAllLabor()
         ins.removeAllStaff()
     }
+    Factory.factories.clear()
     DatabaseFactory.index = 0
     Inventory.getInventory("sell")
     Inventory.getInventory("buy")
     Inventory.getInventory()
     Factory(true, 0, true, EnumFactory.SAWMILL.price, EnumFactory.SAWMILL)
+    Factory.getFactoryById(0)!!.save(ctx)
     Inventory.saveInventories(ctx)
     Log.d("FACTORY", Factory.factories.toString())
 
@@ -298,7 +300,7 @@ fun fillDb(ctx: Context) {
     kek.addDataTimeWithProperties(day, month, data.get(Calendar.YEAR).toString(), 0, 0)
     kek.addMoneyForDay(0, 0)
 
-    loadAll(ctx)
+    setBeginToAll()
     Log.d("FACTORY", Factory.factories.toString())
 }
 
@@ -308,7 +310,7 @@ fun generateRandomIndexOfFactory(): Int {
     for (fac in Factory.factories) {
         DatabaseFactory.index = i
         i++
-        if (Worker.sizeOfStaff()>0) {
+        if (Worker.sizeOfStaff() > 0) {
             index++
         } else {
             break
@@ -320,10 +322,10 @@ fun generateRandomIndexOfFactory(): Int {
 
 }
 
-fun Array<Boolean>.isTrue():Boolean{
+fun Array<Boolean>.isTrue(): Boolean {
     var res = true
-    for(kek in this){
-        res = res&&kek
+    for (kek in this) {
+        res = res && kek
     }
     return res
 }

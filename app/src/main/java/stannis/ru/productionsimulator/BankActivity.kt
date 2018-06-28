@@ -20,7 +20,8 @@ import stannis.ru.productionsimulator.Models.Player
 class BankActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
-
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

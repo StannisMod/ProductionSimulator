@@ -21,7 +21,8 @@ import stannis.ru.productionsimulator.Models.*
 
 class InventoryActivity : AppCompatActivity() {
     override fun onBackPressed() {
-
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

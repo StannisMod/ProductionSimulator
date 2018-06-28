@@ -17,14 +17,20 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"></include>
 
-
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Дом"
+        android:layout_below="@id/stats"
+        android:textSize="30sp"/>
     <LinearLayout
         android:id="@+id/body"
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/data"
-        android:layout_below="@id/stats"
+        android:layout_below="@id/label"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -42,7 +48,7 @@
                 android:layout_centerHorizontal="true" />
             <!--android:background="@mipmap/lesopilka1_background" -->
 
-            
+
             <ImageButton
                 android:id="@+id/left"
                 android:layout_width="30dp"

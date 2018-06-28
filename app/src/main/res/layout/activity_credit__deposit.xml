@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Credit_DepositActivity">
     <include
+        android:id="@+id/stats_panel"
         layout="@layout/stats_panel"
         ></include>
     <include
@@ -15,6 +16,13 @@
         android:id="@+id/data"
         layout="@layout/date_layout"
         ></include>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Диалог с банком"
+        android:layout_below="@id/stats_panel"
+        android:textSize="30sp"
+    />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

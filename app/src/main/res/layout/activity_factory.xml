@@ -17,6 +17,7 @@
         layout="@layout/date_layout"
         ></include>
 
+
     <TextView
         android:id="@+id/factory_name"
         android:layout_width="match_parent"

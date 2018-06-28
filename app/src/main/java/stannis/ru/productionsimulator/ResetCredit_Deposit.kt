@@ -17,7 +17,8 @@ import stannis.ru.productionsimulator.Models.Player
 
 class ResetCredit_Deposit : AppCompatActivity() {
     override fun onBackPressed() {
-
+        startActivity(Intent(this, BankActivity::class.java))
+        finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

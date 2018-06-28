@@ -23,7 +23,8 @@ import stannis.ru.productionsimulator.Models.Message
 
 class MailActivity : AppCompatActivity() {
     override fun onBackPressed() {
-
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
 
@@ -90,6 +91,7 @@ class MailActivity : AppCompatActivity() {
 
         }
         listview.setOnTouchListener(TOUCH())
+
     }
 
 }
