@@ -44,12 +44,7 @@ class MainActivity : AppCompatActivity() {
                         "Производство - место, куда можно попасть нажав на домик в главном окне, где производится и выгружается на рынок продукция, хранится состояние оборудования и место, где можно пополнить сырьём производство.\n" +
                         "Ваши рабочие - место, где можно посмотреть ваших рабочих, повысить им зарплату и уволить\n" +
                         "Почта - место, куда стоит заглядывать, после перехода на каждый следующий день. Там появляется информация о повышении налогов, напоминание о выплачивании кредита и многое другое. Повышение налогов зависит от вашей репутации.")
-                builder.setPositiveButton("YES") { dialog, which ->
-                    Toast.makeText(this, "Приятной игры!", Toast.LENGTH_SHORT).show()
-                }
-                builder.setNegativeButton("NO") { dialog, which ->
-                    Toast.makeText(this, "Приятной игры!", Toast.LENGTH_SHORT).show()
-                }
+               
                 builder.setNeutralButton("CANCEL") { dialog, which ->
                     Toast.makeText(this, "Приятной игры!", Toast.LENGTH_SHORT).show()
                 }

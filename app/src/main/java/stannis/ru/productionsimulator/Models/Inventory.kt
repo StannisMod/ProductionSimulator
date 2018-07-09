@@ -62,9 +62,10 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
 
         fun transferItem(from: Inventory, to: Inventory, slotIndex: Int, quantity: Int): Boolean {
             if (quantity > 1) {
-                for (i in 0 until quantity) {
-                    transferItem(from, to, slotIndex, 1)
+                for (i in 0 until quantity - 1) {
+                     transferItem(from, to, slotIndex, 1)
                 }
+                return transferItem(from , to, slotIndex, 1)
             }
             if (from.getInventorySlotContents(slotIndex).stackSize < quantity)
                 transferItem(from, to, slotIndex, from.getInventorySlotContents(slotIndex).stackSize)
@@ -170,9 +171,9 @@ class Inventory(val name: String, val size: Int, var maxStackSize: Int) {
 }
 
 fun Array<ItemStack>.toDetailedString(): String {
-    var str: String = ""
+    var str = ""
     for (inv in this) {
-        str = str + Items.findById(inv.itemId).name
+        str += Items.findById(inv.itemId).name
     }
     return str
 }

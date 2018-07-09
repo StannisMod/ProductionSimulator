@@ -69,12 +69,15 @@ class MarketActivity : AppCompatActivity() {
         tabSpec.setContent(R.id.tvTab3)
         tabHost.addTab(tabSpec)
         Inventory.getInventory(Inventory.BUY_NAME).normalize()
+        Inventory.getInventory(Inventory.BUY_NAME).normalize()
         var slots = Inventory.getInventory(Inventory.BUY_NAME).inv
-
         val arrayList: ArrayList<ItemStack> = ArrayList()
+
         for (inv in slots) {
             if (!inv.isEmpty()) {
                 arrayList.add(inv)
+            } else {
+                break
             }
         }
         val adapter = ItemAdapterBuy(this, arrayList/*slots.toCollection(ArrayList())*/)
@@ -99,6 +102,7 @@ class MarketActivity : AppCompatActivity() {
             }
         }
         tvTab1.setOnItemLongClickListener { adapterView, view, i, l ->
+            Log.d("LONGCLICKER", "Start")
             val item = Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId)
             var sz = Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).stackSize
             if (player.money / item.price > 10) {
@@ -109,11 +113,13 @@ class MarketActivity : AppCompatActivity() {
                 sz = player.money / item.price
             }
             player.money -= sz * item.price
+            Log.d("LONGCLICKER", sz.toString())
             if (Inventory.transferItem(Inventory.getInventory(Inventory.BUY_NAME), Inventory.getInventory(), i, sz)) {
+                Log.d("LONGCLICKER", i.toString())
                 startActivity(Intent(this, MarketActivity::class.java))
                 finish()
-
             } else {
+                Log.d("LONGCLICKER", Inventory.getInventory(Inventory.BUY_NAME).inv.toDetailedString())
                 money.text = player.money.toString()
                 slots = Inventory.getInventory(Inventory.BUY_NAME).inv
                 adapter.notifyDataSetChanged()
@@ -243,6 +249,7 @@ class ItemAdapterSell : BaseAdapter {
     }
 
 }
+
 
 
 

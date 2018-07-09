@@ -148,7 +148,11 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     }
 
     fun generateLabor(ctx: Context) {
-
+        for (i in 1..3) {
+            if (Random().nextInt(17 - Worker.sizeOfLabor()) == 1) {
+                Worker.getListOfLabor().remove(Worker.getListOfLabor()[Random().nextInt(Worker.sizeOfLabor())])
+            }
+        }
         for (i in 1..3) {
             Log.d("WORKERi", i.toString())
             val sz = Worker.sizeOfLabor()
@@ -171,8 +175,10 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
                     tmp++
                 }
             }
-            val randId = Random().nextInt(tmp + 1)
-            invent.decrStackSize(randId, invent.getInventorySlotContents(randId).stackSize)
+            if (Random().nextInt(17 - tmp) == 1) {
+                val randId = Random().nextInt(tmp + 1)
+                invent.decrStackSize(randId, invent.getInventorySlotContents(randId).stackSize)
+            }
             val id = EnumFactory.findById(DatabaseFactory.index).res_type.itemId
 
             invent.setInventorySlotContents(invent.findFirstEqualSlot(Items.findById(id).getId()), ItemStack(Items.findById(id)
