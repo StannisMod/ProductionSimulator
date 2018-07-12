@@ -24,7 +24,7 @@ class Factory {
     var production: Inventory
     var machine_state: Double
 
-    constructor(addToList: Boolean = true, id: Int, isBought: Boolean = false, price: Int, type: EnumFactory, res: Int = 0, res_cap: Int = type.res_cap, productivity: Int = 0, production: Int = 0, production_cap: Int = type.productivity_cap, machine_state: Double = 10.0) {
+    constructor(addToList: Boolean = true, id: Int, isBought: Boolean = false, price: Int = 0, type: EnumFactory, res: Int = 0, res_cap: Int = type.res_cap, productivity: Int = 0, production: Int = 0, production_cap: Int = type.production_cap, machine_state: Double = 10.0) {
         this.id = id
         this.isBought = isBought
         this.price = price
@@ -38,6 +38,22 @@ class Factory {
         this.machine_state = machine_state
         if (addToList)
             factories.add(this)
+    }
+
+    constructor(id: Int) {
+        val type = EnumFactory.findById(id)
+        this.id = id
+        this.isBought = false
+        this.price = type.price
+        this.type = type
+        this.res = Inventory("${id}_Res", 1, type.res_cap)
+        this.res.setInventorySlotContents(0, ItemStack(this.type.getResType().getId(), 0, type.res_cap))
+        this.productivity = 0
+        this.production = Inventory("${id}_Prod", 1, type.production_cap)
+        this.production.setInventorySlotContents(0, ItemStack(this.type.getProdType().getId(), 0, type.production_cap))
+        this.machine_state = 10.0
+        factories.add(this)
+
     }
 
     fun toDetailedString(): String {
@@ -110,8 +126,8 @@ class Factory {
 
     }
 
-    fun countParams(ctx: Context) {
-        countProductivity(ctx)
+    fun countParams() {
+        countProductivity()
         countProd_Cap()
         countRes_Cap()
     }

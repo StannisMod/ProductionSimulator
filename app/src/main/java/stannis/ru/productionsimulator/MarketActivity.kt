@@ -4,17 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_market.*
+import kotlinx.android.synthetic.main.buy_view_alert_dialog.view.*
 import kotlinx.android.synthetic.main.date_layout.*
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.item_buy.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Models.*
@@ -84,13 +85,35 @@ class MarketActivity : AppCompatActivity() {
 
         tvTab1.adapter = adapter
         tvTab1.setOnItemClickListener { adapterView, view, i, l ->
-            val player = Player.getInstance(this)
-            Log.d("ItemClicker", i.toString())
-            if (player!!.money > Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId).price) {
-                player!!.money -= Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId).price
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Покупка")
+            val it = Items.findById(Inventory.getInventory(Inventory.BUY_NAME).inv[i].itemId)
+            val inflator = (this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.buy_view_alert_dialog, null)
+            builder.setView(inflator)
+            inflator.iconOfBuying.setImageResource(it.image)
+            inflator.leftMoney.text = "${player.money}$"
+            inflator.description.text = it.description
 
-                Log.d("ItemClicker", "Pressed")
-                if (Inventory.transferItem(Inventory.getInventory(Inventory.BUY_NAME), Inventory.getInventory(), i, 1)) {
+            class listener() : SeekBar.OnSeekBarChangeListener {
+
+                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                    inflator.countThings.text = "${p1}шт."
+                    inflator.leftMoney.text = "${player.money - Items.findById(Inventory.getInventory(Inventory.BUY_NAME).getInventorySlotContents(i).itemId).price * p1}"
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                }
+            }
+            inflator.countBar.max = if (player.money > it.price * Inventory.getInventory(Inventory.BUY_NAME).inv[i].stackSize) Inventory.getInventory(Inventory.BUY_NAME).inv[i].stackSize else player.money / it.price
+
+            inflator.countBar.setOnSeekBarChangeListener(listener())
+            builder.setPositiveButton("Купить") { dialog, which ->
+                player.money -= it.price * inflator.countBar.progress
+
+                if (Inventory.transferItem(Inventory.getInventory(Inventory.BUY_NAME), Inventory.getInventory(), i, inflator.countBar.progress)) {
                     startActivity(Intent(this, MarketActivity::class.java))
                     finish()
                 }
@@ -98,8 +121,15 @@ class MarketActivity : AppCompatActivity() {
                 money.text = player.money.toString()
                 slots = Inventory.getInventory(Inventory.BUY_NAME).inv
                 adapter.notifyDataSetChanged()
+                if(inflator.countBar.progress>0){
+                    Toast.makeText(this, "Покупка прошла успешно", Toast.LENGTH_SHORT).show()
+                }
+            }
+            builder.setNeutralButton("Отмена"){dialog, which ->
 
             }
+            builder.create().show()
+
         }
         tvTab1.setOnItemLongClickListener { adapterView, view, i, l ->
             Log.d("LONGCLICKER", "Start")

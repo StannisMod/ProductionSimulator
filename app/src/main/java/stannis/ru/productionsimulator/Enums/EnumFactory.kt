@@ -2,7 +2,7 @@ package stannis.ru.productionsimulator.Enums
 
 import stannis.ru.productionsimulator.R
 
-enum class EnumFactory(val factory: String, val factoryInNotGeneralForm: String, val type: Int, val res_type: Items, val prod_type: Items, val image: Int, val price: Int, val res_cap: Int, val productivity_cap: Int, val coef: Int, val workerkLimit: Int) {
+enum class EnumFactory(val factory: String, val factoryInNotGeneralForm: String, val type: Int, val res_type: Items, val prod_type: Items, val image: Int, val price: Int, val res_cap: Int, val production_cap: Int, val coef: Int, val workerkLimit: Int) {
 
     SAWMILL("Лесопилка", "лесопилки", 0, Items.WOOD, Items.PLANKS, R.mipmap.lesopilka1_background, 0, 10, 6, -800, 8),
     QUARRY("Каменоломня", "каменоломни", 1, Items.STONE, Items.GRANITE, R.mipmap.brickwork_foreground, 2000, 15, 12, -1600, 15),

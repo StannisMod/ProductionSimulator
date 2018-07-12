@@ -48,13 +48,13 @@ class FactoryActivity : AppCompatActivity() {
 
         var factory = Factory.getFactoryById(DatabaseFactory.index)//intent.getIntExtra("FACTORY_ID", 0))
         Log.d("WHATThe", factory!!.toDetailedString())
-        factory.countParams(this)
+        factory.countParams()
 
         // if (factory == null)
         //  factory = Factory.load(this, intent.getIntExtra("FACTORY_ID", 0))
 
 
-        factory_name.text = factory!!.type.getName()
+        factory_name.text = "Производство"
 
         val data = arrayOf("Сырьё: ${factory!!.res.getInventorySlotContents(0).stackSize}/${factory!!.res.getInventoryStackLimit()}",
                 /*"Потребление сырья: ${factory!!.consumption}/сек",*/

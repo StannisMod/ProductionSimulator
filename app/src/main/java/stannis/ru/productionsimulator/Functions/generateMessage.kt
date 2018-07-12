@@ -1,6 +1,8 @@
 package stannis.ru.productionsimulator.Functions
 
 import android.content.Context
+import android.provider.ContactsContract
+import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Enums.EnumFactory
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
@@ -10,16 +12,19 @@ fun generateMessage(ctx: Context) {
     var player = Player.getInstance(ctx)
     if (isPromotioned.isNotEmpty()) {
         if (!isPromotioned.isTrue()) {
+            DatabaseFactory.index = factory
+            player.reputation -= 2 * Worker.sizeOfStaff()
+            player.reputation = if (player.reputation < 0) 0 else player.reputation
             for (wk in Worker.getListOfStaff()) {
                 wk.fire()
             }
             isPromotioned = emptyArray()
-            player.reputation += 3
-            if (player.reputation > 100) {
-                player.reputation = 100
-            }
+
             generateGratefullN_tMessage(ctx)
+            DatabaseFactory.index = 0
         } else {
+            player.reputation += 3
+            player.reputation = if (player.reputation > 100) 100 else player.reputation
             isPromotioned = emptyArray()
             generateGratefulLetter(ctx)
 
@@ -47,10 +52,13 @@ fun generateMessage(ctx: Context) {
     }
 
     //УСЛОВИЕ: Ежедневно с вероятностью 5% ПОСЛЕДСТВИЯ: Если не повысить зарплату то все работники уйдут
-    if (r.nextDouble() < 0.12 && Worker.sizeOfStaff() > 0) {
-
-        generateWorkerMessage(ctx, generateRandomIndexOfFactory())
+    if (r.nextDouble() < 0.5 && !Worker.isEmpty()) {
+        var index = generateRandomIndexOfFactory()
+        generateWorkerMessage(ctx, index)
+        DatabaseFactory.index = index
         isPromotioned = Array(Worker.sizeOfStaff()) { i -> false }
+        DatabaseFactory.index = 0
+        factory = index
 
     }
 
@@ -151,9 +159,11 @@ fun generateCollectorMessage(ctx: Context) {//УСЛОВИЯ: Письмо пр�
 }
 
 fun generateWorkerMessage(ctx: Context, index: Int) {//УСЛОВИЕ: Ежедневно с вероятностью 5% ПОСЛЕДСТВИЯ: Нет
+    val ind = DatabaseFactory.index
+    DatabaseFactory.index = index
     var message: Message = Message()
     message.caption = "Хазяйна, денег дай. А?"
-    var wk = Worker.getWorkerFromStaffById(index, Random().nextInt(Worker.sizeOfStaff()))
+    var wk = Worker.getWorkerFromStaffById(DatabaseFactory.index, Random().nextInt(Worker.sizeOfStaff()))
     var name = ""
     if (wk != null) {
         name = wk.name
@@ -163,6 +173,7 @@ fun generateWorkerMessage(ctx: Context, index: Int) {//УСЛОВИЕ: Ежед�
     message.text = "Здоровья, вам.\nДеля харошо идют. Только жена моей из Кареи не хватает деньга на пропитание. А я им все моё посылаю. Не погуби. Повысь всем зарплату. А то нам придется уйти с ${EnumFactory.findById(index).factoryInNotGeneralForm} в дом."
     message.date = arrayOf(DataTime.getInstance(ctx).currentDay, DataTime.getInstance(ctx).currentMonth, DataTime.getInstance(ctx).currentYear)
     Message.addMessage(message)
+    DatabaseFactory.index = ind
 }
 
 fun generateLotoMessage(ctx: Context) {//УСЛОВИЕ: Ежедневно с вероятностью 0,5% ПОСЛЕДСТВИЯ: Добавляется 5000$

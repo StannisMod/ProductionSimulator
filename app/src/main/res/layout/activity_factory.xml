@@ -22,6 +22,7 @@
         android:id="@+id/factory_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:textSize="30sp"
         android:layout_below="@id/top_bar" />
 
     <ListView

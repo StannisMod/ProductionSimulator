@@ -9,14 +9,18 @@ import stannis.ru.productionsimulator.Enums.Items
 import stannis.ru.productionsimulator.Enums.Nations
 import stannis.ru.productionsimulator.Enums.Profs
 import stannis.ru.productionsimulator.Models.*
+import stannis.ru.productionsimulator.R
+import java.io.File
+import java.io.PrintWriter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
+var str = ""
 var GO = false
 var isPromotioned: Array<Boolean> = emptyArray()
 var senderWorker: String = ""
-
+var factory = 0
 fun round(a: Double, radix: Int): Double {
     var b = a
     b *= Math.pow(10.0, radix.toDouble())
@@ -89,8 +93,8 @@ fun countReputation(ctx: Context, tax: Int) {
     }
 }
 
-fun generateWorker(ctx: Context) {
-    val name = PlayerStatsDatabase.getInstance(ctx).getName()
+fun generateWorker() {
+    val name = getNameFromFile()
     val age = Random().nextInt(40) + 20
     var p = Random().nextInt(20)
     var prof: Profs? = null
@@ -112,22 +116,21 @@ fun generateWorker(ctx: Context) {
         var nationality = nation.nation
         var quality = nation.quality + (Random().nextInt(6) - 3)
         var salary = prof.averSalary + (Random().nextInt(prof.averSalary / 2) - prof.averSalary / 4)
-        salary *= (quality / 10)
+        salary *= (quality / 5)
         if (salary == 0) {
             salary = 1
         }
         var birthDay = (Random().nextInt(10) + 10).toString()
         var birthMonth = "0${(Random().nextInt(10))}"
         Worker(name, age, spec, quality, nationality, salary, Pair(birthDay, birthMonth)).generate()
-        Log.d("WORKER", Worker.getListOfLabor().toString())
     }
 
 }
 
-fun countProductivity(ctx: Context) {
+fun countProductivity() {
     val fac = Factory.getFactoryById(DatabaseFactory.index)
     if (fac != null) {
-        val list = DatabaseFactory.getInstance(ctx).getListOfStaff()
+        val list = Worker.getListOfStaff()
         var qualityOfGW = 0
         var qualityMN = 0
         var qualityFM = 0
@@ -176,7 +179,7 @@ fun countProd_Cap() {
     val inv = Inventory.inventories[DatabaseFactory.index].get(Inventory.TAG)!!
     val fac = Factory.getFactoryById(DatabaseFactory.index)
     if (fac != null) {
-        fac.production.maxStackSize = EnumFactory.findById(DatabaseFactory.index).productivity_cap
+        fac.production.maxStackSize = EnumFactory.findById(DatabaseFactory.index).production_cap
         for (i in 0 until inv.size) {
             if (inv.getInventorySlotContents(i).itemId in Items.getNumOfProdCap().first..Items.getNumOfProdCap().second) {
                 fac.production.maxStackSize += (Items.findById(inv.getInventorySlotContents(i).itemId).price / 40) * inv.getInventorySlotContents(i).stackSize
@@ -230,64 +233,15 @@ fun fillDb(ctx: Context) {
     Inventory.saveInventories(ctx)
     Log.d("FACTORY", Factory.factories.toString())
 
-    val arrayNames = arrayOf(/*"Абрам", " Август", " Авдей", " Аверкий", " Адам", " Адриан", " Азарий", " Аким", " Александр", " Алексей", " Амвросий", " Амос", " Ананий", " Анатолий", " Андрей", " Андриан", " Андрон", " Аристарх", " Аркадий", " Арсен", " Арсений", " Артём", " Артемий", " Архип", " Аскольд", " Афанасий", " Афиноген", "Кирилл", " Карл", " Касим", " Кастор", " Касьян", " Каюм", " Кеша", " Кирсан", " Клим", " Кондрат", " Корней", " Корнелий", " Косьма", " Кристиан", " Кузьма",
-            "Лавр", " Лаврентий", " Ладимир", " Лазарь", " Леонид", " Леонтий", " Лонгин", " Лука", " Наум", " Нестор", " Нестер", " Никандр", " Никанор", " Никита", " Никифор", " Никодим", " Никола", " Николай", " Никон", " Нил", " Нифонт",
-
-            "Олег", " Оскар", " Остап", " Остромир",
-
-            "Павел", " Панкрат", " Парфений", " Пахом", " Петр", " Пимен", " Платон", " Поликарп", " Порфирий", " Потап", " Пров", " Прокл", " Прокоп", " Прокопий", " Прокофий", " Прохор",
-
-            "Радим", " Радислав", " Радован", " Ратибор", " Ратмир", " Рафаил", " Родион", " Роман", " Ростислав", " Руслан", " Рюрик",
-
-            "Стас", " Савва", " Савелий", " Спартак", " Степан",*/
-
-            " Тарас", " Твердислав", " Творимир", " Терентий", " Тимофей", " Тимур", " Тит", " Тихон", " Трифон", " Трофим")
-    val arraySecondNames = arrayOf(/*"Смирнов", "Иванов", " Кузнецов", " Соколов", " Попов", " Лебедев", " Козлов", " Новиков ", "Морозов ", "Петров ", "Волков ", "Соловьёв ", "Васильев ", "Зайцев ", "Павлов ", "Семёнов ", "Голубев", ""
-            , "Виноградов", "Богданов"
-            , "Воробьёв"
-            , "Фёдоров"
-            , "Михайлов"
-            , "Беляев"
-            , "Тарасов"
-            , "Белов"
-            , "Комаров"
-            , "Орлов"
-
-            , "Веселов"
-            , "Филиппов"
-            , "Марков"
-            , "Большаков"
-            , "Суханов"
-            , "Миронов"
-            , "Ширяев"
-            , "Александров"
-            , "Коновалов"
-            , "Шестаков"
-            , "Казаков"
-            , "Ефимов"
-            , "Денисов"
-            , "Громов"
-            , "Фомин"
-            , "Давыдов"
-            , "Мельников"
-            , */"Щербаков"
-            , "Блинов"
-            , "Колесников"
-            , "Карпов"
-            , "Афанасьев"
-            , "Власов"
-            , "Маслов"
-    )
     val kek = PlayerStatsDatabase.getInstance(ctx)
     kek.removeAllCredits()
     kek.removeDataTime()
     kek.removePlayer()
-    kek.removeAllNames()
     kek.removeMoneyForDay()
     kek.removeAllMessage()
     kek.removeAllMessageReaded()
-    kek.addNames(arrayNames, arraySecondNames)
-    kek.addPlayerStatsWithProperties(200, 0, 0, 50, 5)
+
+    kek.addPlayerStatsWithProperties(1000000, 0, 0, 50, 5)
     val data = java.util.Calendar.getInstance()
     var day = data.get(Calendar.DAY_OF_MONTH).toString()
     if (data.get(Calendar.DAY_OF_MONTH) < 10) {
@@ -299,26 +253,24 @@ fun fillDb(ctx: Context) {
     }
     kek.addDataTimeWithProperties(day, month, data.get(Calendar.YEAR).toString(), 0, 0)
     kek.addMoneyForDay(0, 0)
-
+    getNameFromFile()
     setBeginToAll()
     Log.d("FACTORY", Factory.factories.toString())
 }
 
 fun generateRandomIndexOfFactory(): Int {
-    var index = 0
+    var indexes = ArrayList<Int>()
     var i = 0
     for (fac in Factory.factories) {
         DatabaseFactory.index = i
-        i++
         if (Worker.sizeOfStaff() > 0) {
-            index++
-        } else {
-            break
+            indexes.add(i)
         }
+        i++
     }
     DatabaseFactory.index = 0
-    Log.d("IIIIRandom index", index.toString())
-    return Random().nextInt(index)
+
+    return indexes[Random().nextInt(indexes.size)]
 
 }
 
@@ -329,4 +281,28 @@ fun Array<Boolean>.isTrue(): Boolean {
     }
     return res
 }
+
+fun getNameFromFile(): String {
+    val ar = str.split(" ")
+    val arr = Array(ar.size) { i -> "" }
+    for (i in 0 until ar.size) {
+        var st = ar[i]
+        for (j in 1 until st.length) {
+            if (st[j].isUpperCase()) {
+                st = "${st.substring(0, j)} ${st.substring(j)}"
+                break
+            }
+        }
+        arr[i] = st
+    }
+    var string = ""
+    do {
+        string = arr[Random().nextInt(arr.size)]
+    } while (Worker.contains(string))
+    return string
+}
+fun Pair<Int, Int>.contains(a : Int):Boolean{
+    return a in this.first..this.second
+}
+
 

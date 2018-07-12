@@ -9,6 +9,32 @@ import kotlin.math.roundToInt
 class Worker(var name: String, var age: Int, var prof: String, var quality: Int, var nation: String, var salary: Int, var birth: Pair<String, String>) {
 
     companion object {
+        fun contains(str: String): Boolean {
+            var res = false
+            for (i in 0 until EnumFactory.getSize()) {
+                for (j in 0..1) {
+                    res = res || instance[i][j].contains(str)
+                    if (res) return res
+                }
+
+            }
+            return res
+        }
+
+        fun isEmpty(): Boolean {
+            val ind = DatabaseFactory.index
+            var res = false
+            for (i in 0 until EnumFactory.getSize()) {
+                DatabaseFactory.index = i
+                res = res || (Worker.sizeOfStaff() > 0)
+                if (res) {
+                    break
+                }
+            }
+            DatabaseFactory.index = ind
+            return !res
+        }
+
         fun setBegin() {
             for (i in 0 until EnumFactory.getSize()) {
                 instance.add(Array(2) { i -> HashMap<String, Worker>() })
@@ -125,8 +151,8 @@ class Worker(var name: String, var age: Int, var prof: String, var quality: Int,
     fun getPromotion() {
         var tmp = salary
         salary += (0.2 * salary.toDouble()).roundToInt()
-        if(tmp == salary){
-            salary*=2
+        if (tmp == salary) {
+            salary *= 2
         }
     }
 

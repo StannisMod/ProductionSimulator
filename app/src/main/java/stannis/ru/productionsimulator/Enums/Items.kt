@@ -2,23 +2,24 @@ package stannis.ru.productionsimulator.Enums
 
 import android.content.Context
 import android.util.Log
+import stannis.ru.productionsimulator.Functions.contains
 import stannis.ru.productionsimulator.Models.Player
 import stannis.ru.productionsimulator.R
 
-enum class Items(val itemId: Int, val label: String, val image: Int, val price: Int) {
+enum class Items(val itemId: Int, val label: String, val image: Int, val price: Int, val description: String) {
 
-    NULL(0, " ", R.mipmap.angel_background, 0),
-    WOOD(1, "Древесина", R.mipmap.wood_foreground, 1),
-    STONE(2, "Камень", R.mipmap.stone_foreground, 6),
-    ORE(3, "Руда", R.mipmap.ore_foreground, 12),
-    PLANKS(4, "Пиломатериалы", R.mipmap.planks_foreground, 10),
-    GRANITE(5, "Гранит", R.mipmap.granite_foreground, 20),
-    IRON(6, "Железо", R.mipmap.metal_foreground, 40),
-    SHOVEL(7, "Лопата", R.mipmap.shovel_foreground, 50),
-    PICK_AXE(8, "Кирка", R.mipmap.pickaxe_foreground, 60),
-    AXE(9, "Топор", R.mipmap.axe_foreground, 70),
-    TRACTOR(10, "Трактор", R.mipmap.tractor_foreground, 150),
-    TOOL_KIT(11, "Набор инструментов", R.mipmap.tool_kit_foreground, 100);
+    NULL(0, " ", R.mipmap.angel_background, 0, ""),
+    WOOD(1, "Древесина", R.mipmap.wood_foreground, 1, "Этот ресурс использует лесопилка"),
+    STONE(2, "Камень", R.mipmap.stone_foreground, 6, "Этот ресурс использует каменоломня"),
+    ORE(3, "Руда", R.mipmap.ore_foreground, 12, "Этот ресурс использует литейный завод"),
+    PLANKS(4, "Пиломатериалы", R.mipmap.planks_foreground, 10, "Этот ресурс производит лесопилка"),
+    GRANITE(5, "Гранит", R.mipmap.granite_foreground, 20, "Этот ресурс производит каменоломня"),
+    IRON(6, "Железо", R.mipmap.metal_foreground, 40, "Этот ресурс производит литейный завод"),
+    SHOVEL(7, "Лопата", R.mipmap.shovel_foreground, 50, "Этот инструмент, используется для того, чтобы увеличить максимальное количество производимого ресурса"),
+    PICK_AXE(8, "Кирка", R.mipmap.pickaxe_foreground, 60, "Этот инструмент, используется для того, чтобы увеличить максимальное количество производимого ресурса"),
+    AXE(9, "Топор", R.mipmap.axe_foreground, 70, "Этот инструмент, используется для того, чтобы увеличить максимальное количество производимого ресурса"),
+    TRACTOR(10, "Трактор", R.mipmap.tractor_foreground, 150, "Этот инструмент испульзуется для того, чтобы увеличить максимальное количество потребляемоего ресурса"),
+    TOOL_KIT(11, "Набор инструментов", R.mipmap.tool_kit_foreground, 100, "Этот предмет испульзуется для того чтобы, починить Вашу фабрику");
 
     fun getName(): String = label
 
@@ -29,10 +30,14 @@ enum class Items(val itemId: Int, val label: String, val image: Int, val price: 
     companion object {
         fun getNumOfResCap(): Pair<Int, Int> = Pair(10, 10)
         fun getNumOfProdCap(): Pair<Int, Int> = Pair(7, 9)
+        fun getNumOfProd(): Pair<Int, Int> = Pair(1, 3)
         fun getNumOfRepair(): Int = 11
         fun generateSellPrice(id: Int, ctx: Context): Int {
-            val add = (Player.getInstance(ctx).reputation - 42) / 10
-            return findById(id).price + add
+            if (getNumOfProd().contains(id)) {
+                val add = (Player.getInstance(ctx).reputation - 50) / 10
+                return findById(id).price + add
+            }
+            return findById(id).price
         }
 
         fun findById(id: Int): Items {

@@ -5,15 +5,19 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.SeekBar
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_inventory.*
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.date_layout.*
+import kotlinx.android.synthetic.main.item_buy.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
+import kotlinx.android.synthetic.main.to_sell_view_alert_dialog.view.*
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
 import stannis.ru.productionsimulator.Enums.Items
@@ -66,6 +70,8 @@ class InventoryActivity : AppCompatActivity() {
         inventory.adapter = adapter
 
         inventory.setOnItemClickListener { adapterView, view, i, l ->
+
+
             if (Inventory.getInventory().getInventorySlotContents(i).itemId == Items.getNumOfRepair()) {
                 val fac = Factory.getFactoryById(DatabaseFactory.index)
                 if (fac != null) {
@@ -78,13 +84,40 @@ class InventoryActivity : AppCompatActivity() {
                     Toast.makeText(this, "Вы починили вашу фабрику", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                if (Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, 1)) {
-                    startActivity(Intent(this, InventoryActivity::class.java))
-                    finish()
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("На продажу")
+                val view = (this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.to_sell_view_alert_dialog, null)
+                val item = Items.findById(Inventory.getInventory().inv[i].itemId)
+                builder.setView(view)
+                view.imageInventoryToSell.setImageResource(item.image)
+                view.progressToSell.max = Inventory.getInventory().getInventorySlotContents(i).stackSize
+                class tmp() : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        view.countToSell.text = "${view.progressToSell.progress}шт."
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+
+                    }
                 }
+                view.progressToSell.setOnSeekBarChangeListener(tmp())
+                builder.setNeutralButton("Отмена") { j, k -> }
+                builder.setPositiveButton("Переместить") { j, k ->
+                    if (Inventory.transferItem(Inventory.getInventory(), Inventory.getInventory("sell"), i, view.progressToSell.progress)) {
+                        startActivity(Intent(this, InventoryActivity::class.java))
+                        finish()
+                    }else{
+
+                        slots = Inventory.getInventory().inv
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+                builder.create().show()
             }
-            slots = Inventory.getInventory().inv
-            adapter.notifyDataSetChanged()
+
         }
 
         inventory.setOnItemLongClickListener { adapterView, view, i, l ->

@@ -150,7 +150,9 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
     fun generateLabor(ctx: Context) {
         for (i in 1..3) {
             if (Random().nextInt(17 - Worker.sizeOfLabor()) == 1) {
-                Worker.getListOfLabor().remove(Worker.getListOfLabor()[Random().nextInt(Worker.sizeOfLabor())])
+                if (Worker.sizeOfLabor() > 0) {
+                    Worker.getListOfLabor().remove(Worker.getListOfLabor()[Random().nextInt(Worker.sizeOfLabor())])
+                }
             }
         }
         for (i in 1..3) {
@@ -159,7 +161,7 @@ class DataTime(var currentDay: String, var currentMonth: String, var currentYear
             Log.d("WORKER", sz.toString())
             val p = Random().nextInt(sz + 1)
             if (p == 0) {
-                generateWorker(ctx)
+                generateWorker()
             }
             // Log.d("WORKER", Worker.sizeOfLabor().toString())
         }

@@ -8,7 +8,7 @@ import android.widget.TextView
 
 class MessageActivity : AppCompatActivity() {
     override fun onBackPressed() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, MailActivity::class.java))
         finish()
     }
 

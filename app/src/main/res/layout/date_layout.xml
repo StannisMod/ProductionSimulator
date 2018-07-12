@@ -7,41 +7,49 @@
     android:background="@color/white">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorTextMessageActivity">
 
-        <LinearLayout
-            android:layout_alignParentTop="true"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorTextMessageActivity">
+    </LinearLayout>
 
-        </LinearLayout>
-        <TextView
-            android:id="@+id/curDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginHorizontal="20dp"
-            android:text="13.06.18"
-            android:textSize="18dp"
-            android:textColor="@color/colorNameTextMailActivity"/>
+    <TextView
+        android:id="@+id/curDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="10dp"
+        android:text="13.06.18"
+        android:textColor="@color/colorNameTextMailActivity"
+        android:textSize="18dp" />
 
-        <ImageButton
-            android:id="@+id/endDay"
+    <RelativeLayout
+        android:id="@+id/endDay"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/curDate">
+
+        <ImageView
+            android:id="@+id/image"
             android:layout_width="60dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/arrow" />
+
         <TextView
+            android:layout_toLeftOf="@id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/endDay"
+
             android:layout_centerVertical="true"
             android:text="Закончить день:"
-            android:textSize="18dp"
             android:textColor="@color/colorAccent"
-            />
+            android:textSize="18dp" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

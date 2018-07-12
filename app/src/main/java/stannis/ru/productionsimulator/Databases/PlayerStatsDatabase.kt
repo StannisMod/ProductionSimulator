@@ -67,9 +67,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
                 "monthOfStart" to TEXT,
                 "yearOfStart" to TEXT
         )
-        db.createTable("Names", true,
-                "id" to INTEGER,
-                "name" to TEXT)
+
         db.createTable(MONEY_FOR_DAY_NAME, true,
                 "wages" to INTEGER,
                 "sellings" to INTEGER)
@@ -381,52 +379,7 @@ class PlayerStatsDatabase(val ctx: Context) : ManagedSQLiteOpenHelper(ctx, "Play
         return res
     }
 
-    fun addNames(arr: Array<String>, arr2: Array<String>) {
-        var k = 0
-        sz = arr.size * arr2.size
-        PlayerStatsDatabase.getInstance(ctx).use {
-            for (i in 0 until arr.size) {
-                for (j in 0 until arr2.size) {
-                    insert("Names", "id" to k, "name" to "${arr[i].trim()} ${arr2[j].trim()}")
-                    k++
-                }
-            }
-        }
-    }
 
-    fun removeAllNames(): Int {
-        var res = 0
-        PlayerStatsDatabase.getInstance(ctx).use {
-            res = delete("Names")
-        }
-        return res
-    }
-
-    fun removeName(id: Int) {
-        PlayerStatsDatabase.getInstance(ctx).use {
-            delete("Names", "id = {id}", "id" to id)
-        }
-    }
-
-
-    fun getName(): String {
-        var id = 0
-        var name: String? = null
-        val db = this.writableDatabase
-        while (name == null) {
-            id = Random().nextInt(1200)
-            val query = "SELECT * FROM Names WHERE id = \"$id\""
-            val cursor = db.rawQuery(query, null)
-            if (cursor.moveToFirst()) {
-                cursor.moveToFirst()
-                name = cursor.getString(1)
-                cursor.close()
-            }
-        }
-        db.close()
-        removeName(id)
-        return name!!
-    }
 
     fun addMoneyForDay(wages: Int, sellings: Int) {
         getInstance(ctx).use {
