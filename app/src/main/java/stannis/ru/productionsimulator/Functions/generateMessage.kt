@@ -52,7 +52,7 @@ fun generateMessage(ctx: Context) {
     }
 
     //УСЛОВИЕ: Ежедневно с вероятностью 5% ПОСЛЕДСТВИЯ: Если не повысить зарплату то все работники уйдут
-    if (r.nextDouble() < 0.5 && !Worker.isEmpty()) {
+    if (r.nextDouble() < 0.12 && !Worker.isEmpty()) {
         var index = generateRandomIndexOfFactory()
         generateWorkerMessage(ctx, index)
         DatabaseFactory.index = index
