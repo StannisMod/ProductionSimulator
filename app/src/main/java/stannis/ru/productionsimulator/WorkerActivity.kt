@@ -24,10 +24,7 @@ import stannis.ru.productionsimulator.Models.Worker
 
 
 class WorkerActivity : AppCompatActivity() {
-    override fun onBackPressed() {
-
-    }
-
+    var str: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
@@ -57,6 +54,7 @@ class WorkerActivity : AppCompatActivity() {
         if (intent.hasExtra("TAG")) {
             val arr = intent.getStringExtra("TAG").split(".")
             val cond = arr[1].trim() != "YourWorker"
+            str = arr[1].trim()
             var worker: Worker? = null
 
 
@@ -134,6 +132,13 @@ class WorkerActivity : AppCompatActivity() {
             }
 
 
+        }
+    }
+
+    override fun onBackPressed() {
+        if (str != null) {
+            startActivity(Intent(this, if (str == "YourWorker") StaffActivity::class.java else MarketActivity::class.java))
+            finish()
         }
     }
 }

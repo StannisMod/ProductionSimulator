@@ -109,7 +109,8 @@ class Credit_DepositActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
+        startActivity(Intent(this, BankActivity::class.java))
+        finish()
     }
 
 

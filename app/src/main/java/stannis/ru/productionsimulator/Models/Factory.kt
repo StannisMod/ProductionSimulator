@@ -46,9 +46,10 @@ class Factory {
 
     companion object {
         var factories = ArrayList<Factory>()
-        fun clear(){
-           factories = ArrayList()
+        fun clear() {
+            factories = ArrayList()
         }
+
         fun getFactoryById(id: Int): Factory? {
 
             if (id < factories.size && id >= 0) {
@@ -74,26 +75,27 @@ class Factory {
     }
 
     fun runTick(ctx: Context) {
+        if (productivity > 0 && res.getInventorySlotContents(0).stackSize > 5) {
 
-        var count = res.getInventorySlotContents(0).stackSize / 5
-        Log.d("RunTick", count.toString())
-        Log.d("RunTick", (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize).toString())
-        if (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize < count * productivity) {
-            count = (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize) / productivity
+            var count = res.getInventorySlotContents(0).stackSize / 5
+            Log.d("RunTick", count.toString())
+            Log.d("RunTick", (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize).toString())
+            if (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize < count * productivity) {
+                count = (production.getInventorySlotContents(0).maxStackSize - production.getInventorySlotContents(0).stackSize) / productivity
+            }
+            Log.d("RunTick", count.toString())
+
+            if (production.getInventorySlotContents(0).stackSize == 0) {
+                production.setInventorySlotContents(0, ItemStack(this.type.getProdType().itemId, count * productivity, production.getInventorySlotContents(0).maxStackSize))
+            } else {
+                production.getInventorySlotContents(0).stackSize += count * 5
+            }
+            res.decrStackSize(0, 5 * count)
+            Log.d("RunTick", count.toString())
+
+
+            machine_state -= round((Random().nextInt(50) + 20).toDouble() / 100.0, 2)
         }
-        Log.d("RunTick", count.toString())
-
-        if (production.getInventorySlotContents(0).stackSize == 0) {
-            production.setInventorySlotContents(0, ItemStack(this.type.getProdType().itemId, count * productivity, production.getInventorySlotContents(0).maxStackSize))
-        } else {
-            production.getInventorySlotContents(0).stackSize += count * 5
-        }
-        res.decrStackSize(0, 5 * count)
-        Log.d("RunTick", count.toString())
-
-
-        machine_state -= round(Random().nextInt(10).toDouble() / 100.0, 2)
-        this.save(ctx)
     }
 
     fun save(ctx: Context) {
@@ -107,7 +109,8 @@ class Factory {
         }
 
     }
-    fun countParams(ctx : Context){
+
+    fun countParams(ctx: Context) {
         countProductivity(ctx)
         countProd_Cap()
         countRes_Cap()

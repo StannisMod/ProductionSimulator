@@ -18,6 +18,14 @@
         android:id="@+id/data"
         layout="@layout/date_layout"
         ></include>
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Информация о работнике"
+        android:layout_below="@id/stats_panel"
+        android:textSize="30sp"
+        />
 
     <RelativeLayout
 
@@ -26,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/fire_hire_layout"
-        android:layout_below="@id/stats_panel"
+        android:layout_below="@id/label"
         android:layout_margin="6dp">
 
         <ImageView

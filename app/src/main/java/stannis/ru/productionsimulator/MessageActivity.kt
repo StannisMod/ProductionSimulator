@@ -1,5 +1,6 @@
 package stannis.ru.productionsimulator
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Message
@@ -7,7 +8,8 @@ import android.widget.TextView
 
 class MessageActivity : AppCompatActivity() {
     override fun onBackPressed() {
-
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -21,7 +21,7 @@ import stannis.ru.productionsimulator.Models.*
 
 class MarketActivity : AppCompatActivity() {
     override fun onBackPressed() {
-
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
