@@ -17,7 +17,7 @@ import stannis.ru.productionsimulator.StartActivity
 fun gameover(ctx: Context){
     PlayerStatsDatabase.getInstance(ctx).removePlayer()
     Player.clear()
-    PlayerStatsDatabase.getInstance(ctx).removeAllMessage()
+    Message.clear()
 
     generateUnhappyMessage(ctx)
     var list : ArrayList<Message> = Message.getMessages(ctx)

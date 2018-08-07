@@ -11,13 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_end_day.*
 import kotlinx.android.synthetic.main.end_day_view.view.*
 import kotlinx.android.synthetic.main.stats_panel.*
-import stannis.ru.productionsimulator.Functions.GO
-import stannis.ru.productionsimulator.Functions.countReputation
-import stannis.ru.productionsimulator.Functions.generateMessage
-import stannis.ru.productionsimulator.Functions.saveAll
+import stannis.ru.productionsimulator.Functions.*
 import stannis.ru.productionsimulator.Models.*
 import java.util.*
 
@@ -32,8 +31,9 @@ class EndDayActivity : AppCompatActivity() {
         number.text = curData.toString()
         curData.nextDay(this)
         playerNalog.text = "${Player.getInstance(this).tax}$)"
+        (nalogValue as TextView).text = previousTax.toString()
         tmpSum = MoneyForDay.getIns(this).getAll()
-        allInAllValue.text = "${tmpSum}$"
+        allInAllValue.text = "${tmpSum - previousTax}$"
         if (allInAllValue.text.toString()[0] == '-') {
             allInAllValue.setTextColor(Color.RED)
         } else {
@@ -69,6 +69,7 @@ class EndDayActivity : AppCompatActivity() {
         nextDay.setOnClickListener {
             if (nalogValue.text.toString() != "") {
                 var tax = nalogValue.text.toString().toInt()
+                previousTax = tax
                 val player = Player.getInstance(this)
                 if (player.money <= tax) {
                     tax = player.money
@@ -100,6 +101,8 @@ class EndDayActivity : AppCompatActivity() {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
+            }else{
+                Toast.makeText(this, "Введите сумму, которую Вы заплатите в качестве налога", Toast.LENGTH_SHORT).show()
             }
         }
 

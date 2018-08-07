@@ -98,6 +98,7 @@ class Message(var caption: String = "Отдайте деньги!", var text: St
 
         fun clear() {
             instance = emptyArray()
+            setBegin()
         }
 
         fun sizeOfUnRead(): Int = instance[0].size

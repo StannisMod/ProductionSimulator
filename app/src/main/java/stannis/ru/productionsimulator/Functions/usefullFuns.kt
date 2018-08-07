@@ -21,6 +21,7 @@ var GO = false
 var isPromotioned: Array<Boolean> = emptyArray()
 var senderWorker: String = ""
 var factory = 0
+var previousTax = 0;
 fun round(a: Double, radix: Int): Double {
     var b = a
     b *= Math.pow(10.0, radix.toDouble())
