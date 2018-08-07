@@ -3,23 +3,22 @@ package stannis.ru.productionsimulator
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Point
-import android.media.MediaExtractor
+
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+
 import android.widget.*
 import kotlinx.android.synthetic.main.message_view.view.*
-import org.jetbrains.anko.ctx
-import stannis.ru.productionsimulator.Databases.DatabaseFactory
-import stannis.ru.productionsimulator.Databases.PlayerStatsDatabase
+
+
 import stannis.ru.productionsimulator.Models.Message
+import stannis.ru.productionsimulator.TouchListeners.MessageTouch
 
 class MailActivity : AppCompatActivity() {
     override fun onBackPressed() {
@@ -36,61 +35,9 @@ class MailActivity : AppCompatActivity() {
         var dataArray = Message.getAllMessages()
         val adapter = MessageAdapter(this, dataArray)
         listview.adapter = adapter
-
-        listview.setOnItemClickListener { parent, view, position, id ->
-            val mes = Message.getAllMessages()[position]
-            mes.makeRead()
-            val intent = Intent(this, MessageActivity::class.java)
-            intent.putExtra("message", position)
-            startActivity(intent)
-        }
         var ctx = this
         var x = 0.toFloat()
-        var stX = listview.x
-        var position: Int? = null
-        var t = 0L
-        class TOUCH() : View.OnTouchListener {
-            override fun onTouch(p0: View?, motionEvent: MotionEvent?): Boolean {
-                if (motionEvent != null) {
-                    if (position == null) {
-                        position = motionEvent.y.toInt() / 200
-
-                    }
-                    var tp = motionEvent.action
-
-                    if (tp == MotionEvent.ACTION_DOWN) {
-                        x = motionEvent.x
-                        t = System.currentTimeMillis()
-                    } else if (tp == MotionEvent.ACTION_MOVE) {
-                        if (position != null) {
-                            if (listview.getChildAt(position!!) != null) {
-                                listview.getChildAt(position!!).x = if ((motionEvent.x - x) < 0) listview.getChildAt(position!!).x else listview.getChildAt(position!!).x + (motionEvent.x - x)
-                                x = motionEvent.x
-                            }
-                        }
-                    } else if (tp == MotionEvent.ACTION_UP) {
-                        if (position != null) {
-                            if (listview.getChildAt(position!!) != null) {
-                                val diffX = (listview.getChildAt(position!!).x - stX)
-                                val diffT = (System.currentTimeMillis() - t)
-                                Log.d("AVERAGEvelocity",(diffX*1000/diffT).toString() )
-                                if (diffX*1000/diffT>2500) {
-                                    dataArray[position!!].remove()
-                                    dataArray = Message.messages
-                                    listview.adapter = MessageAdapter(ctx, dataArray)
-                                } else {
-                                    listview.getChildAt(position!!).x = stX
-                                }
-                                position = null
-                            }
-                        }
-                    }
-                }
-                return p0?.onTouchEvent(motionEvent) ?: true
-            }
-
-        }
-        listview.setOnTouchListener(TOUCH())
+        listview.setOnTouchListener(MessageTouch(listview, ctx, dataArray))
 
     }
 

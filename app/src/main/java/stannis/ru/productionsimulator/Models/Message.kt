@@ -18,6 +18,9 @@ class Message(var caption: String = "Отдайте деньги!", var text: St
     companion object {
         fun setBegin() {
             instance = Array(2) { i -> ArrayList<Message>() }
+            instance[0].add(Message())
+            instance[0].add(Message())
+            instance[0].add(Message()); instance[0].add(Message());instance[0].add(Message());instance[0].add(Message());instance[0].add(Message());instance[0].add(Message());
         }
 
         var instance: Array<ArrayList<Message>> = emptyArray()

@@ -18,6 +18,7 @@ fun gameover(ctx: Context){
     PlayerStatsDatabase.getInstance(ctx).removePlayer()
     Player.clear()
     PlayerStatsDatabase.getInstance(ctx).removeAllMessage()
+
     generateUnhappyMessage(ctx)
     var list : ArrayList<Message> = Message.getMessages(ctx)
     val intent = Intent(ctx, GameOverActivity::class.java)

@@ -1,6 +1,7 @@
 package stannis.ru.productionsimulator.Models
 
 import android.content.Context
+import android.provider.ContactsContract
 import android.util.Log
 import stannis.ru.productionsimulator.Databases.DatabaseFactory
 import stannis.ru.productionsimulator.Enums.EnumFactory
@@ -9,6 +10,7 @@ import kotlin.math.roundToInt
 class Worker(var name: String, var age: Int, var prof: String, var quality: Int, var nation: String, var salary: Int, var birth: Pair<String, String>) {
 
     companion object {
+
         fun contains(str: String): Boolean {
             var res = false
             for (i in 0 until EnumFactory.getSize()) {
@@ -36,6 +38,7 @@ class Worker(var name: String, var age: Int, var prof: String, var quality: Int,
         }
 
         fun setBegin() {
+            instance = ArrayList()
             for (i in 0 until EnumFactory.getSize()) {
                 instance.add(Array(2) { i -> HashMap<String, Worker>() })
             }
